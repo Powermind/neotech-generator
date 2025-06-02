@@ -1,36 +1,35 @@
-iimport { defineStore } from 'pinia';
+import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if needed)
+
+// Import your dice rolling helpers (if you moved them to utils/diceRolls.js)
+import { rollDice, roll3D6, roll4D6DropLowest } from '../utils/diceRolls';
+
+// Import the refactored action logic
+import { rollLifeEventLogic } from './characterActions/lifeEventActions'; // <--- NEW IMPORT
 
 // Default character structure (can be defined directly or imported)
 const defaultCharacterState = () => ({
   id: uuidv4(), // Generate a new ID each time a new default is created
   name: 'New Hero',
-  race: 'Human',
-  class: 'Warrior',
-  level: 1,
-  experience: 0,
-  attributes: {
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 10,
-  },
+  attributes: [
+    { name: 'Styrka', abbr: 'STY', value: 0, mods: []},
+    { name: 'Tålighet', abbr: 'TÅL', value: 0, mods: []},
+    { name: 'Rörlighet', abbr: 'RÖR', value: 0, mods: []},
+    { name: 'Personlighet', abbr: 'PER', value: 0, mods: []},
+    { name: 'Psyke', abbr: 'PSY', value: 0, mods: []},
+    { name: 'Vilja', abbr: 'VIL', value: 0, mods: []},
+    { name: 'Bildning', abbr: 'BIL', value: 0, mods: []},
+    { name: 'Syn', abbr: 'SYN', value: 0, mods: []},
+    { name: 'Hörsel', abbr: 'HÖR', value: 0, mods: []}, 
+  ],
   skills: {
     athletics: 0,
     acrobatics: 0,
     stealth: 0,
     perception: 0,
   },
-  inventory: [],
-  equipment: {
-    head: null,
-    body: null,
-    weapon: null,
-  },
-  spells: [],
   notes: '',
+  lifeEvents: []
 });
 
 export const useCharacterStore = defineStore('character', {
@@ -43,8 +42,7 @@ export const useCharacterStore = defineStore('character', {
     // Getters are like computed properties for your store's state
     // They are reactive and recalculate when their dependencies change.
     totalAttributePoints: (state) => {
-      const attributes = state.current.attributes;
-      return Object.values(attributes).reduce((sum, val) => sum + val, 0);
+      return state.current.attributes.reduce((sum, attr) => sum + attr.value, 0);
     },
     isCharacterValid: (state) => {
       // Example validation logic
@@ -59,17 +57,13 @@ export const useCharacterStore = defineStore('character', {
       // Basic update for top-level properties
       this.current[key] = value;
     },
-    updateAttribute(attributeName, value) {
-      // Update nested attribute
-      if (this.current.attributes.hasOwnProperty(attributeName)) {
-        this.current.attributes[attributeName] = value;
+    updateAttribute(attributeName, newValue) {
+      const attributeToUpdate = this.current.attributes.find(attr => attr.name === attributeName);
+      if (attributeToUpdate) {
+        attributeToUpdate.value = newValue;
+      } else {
+        console.warn(`Attribute with name "${attributeName}" not found.`);
       }
-    },
-    addInventoryItem(item) {
-      this.current.inventory.push(item);
-    },
-    removeInventoryItem(itemName) {
-      this.current.inventory = this.current.inventory.filter(item => item.name !== itemName);
     },
     resetCharacter() {
       // Reset the character to its default state
@@ -95,6 +89,33 @@ export const useCharacterStore = defineStore('character', {
         } else {
             console.warn('Character not found with ID:', id);
         }
-    }
+    },
+   // --- MODIFIED ACTION: rollAllAttributes ---
+    rollAllAttributes() {
+      console.log('Rolling 3D6 for all attributes...');
+      // Iterate directly over the 'attributes' array on the current character
+      this.current.attributes.forEach(attribute => {
+        const rollResult = roll3D6(); // Get a 3D6 roll
+        attribute.value = rollResult; // Update the 'value' property of the attribute object directly
+        console.log(`${attribute.name}: ${rollResult}`);
+      });
+      console.log('All attributes rolled!');
+    },
+    // --- NEW ACTION: Roll all attributes using 4d6 drop lowest ---
+    rollAllAttributes4D6DropLowest() {
+      console.log('Rolling 4D6 (drop lowest) for all attributes...');
+      this.current.attributes.forEach(attribute => {
+        const rollResult = roll4D6DropLowest(); // Use the new helper function
+        attribute.value = rollResult;
+        console.log(`${attribute.name}: ${rollResult}`);
+      });
+      console.log('All attributes (4D6 drop lowest) rolled!');
+    },
+
+    // --- REFACTORED ACTION: rollLifeEvent ---
+    rollLifeEvent(tableName) {
+      // Call the external logic function, passing 'this' (the store instance) and tableName
+      rollLifeEventLogic(this, tableName);
+    },
   },
 });

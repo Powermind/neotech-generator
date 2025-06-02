@@ -1,0 +1,58 @@
+// src/stores/characterActions/lifeEventActions.js
+
+// Re-import the necessary utilities and tables that this action needs
+import { resolveEvent } from '../../utils/eventResolver';
+import upbringingEvents from '../../gameData/lifeEvents/upbringingEvents';
+
+// Define the map of tables here again, as this file needs direct access to them
+const lifeEventTables = {
+    upbringing: upbringingEvents
+    // Add more tables here as you create them
+};
+
+/**
+ * Handles the logic for rolling a life event and applying its modifiers.
+ * This function is designed to be called from a Pinia store action,
+ * receiving the store instance as its first argument.
+ *
+ * @param {object} store The Pinia store instance (e.g., 'this' from the action)
+ * @param {string} tableName The name of the table to roll on (e.g., 'childhood')
+ */
+export function rollLifeEventLogic(store, tableName) {
+  const table = lifeEventTables[tableName];
+  if (!table) {
+    console.error(`Life event table "${tableName}" not found.`);
+    return;
+  }
+
+  const eventResult = resolveEvent(table); // Get the full event object, including modifiers
+
+  if (eventResult) {
+    store.current.lifeEvents.push(eventResult); // Store the event with its description and roll
+
+    // Apply modifiers
+    if (eventResult.modifiers && Array.isArray(eventResult.modifiers)) {
+      console.log(`Applying modifiers for event: "${eventResult.description}"`);
+      eventResult.modifiers.forEach(modifier => {
+        if (modifier.type === 'attribute') {
+          const targetAttributeName = modifier.target;
+          const amount = modifier.amount;
+
+          // Find the current value of the attribute from the store's state
+          const currentAttribute = store.current.attributes.find(attr => attr.name === targetAttributeName);
+
+          if (currentAttribute) {
+            // Calculate the new value
+            const newValue = currentAttribute.value + amount;
+            // Use the existing updateAttribute action from the store
+            store.updateAttribute(targetAttributeName, newValue);
+            console.log(`  - ${targetAttributeName} changed by ${amount} to ${newValue}`);
+          } else {
+            console.warn(`Modifier target attribute "${targetAttributeName}" not found.`);
+          }
+        }
+        // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
+      });
+    }
+  }
+}

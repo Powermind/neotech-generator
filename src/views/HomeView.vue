@@ -1,5 +1,7 @@
 <script setup>
 import MyReusableComponent from '../components/MyReusableComponent.vue';
+import CharacterSheet from '../components/CharacterSheet.vue'; // Import the new component
+
 import { useCharacterStore } from '../stores/character'; // Import your store
 
 import { ref } from 'vue';
@@ -40,6 +42,7 @@ const resetCurrentCharacter = () => {
     <p>This is your default view, rendered by Vue Router.</p>
     
     <MyReusableComponent msg="Hello from HomeView!" />
+    <CharacterSheet />
   </div>
 </template>
 
