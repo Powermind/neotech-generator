@@ -4,10 +4,25 @@
 import { resolveEvent } from '../../utils/eventResolver';
 import upbringingEvents from '../../gameData/lifeEvents/upbringingEvents';
 
-// Define the map of tables here again, as this file needs direct access to them
+// NEW: Import all individual career event tables explicitly OR import the whole module
+import {
+    urbanBackgroundEvents,
+    ruralBackgroundEvents,
+    academicBackgroundEvents,
+    soldierCareerEvents,
+    medicCareerEvents,
+    scoutCareerEvents
+} from '../../gameData/careers/careerEventTables'; // <-- Import individual tables
+
 const lifeEventTables = {
-    upbringing: upbringingEvents
-    // Add more tables here as you create them
+    upbringing: upbringingEvents, // Keep your upbringing table if it's distinct
+    urbanBackgroundEvents: urbanBackgroundEvents, // <-- Add this
+    ruralBackgroundEvents: ruralBackgroundEvents, // <-- Add this
+    academicBackgroundEvents: academicBackgroundEvents, // <-- Add this
+    soldierCareerEvents: soldierCareerEvents, // <-- Add this
+    medicCareerEvents: medicCareerEvents, // <-- Add this
+    scoutCareerEvents: scoutCareerEvents, // <-- Add this
+    // Add more tables here as you create them for other careers/stages
 };
 
 /**
@@ -50,7 +65,21 @@ export function rollLifeEventLogic(store, tableName) {
           } else {
             console.warn(`Modifier target attribute "${targetAttributeName}" not found.`);
           }
-        }
+        } else if (modifier.type === 'skill_distribution') {
+          // Roll the dice for points
+          const pointsRolled = rollDice(modifier.diceFormula);
+    
+          // Add to pending distributions
+          store.current.pendingSkillDistributions.push({
+            id: uuidv4(),
+            eventDescription: event.event,
+            pointsTotal: pointsRolled,
+            pointsRemaining: pointsRolled,
+            allowedSkills: modifier.allowedSkills,
+            description: modifier.description,
+            completed: false
+          });
+  }
         // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
       });
     }

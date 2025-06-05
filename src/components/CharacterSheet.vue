@@ -3,6 +3,8 @@ import { useCharacterStore } from '../stores/character'; // 1. Import your store
 
 import AttributeBox from './AttributeBox.vue'
 import LifeEventsGenerator from './LifeEventsGenerator.vue'; 
+import SkillList from './SkillList.vue'; // <-- NEW: Import SkillList
+import CareerPathStepper from './CareerPathStepper.vue'; // <-- NEW: Import CareerPathStepper
 
 // 2. Instantiate the store
 // This gives you access to all state, getters, and actions defined in your character store.
@@ -25,6 +27,7 @@ const characterStore = useCharacterStore();
 // You could also directly v-model="characterStore.current.name" for simple cases,
 // but for complex objects or validation, explicit actions are better.
 import { ref, watch } from 'vue'; // Import ref and watch
+import { computed } from 'vue'
 
 const characterNameInput = ref(characterStore.current.name);
 
@@ -59,6 +62,21 @@ const handleRollChildhoodEvent = () => {
   characterStore.rollLifeEvent('upbringing');
 };
 
+const careerHistorySlots = computed(() => {
+    const slots = [
+        { stage: 'background', career: null },
+        { stage: 'career1', career: null },
+        { stage: 'career2', career: null },
+        { stage: 'career3', career: null },
+    ];
+    characterStore.current.careerHistory.forEach(historyEntry => {
+        const index = slots.findIndex(s => s.stage === historyEntry.stage);
+        if (index !== -1) {
+            slots[index].career = historyEntry;
+        }
+    });
+    return slots;
+});
 </script>
 
 <template>
@@ -92,8 +110,33 @@ const handleRollChildhoodEvent = () => {
     </div>
     <LifeEventsGenerator />
 
-    <p>Total Attribute Points: {{ characterStore.totalAttributePoints }}</p>
+    <SkillList />
 
+    <div class="career-history-boxes">
+        <h3>Career History</h3>
+        <div class="career-slots">
+            <div v-for="slot in careerHistorySlots" :key="slot.stage" class="career-slot">
+                <h4>{{ slot.stage === 'background' ? 'Background' : `Career ${slot.stage.slice(-1)}` }}</h4>
+                <div v-if="slot.career" class="career-entry">
+                    <strong>{{ slot.career.name }}</strong>
+                    <p>Promotion: {{ slot.career.promotion }}</p>
+                    <p>Years: {{ slot.career.years }}</p>
+                </div>
+                <div v-else class="career-empty">
+                    <p>-- Not yet chosen --</p>
+                </div>
+            </div>
+        </div>
+        <div class="promotions-display">
+            <h4>Promotions Earned:</h4>
+            <span v-if="characterStore.current.promotions.length === 0">None</span>
+            <span v-else>{{ characterStore.current.promotions.join(', ') }}</span>
+        </div>
+    </div>
+
+    <CareerPathStepper />
+
+    <p>Total Attribute Points: {{ characterStore.totalAttributePoints }}</p>
     <div class="actions">
       <button @click="saveCurrent">Save Character</button>
       <button @click="resetCurrent">Reset Character</button>
@@ -219,5 +262,85 @@ li {
 }
 .actions button:hover {
     background-color: #0056b3;
+}
+
+/* Add new styles for career history boxes and promotions */
+.career-history-boxes {
+    background-color: #e0f7fa; /* Light cyan */
+    border: 1px solid #81d4fa; /* Light blue */
+    border-radius: 10px;
+    padding: 25px;
+    margin: 30px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.career-history-boxes h3 {
+    color: #007bff; /* Blue */
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.career-slots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.career-slot {
+    background-color: #f0f8ff; /* Alice Blue */
+    border: 1px dashed #a7d9f7;
+    border-radius: 8px;
+    padding: 15px;
+    width: 200px; /* Fixed width for the box */
+    text-align: center;
+    min-height: 120px; /* Ensure consistent height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.career-slot h4 {
+    color: #4682b4; /* Steel Blue */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.career-slot .career-empty p {
+    color: #888;
+    font-style: italic;
+}
+
+.career-slot .career-entry strong {
+    display: block;
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.career-slot .career-entry p {
+    font-size: 0.85em;
+    color: #555;
+    margin: 0;
+}
+
+.promotions-display {
+    background-color: #fffacd; /* Lemon Chiffon */
+    border: 1px solid #ffd700; /* Gold */
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+.promotions-display h4 {
+    color: #b8860b; /* Dark Goldenrod */
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 </style>
