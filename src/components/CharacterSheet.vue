@@ -3,6 +3,7 @@ import { useCharacterStore } from '../stores/character'; // 1. Import your store
 
 import AttributeBox from './AttributeBox.vue'
 import LifeEventsGenerator from './LifeEventsGenerator.vue'; 
+import EventSkillDistribution from './EventSkillDistribution.vue';
 import SkillList from './SkillList.vue'; // <-- NEW: Import SkillList
 import CareerPathStepper from './CareerPathStepper.vue'; // <-- NEW: Import CareerPathStepper
 
@@ -109,6 +110,8 @@ const careerHistorySlots = computed(() => {
         <button @click="handleRollChildhoodEvent" class="roll-button roll-life-event">Roll Upbringing Event</button>
     </div>
     <LifeEventsGenerator />
+
+    <EventSkillDistribution />
 
     <SkillList />
 

@@ -377,5 +377,26 @@ export const useCharacterStore = defineStore('character', {
         }
     },
 
+    createSkillDistribution(eventDescription, diceFormula, allowedSkills) {
+  // Roll the dice for points using your existing rollDice function
+  const pointsRolled = rollDice(diceFormula);
+  
+  // Create the distribution object
+  const distribution = {
+    id: uuidv4(),
+    eventDescription: eventDescription,
+    pointsTotal: pointsRolled,
+    pointsRemaining: pointsRolled,
+    allowedSkills: allowedSkills,
+    distributedPoints: {}, // Tracks points distributed to each skill
+    completed: false
+  };
+  
+  // Add to pending distributions
+  this.current.pendingSkillDistributions.push(distribution);
+  
+  console.log(`Created skill distribution: ${pointsRolled} points for skills: ${allowedSkills.join(', ')}`);
+},
+
   },
 });

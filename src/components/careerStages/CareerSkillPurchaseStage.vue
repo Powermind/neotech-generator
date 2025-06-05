@@ -42,7 +42,7 @@ const spendStridsvana = (levels) => {
 // Determine if the "Continue" button should be enabled
 // For simplicity, we'll enable it once all points are spent.
 const isContinueEnabled = computed(() => {
-  return careerPoints.value === 0 && freePoints.value === 0 && stridsvanaPoints.value === 0;
+  return careerPoints.value < 2 && freePoints.value < 2 && stridsvanaPoints.value < 2;
 });
 
 const currentCareerName = computed(() => characterStore.current.currentCareerDetails?.name || 'Current Career');
@@ -74,15 +74,7 @@ const getCostForOneLevel = (skill, poolType) => {
 const getReductionCostForOneLevel = (skill, poolType) => {
     const currentSkillValue = skill.value;
     const cost = characterStore.calculateSkillReductionCost(currentSkillValue, 1);
-    // Check if the pool has enough points, and if the advancement is valid (not Infinity)
-    if (poolType === 'career' && cost !== Infinity && careerPoints.value >= cost) {
-        return cost;
-    } else if (poolType === 'free' && cost !== Infinity && freePoints.value >= cost) {
-        return cost;
-    } else if (poolType === 'stridsvana' && cost !== Infinity && stridsvanaPoints.value >= cost) {
-        return cost;
-    }
-    return Infinity; // Indicate impossible or not enough points
+    return cost
 };
 
 // Helper to check if a +1 button should be disabled
@@ -170,7 +162,8 @@ const isReductionLevelDisabled = (skill, poolType) => {
                     (Invalid)
                 </span>
             </span>
-            <button @click="spendFreeSkill(skill.name, 1)" :disabled="isOneLevelDisabled(skill, 'free')">+1</button>
+            <button @click="spendSkillPoints(skill.name, getCostForOneLevel(skill, 'free'), 'free')" :disabled="isOneLevelDisabled(skill, 'free')">+</button>
+            <button @click="returnSkillPoints(skill.name, getReductionCostForOneLevel(skill, 'free'), 'free')" :disabled="isReductionLevelDisabled(skill, 'free')">-</button>
           </div>
         </div>
       </div>
@@ -188,7 +181,8 @@ const isReductionLevelDisabled = (skill, poolType) => {
                     (Invalid)
                 </span>
             </span>
-            <button @click="spendStridsvana(1)" :disabled="isOneLevelDisabled(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana')">+1</button>
+            <button @click="spendSkillPoints('Stridsvana', getCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana'), 'stridsvana')" :disabled="isOneLevelDisabled(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana')">+</button>
+            <button @click="returnSkillPoints('Stridsvana', getReductionCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana'), 'stridsvana')" :disabled="isReductionLevelDisabled(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana')">-</button>
           </div>
         </div>
       </div>

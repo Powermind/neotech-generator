@@ -79,7 +79,8 @@ export function rollLifeEventLogic(store, tableName) {
             description: modifier.description,
             completed: false
           });
-  }
+          console.log(store.current.pendingSkillDistributions)
+        }
         // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
       });
     }

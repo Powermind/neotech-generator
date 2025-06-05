@@ -17,8 +17,21 @@ export const academicBackgroundEvents = [
 
 // Add specific event tables for Soldier, Medic, Scout, etc.
 export const soldierCareerEvents = [
-    { min: 1, max: 50, event: "Participated in a successful skirmish.", modifiers: [{ type: 'attribute', target: 'Stridsvana', amount: 1 }] },
-    { min: 51, max: 100, event: "Witnessed a strategic blunder.", modifiers: [{ type: 'attribute', target: 'Taktik', amount: 1 }] },
+    { min: 1, max: 2, event: "Participated in a successful skirmish.", modifiers: [{ type: 'attribute', target: 'Stridsvana', amount: 1 }] },
+    { min: 3, max: 4, event: "Witnessed a strategic blunder.", modifiers: [{ type: 'attribute', target: 'Taktik', amount: 1 }] },
+    { 
+    min: 5, 
+    max: 100, 
+    event: "Military training experience", 
+    modifiers: [
+      { 
+        type: 'skill_distribution', 
+        diceFormula: '1d6+6',
+        allowedSkills: ['Pistol', 'Gevär', 'Smyga'],
+        description: 'Distribute points among combat skills'
+      }
+    ] 
+  },
 ];
 
 export const medicCareerEvents = [
