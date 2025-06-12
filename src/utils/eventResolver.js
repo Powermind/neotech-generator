@@ -1,26 +1,30 @@
-import { rollDice } from './diceRolls'; // Import your dice rolling utility
+// src/utils/eventResolver.js
+
+import { rollDice } from './diceRolls'; // Assuming rollDice is in diceRolls.js
 
 /**
- * Rolls 1D100 and finds the corresponding event in a given table.
- * @param {Array<Object>} eventTable - An array of event objects, each with min, max, and event properties.
- * Example: [{ min: 1, max: 10, event: "..." }]
- * @returns {Object|null} The event object that matches the roll, or null if no match (shouldn't happen with full table).
+ * Rolls on a given event table and returns the matched event.
+ *
+ * @param {Array<Object>} eventTable An array of event objects, each with min, max, event, and optional modifiers.
+ * @returns {Object|null} The matched event object, or null if no event is found.
  */
 export function resolveEvent(eventTable) {
-  const roll = rollDice(100); // Roll 1D100
-  console.log(`Rolled ${roll} on event table.`);
+    if (!eventTable || !Array.isArray(eventTable)) {
+        console.error("Invalid event table provided to resolveEvent.");
+        return null;
+    }
 
-  // Find the event that matches the roll within its min/max range
-  const foundEvent = eventTable.find(entry => roll >= entry.min && roll <= entry.max);
+    // Roll a 1D100 to determine the event
+    const roll = rollDice(100); // rollDice should return a number between 1 and max (inclusive)
 
-  if (!foundEvent) {
-    console.warn(`No event found for roll ${roll} in the provided table.`);
-    return { event: `Error: No event found for roll ${roll}.` }; // Fallback
-  }
+    // Find the event entry that matches the roll
+    const matchedEvent = eventTable.find(entry => roll >= entry.min && roll <= entry.max);
 
-  // Return the event object, possibly with the roll number
-  return {
-      roll: roll,
-      description: foundEvent.event
-  };
+    if (matchedEvent) {
+        console.log(`Rolled ${roll} on event table. Event: "${matchedEvent.event}"`);
+        return matchedEvent;
+    } else {
+        console.warn(`No event found for roll ${roll} in the provided table.`);
+        return null;
+    }
 }

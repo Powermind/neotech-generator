@@ -104,6 +104,9 @@ const careerHistorySlots = computed(() => {
         <button @click="rerollAttributes">Reroll Attributes</button>
     </div>
 
+    <p>Startkapital: {{ characterStore.totalStartkapital }}</p>
+
+
     <div class="life-event-roll-section">
         <h3>Roll Life Events</h3>
         <p>Roll events for different stages of your character's life.</p>
@@ -113,7 +116,6 @@ const careerHistorySlots = computed(() => {
 
     <EventSkillDistribution />
 
-    <SkillList />
 
     <div class="career-history-boxes">
         <h3>Career History</h3>
@@ -144,6 +146,8 @@ const careerHistorySlots = computed(() => {
       <button @click="saveCurrent">Save Character</button>
       <button @click="resetCurrent">Reset Character</button>
     </div>
+
+    <SkillList />
 
     <h3>Validation</h3>
     <p v-if="characterStore.isCharacterValid" class="valid-message">Character is ready!</p>

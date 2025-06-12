@@ -3,10 +3,12 @@
 // Re-import the necessary utilities and tables that this action needs
 import { resolveEvent } from '../../utils/eventResolver';
 import upbringingEvents from '../../gameData/lifeEvents/upbringingEvents';
+import { rollDiceString } from '../../utils/diceRolls';
+import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if needed)
 
 // NEW: Import all individual career event tables explicitly OR import the whole module
 import {
-    urbanBackgroundEvents,
+    hemlosBackgroundEvents,
     ruralBackgroundEvents,
     academicBackgroundEvents,
     soldierCareerEvents,
@@ -16,7 +18,7 @@ import {
 
 const lifeEventTables = {
     upbringing: upbringingEvents, // Keep your upbringing table if it's distinct
-    urbanBackgroundEvents: urbanBackgroundEvents, // <-- Add this
+    hemlosBackgroundEvents: hemlosBackgroundEvents, // <-- Add this
     ruralBackgroundEvents: ruralBackgroundEvents, // <-- Add this
     academicBackgroundEvents: academicBackgroundEvents, // <-- Add this
     soldierCareerEvents: soldierCareerEvents, // <-- Add this
@@ -41,7 +43,7 @@ export function rollLifeEventLogic(store, tableName) {
   }
 
   const eventResult = resolveEvent(table); // Get the full event object, including modifiers
-
+  console.log('Event result',eventResult)
   if (eventResult) {
     store.current.lifeEvents.push(eventResult); // Store the event with its description and roll
 
@@ -67,12 +69,13 @@ export function rollLifeEventLogic(store, tableName) {
           }
         } else if (modifier.type === 'skill_distribution') {
           // Roll the dice for points
-          const pointsRolled = rollDice(modifier.diceFormula);
+          console.log('Logged skill distribution')
+          const pointsRolled = rollDiceString(modifier.diceFormula);
     
           // Add to pending distributions
           store.current.pendingSkillDistributions.push({
             id: uuidv4(),
-            eventDescription: event.event,
+            eventDescription: eventResult.description,
             pointsTotal: pointsRolled,
             pointsRemaining: pointsRolled,
             allowedSkills: modifier.allowedSkills,
@@ -80,6 +83,15 @@ export function rollLifeEventLogic(store, tableName) {
             completed: false
           });
           console.log(store.current.pendingSkillDistributions)
+        } else if (modifier.type === 'kontakt') {
+          // Roll the dice for points
+          console.log('Logged kontakt')
+          const resources = rollDiceString(modifier.resources);
+          store.current.contacts.push({ title: modifier.title, resources })
+        } else if (modifier.type === 'startkapital') {
+          console.log('Logged startkapital')
+          const amount = rollDiceString(modifier.diceFormula) * modifier.multiplier
+          store.current.startkapital.push({ amount, description: modifier.title })
         }
         // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
       });

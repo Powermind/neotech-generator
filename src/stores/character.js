@@ -41,6 +41,7 @@ const defaultCharacterState = () => ({
   lifeEvents: [],
   money: 0, // <-- NEW: Character's money
   promotions: [], // <-- NEW: Store promotions earned
+  startkapital: [],
 
   // --- NEW CAREER TRACKING STATE ---
   currentCareerStage: 'background_selection', // <--- CHANGED HERE!
@@ -51,6 +52,7 @@ const defaultCharacterState = () => ({
   selectedCareerId: null, // The ID of the career currently being processed for the current stage
   currentCareerDetails: null, // Full details of the selected career for the current stage
   pendingSkillDistributions: [], // Events waiting for skill point distribution
+  contacts: [],
 });
 
 export const useCharacterStore = defineStore('character', {
@@ -64,6 +66,9 @@ export const useCharacterStore = defineStore('character', {
     // They are reactive and recalculate when their dependencies change.
     totalAttributePoints: (state) => {
       return state.current.attributes.reduce((sum, attr) => sum + attr.value, 0);
+    },
+    totalStartkapital: (state) => {
+      return state.current.startkapital.reduce((sum, event) => sum + event.amount, 0);
     },
     isCharacterValid: (state) => {
       // Example validation logic
