@@ -38,10 +38,6 @@ const resetCurrentCharacter = () => {
 
 <template>
   <div class="home-view">
-    <h2>Welcome to Your Home Page!</h2>
-    <p>This is your default view, rendered by Vue Router.</p>
-    
-    <MyReusableComponent msg="Hello from HomeView!" />
     <CharacterSheet />
   </div>
 </template>

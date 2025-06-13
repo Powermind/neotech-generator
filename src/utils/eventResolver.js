@@ -18,11 +18,20 @@ export function resolveEvent(eventTable) {
     const roll = rollDice(100); // rollDice should return a number between 1 and max (inclusive)
 
     // Find the event entry that matches the roll
-    const matchedEvent = eventTable.find(entry => roll >= entry.min && roll <= entry.max);
+    const matchedEntry = eventTable.find(entry => roll >= entry.min && roll <= entry.max);
 
-    if (matchedEvent) {
-        console.log(`Rolled ${roll} on event table. Event: "${matchedEvent.event}"`);
-        return matchedEvent;
+    if (matchedEntry) {
+        // Create a NEW object instance by spreading the matched entry
+        // This prevents mutating the original object in your gameData tables.
+        const eventResult = {
+            ...matchedEntry, // Copy all properties from the found entry
+            roll: roll,      // Add the specific roll result for this instance
+            id: Date.now() + Math.random(), // Simple unique ID
+            // or use uuid if you import it here
+        };
+        // Log the description property of the new object to see its content
+        console.log(`Rolled ${roll} on event table. Event: "${eventResult.description}"`); // Corrected log message
+        return eventResult; // Return the new, unique object
     } else {
         console.warn(`No event found for roll ${roll} in the provided table.`);
         return null;

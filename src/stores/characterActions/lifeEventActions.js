@@ -13,8 +13,13 @@ import {
     academicBackgroundEvents,
     soldierCareerEvents,
     medicCareerEvents,
-    scoutCareerEvents
+    scoutCareerEvents,
 } from '../../gameData/careers/careerEventTables'; // <-- Import individual tables
+
+import {
+  advantagesEvents,
+  disadvantagesEvents
+} from '../../gameData/lifeEvents/upbringingEvents'
 
 const lifeEventTables = {
     upbringing: upbringingEvents, // Keep your upbringing table if it's distinct
@@ -24,6 +29,8 @@ const lifeEventTables = {
     soldierCareerEvents: soldierCareerEvents, // <-- Add this
     medicCareerEvents: medicCareerEvents, // <-- Add this
     scoutCareerEvents: scoutCareerEvents, // <-- Add this
+    advantages: advantagesEvents,
+    disadvantages: disadvantagesEvents,
     // Add more tables here as you create them for other careers/stages
 };
 

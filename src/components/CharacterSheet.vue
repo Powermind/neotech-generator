@@ -62,6 +62,16 @@ const saveCurrent = () => {
 const handleRollChildhoodEvent = () => {
   characterStore.rollLifeEvent('upbringing');
 };
+const handleRollAdvantages = () => {
+  characterStore.rollLifeEvent('advantages');
+  characterStore.rollLifeEvent('advantages');
+  characterStore.current.hasRolledAdvantages = true;
+};
+const handleRollDisadvantages = () => {
+  characterStore.rollLifeEvent('disadvantages');
+  characterStore.rollLifeEvent('disadvantages');
+  characterStore.current.hasRolledDisadvantages = true;
+};
 
 const careerHistorySlots = computed(() => {
     const slots = [
@@ -107,10 +117,13 @@ const careerHistorySlots = computed(() => {
     <p>Startkapital: {{ characterStore.totalStartkapital }}</p>
 
 
-    <div class="life-event-roll-section">
-        <h3>Roll Life Events</h3>
+    <div class="life-event-roll-section" v-if="!characterStore.current.hasRolledAdvantages">
         <p>Roll events for different stages of your character's life.</p>
-        <button @click="handleRollChildhoodEvent" class="roll-button roll-life-event">Roll Upbringing Event</button>
+        <button @click="handleRollAdvantages" class="roll-button roll-life-event">Slå två fördelar</button>
+    </div>
+    <div class="life-event-roll-section" v-if="!characterStore.current.hasRolledDisadvantages">
+        <p>Roll events for different stages of your character's life.</p>
+        <button @click="handleRollDisadvantages" class="roll-button roll-life-event">Slå två nackdelar</button>
     </div>
     <LifeEventsGenerator />
 

@@ -6,7 +6,7 @@
 <template>
   <div id="app-container">
     <header>
-      <h1>My Vue Router App</h1>
+      <h1>Neogen v2</h1>
       <nav>
         <router-link to="/">Home</router-link>
         </nav>
@@ -25,7 +25,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 
 header {

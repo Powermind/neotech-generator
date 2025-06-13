@@ -42,6 +42,8 @@ const defaultCharacterState = () => ({
   money: 0, // <-- NEW: Character's money
   promotions: [], // <-- NEW: Store promotions earned
   startkapital: [],
+  hasRolledAdvantages: false,
+  hasRolledDisadvantages: false,
 
   // --- NEW CAREER TRACKING STATE ---
   currentCareerStage: 'background_selection', // <--- CHANGED HERE!

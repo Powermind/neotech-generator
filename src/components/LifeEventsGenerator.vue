@@ -21,18 +21,7 @@ const clearLifeEvents = () => {
 <template>
   <div class="life-events-generator">
     <h2>Life Events</h2>
-
-    <div class="controls">
-      <label for="event-table-select">Select Table:</label>
-      <select id="event-table-select" v-model="selectedTable">
-        <option value="childhood">Childhood Events</option>
-        <option value="adolescence">Adolescence Events</option>
-        </select>
-      <button @click="handleRollLifeEvent">Roll Event (1D100)</button>
-    </div>
-
     <div class="event-list">
-      <h3>Your Life Events:</h3>
       <p v-if="characterStore.current.lifeEvents.length === 0">No events rolled yet.</p>
       <ul>
         <li v-for="(event, index) in characterStore.current.lifeEvents" :key="index">
