@@ -44,7 +44,7 @@ const resetCurrentCharacter = () => {
 
 <style scoped>
 .home-view {
-  padding: 20px;
+  padding: 0;
   text-align: center;
 }
 </style>

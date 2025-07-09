@@ -9,8 +9,9 @@ import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if ne
 // NEW: Import all individual career event tables explicitly OR import the whole module
 import {
     hemlosBackgroundEvents,
-    ruralBackgroundEvents,
-    academicBackgroundEvents,
+    underklassenBackgroundEvents,
+    medelklassenBackgroundEvents,
+    overklassenBackgroundEvents,
     soldierCareerEvents,
     medicCareerEvents,
     scoutCareerEvents,
@@ -24,8 +25,9 @@ import {
 const lifeEventTables = {
     upbringing: upbringingEvents, // Keep your upbringing table if it's distinct
     hemlosBackgroundEvents: hemlosBackgroundEvents, // <-- Add this
-    ruralBackgroundEvents: ruralBackgroundEvents, // <-- Add this
-    academicBackgroundEvents: academicBackgroundEvents, // <-- Add this
+    underklassenBackgroundEvents: underklassenBackgroundEvents, // <-- Add this
+    medelklassenBackgroundEvents: medelklassenBackgroundEvents, // <-- Add this
+    overklassenBackgroundEvents: overklassenBackgroundEvents, // <-- Add this
     soldierCareerEvents: soldierCareerEvents, // <-- Add this
     medicCareerEvents: medicCareerEvents, // <-- Add this
     scoutCareerEvents: scoutCareerEvents, // <-- Add this

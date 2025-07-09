@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if ne
 import { rollDice, roll3D6, roll4D6DropLowest, rollDiceString } from '../utils/diceRolls';
 
 // Import the refactored action logic
-import { rollLifeEventLogic } from './characterActions/lifeEventActions'; // <--- NEW IMPORT
+import { rollLifeEventLogic } from './characterActions/lifeEventActions'; 
+import { rollUpbringing } from './characterActions/upbringingActions';
 
 // Import career data
 import backgroundCareers from '../gameData/careers/backgroundCareers';
@@ -13,8 +14,8 @@ import generalCareers from '../gameData/careers/generalCareers';
 
 import {
   selectCareerLogic,
-  applyCareerEffectsLogic, // <--- NEW IMPORT
-  completeCurrentCareerStageAndAdvanceLogic // <--- NEW IMPORT
+  applyCareerEffectsLogic,
+  completeCurrentCareerStageAndAdvanceLogic
 } from './characterActions/careerActions';
 
 import skillsData from '../gameData/skills'; // <-- NEW: Import your skills data
@@ -65,6 +66,10 @@ const defaultCharacterState = () => ({
   initialCareerPointsAwarded: 0,
   initialFreeSkillPointsAwarded: 0,
   initialStridsvanaSkillPointsAwarded: 0,
+
+  // --- Upbringing ---
+  upbringing: '',
+  socialClass: {}
 });
 
 export const useCharacterStore = defineStore('character', {
@@ -345,10 +350,8 @@ export const useCharacterStore = defineStore('character', {
 
     // Action: Determine background on the background table randomly
     rollBackground() {
-      const rollResult = rollDice(100);
-      if (rollResult <= 100) {
-          this.selectCareer('bg-homeless');
-      }
+      rollUpbringing(this);
+      this.selectCareer(this.current.socialClass.socialClass)
       this.current.hasRolledBackground = true;
     },
 

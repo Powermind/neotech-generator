@@ -92,17 +92,8 @@ const careerHistorySlots = computed(() => {
 
 <template>
   <div class="character-sheet">
-    <h2>Character Details</h2>
-
-    <div class="input-field">
-      <label for="char-name">Name:</label>
-      <input id="char-name" type="text" v-model="characterNameInput" />
-    </div>
-
-    <p>Current Name: <strong>{{ characterStore.current.name }}</strong></p>
-
-    <h3>Attributes</h3>
     <div class="attribute-wrapper">
+    <div class="primary-attribute-wrapper">
         <AttributeBox 
             v-for="(attribute, index) in characterStore.current.attributes"
             :key="attribute.name"
@@ -113,6 +104,7 @@ const careerHistorySlots = computed(() => {
     <div class="secondary-attributes-wrapper">
       <p>Turordning: {{ characterStore.turordning }}</p>
       <p>Cool: {{ characterStore.cool }}</p>
+    </div>
     </div>
     <div id="attribute-button">
         <button @click="rerollAttributes">Reroll Attributes</button>
@@ -125,7 +117,7 @@ const careerHistorySlots = computed(() => {
         <p>Roll events for different stages of your character's life.</p>
         <button @click="handleRollAdvantages" class="roll-button roll-life-event">Slå två fördelar</button>
     </div>
-    <div class="life-event-roll-section" v-if="!characterStore.current.hasRolledDisadvantages">
+    <div class="life-event-roll-section" v-if="characterStore.current.hasRolledAdvantages && !characterStore.current.hasRolledDisadvantages">
         <p>Roll events for different stages of your character's life.</p>
         <button @click="handleRollDisadvantages" class="roll-button roll-life-event">Slå två nackdelar</button>
     </div>
@@ -174,22 +166,41 @@ const careerHistorySlots = computed(() => {
 <style scoped>
 
 .attribute-wrapper {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+}
+
+.primary-attribute-wrapper {
     display:flex;
     flex-direction: row;
+    background-color: black;
+    color: white;
+    border-top: solid 1px white;
 }
+
+.secondary-attributes-wrapper {
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.secondary-attributes-wrapper p {
+  margin: 0;
+  padding: 0;
+}
+
 .character-sheet {
   background-color: #f0f8ff;
-  border: 1px solid #add8e6;
-  border-radius: 10px;
-  padding: 30px;
-  margin: 20px auto;
-  max-width: 600px;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
   color: #333;
 }
-
-
 
 .life-event-roll-section {
   background-color: #eaf7ff; /* Lighter blue for this section */
