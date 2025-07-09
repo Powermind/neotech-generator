@@ -39,7 +39,9 @@ const defaultCharacterState = () => ({
   secondary_attributes: [
     { name: 'Tur', value: 0, mods: [] },
     { name: 'Cool', value: 0, mods: [] },
-    { name: 'Turordning', value: 0, mods: [] }
+    { name: 'Turordning', value: 0, mods: [] },
+    { name: 'Mediastatus', value: 0, mods: [] },
+    { name: 'Förflyttning', value: 10, mods: [] }
   ],
   skills: JSON.parse(JSON.stringify(skillsData)), // Deep copy to prevent shared references
   notes: '',
@@ -105,15 +107,22 @@ export const useCharacterStore = defineStore('character', {
     },
     getAttributeValue: (state) => (key) => {
       const attr = state.current.attributes.find(
-        a => a.name === key || a.abbr === key
+          a => a.name === key || a.abbr === key
       );
       if (!attr) {
-        console.warn(`Attribute "${key}" not found.`);
-        return 0;
+          console.warn(`Attribute "${key}" not found.`);
+          return 0;
       }
 
-      const modsSum = attr.mods.reduce((sum, mod) => sum + (mod.value || 0), 0);
-      return attr.value + modsSum;
+      // Calculate the sum of modifiers. Ensure mod.value is treated as a number.
+      const modsSum = attr.mods.reduce((sum, mod) => sum + (parseInt(mod.value) || 0), 0);
+
+      // Convert attr.value to an integer before adding modsSum
+      // If attr.value could be something like "20+2" as a literal string that needs evaluation,
+      // a more complex parser would be needed. Assuming "20" is a string representing a number.
+      const baseValue = parseInt(attr.value) || 0; // Use 0 if parsing fails
+
+      return baseValue + modsSum;
     },
     cool: (state) => {
       const coolAttr = state.current.secondary_attributes.find(
@@ -124,6 +133,16 @@ export const useCharacterStore = defineStore('character', {
         0
       ) || 0;
       return coolAttr.value + modsum
+    },
+    tur: (state) => {
+      const turAttr = state.current.secondary_attributes.find(
+        attr => attr.name === 'Tur'
+      );
+      const modsum = turAttr?.mods?.reduce(
+        (sum, mod) => sum + (mod.value || 0),
+        0
+      ) || 0;
+      return turAttr.value + modsum
     },
     turordning: (state) => {
       const getAttr = state.getAttributeValue
@@ -144,6 +163,16 @@ export const useCharacterStore = defineStore('character', {
       const value = (rörlighet + syn) / 2 + cool + modsum;
 
       return Math.round(value);
+    },
+    mediastatus: (state) => {
+      const msAttr = state.current.secondary_attributes.find(
+        attr => attr.name === 'Mediastatus'
+      );
+      const modsum = msAttr?.mods?.reduce(
+        (sum, mod) => sum + (mod.value || 0),
+        0
+      ) || 0;
+      return msAttr.value + modsum
     },
     // --- NEW GETTERS for career data ---
     // Returns all background careers
@@ -351,7 +380,14 @@ export const useCharacterStore = defineStore('character', {
     // Action: Determine background on the background table randomly
     rollBackground() {
       rollUpbringing(this);
+      // Startkapital
       this.selectCareer(this.current.socialClass.socialClass)
+
+      const amountRoll = rollDiceString('Ob3T6')
+      console.log(amountRoll)
+      const amount = amountRoll * this.current.currentCareerDetails.startingCapital
+      this.current.startkapital.push({ amount , description: "Social status"});
+
       this.current.hasRolledBackground = true;
     },
 

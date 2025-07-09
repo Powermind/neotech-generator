@@ -1,6 +1,6 @@
 export const upbringing = [
     { min: 1, max: 10, description: 'Ödemarken', table: 'odemarken' },
-    { min: 11, max: 20, description: 'Landsbygden', table: 'landsbygen'},
+    { min: 11, max: 20, description: 'Landsbygden', table: 'landsbygden'},
     { min: 21, max: 50, description: 'Förorten', table: 'fororten'},
     { min: 51, max: 80, description: 'Storstadsslummen', table: 'storstadsslummen'},
     { min: 81, max: 98, description: 'Företagsdistriktet', table: 'foretagsdistriktet'},

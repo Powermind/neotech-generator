@@ -104,15 +104,14 @@ const careerHistorySlots = computed(() => {
     <div class="secondary-attributes-wrapper">
       <p>Turordning: {{ characterStore.turordning }}</p>
       <p>Cool: {{ characterStore.cool }}</p>
+      <p>Tur: {{ characterStore.tur }}</p>
+      <p>Startkapital: {{ characterStore.totalStartkapital }}</p>
+      <p>Mediastatus: {{ characterStore.mediastatus }}</p>
     </div>
     </div>
     <div id="attribute-button">
         <button @click="rerollAttributes">Reroll Attributes</button>
     </div>
-
-    <p>Startkapital: {{ characterStore.totalStartkapital }}</p>
-
-
     <div class="life-event-roll-section" v-if="!characterStore.current.hasRolledAdvantages">
         <p>Roll events for different stages of your character's life.</p>
         <button @click="handleRollAdvantages" class="roll-button roll-life-event">Slå två fördelar</button>

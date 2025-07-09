@@ -11,7 +11,7 @@ const backgroundCareers = [
     baseFreeSkillPoints: 0,    // Points for any skill
     baseStridsvanaPoints: 0,   // Points for Stridsvana
     promotion: 'Street-Smart', // Promotion title
-    startingCapital: 100,      // Starting money for this career
+    startingCapital: 10,      // Starting money for this career
     eventTable: 'hemlosBackgroundEvents', // Name of a career-specific event table
     associatedSkills: ['Fingerfärdighet', 'Genomsöka', 'Gömma', 'Klättra', 'Närstrid', 'Smyga', 'Supa', 'Undre världen', 'Värdering', 'Överlevnad', 'Övertalning'], // Skills to enable/buy
     restrictions: [], // No restrictions for background careers

@@ -106,11 +106,42 @@ export function rollLifeEventLogic(store, tableName) {
           const skill = modifier.skill
           store.setSkillEasy(skill)
         } else if (modifier.type === 'secondary_attribute') {
-          console.log('Logged secondary attribute')
-          const targetAttribute = modifier.name
-          const value = modifier.value
+          console.log('Logged secondary attribute');
+          const targetAttribute = modifier.name;
+          const value = modifier.value; // This is the original value from the modifier
+
+          let calculatedValue; // This variable will hold the final integer value
+
+          // Check if the value is a string (indicating a dice formula)
+          if (typeof value === 'string') {
+              // Call your rollDiceFormula function to get the integer result
+              // Make sure rollDiceFormula is defined in your scope
+              if (typeof rollDiceString === 'function') {
+                  calculatedValue = rollDiceString(value);
+                  console.log(`Rolled formula "${value}", result: ${calculatedValue}`);
+              } else {
+                  console.error("Error: rollDiceFormula function is not defined. Cannot parse string value.");
+                  calculatedValue = 0; // Default to 0 or handle error appropriately
+              }
+          } else if (typeof value === 'number') {
+              // If it's already an integer, use it as is
+              calculatedValue = value;
+              console.log(`Applying integer value: ${calculatedValue}`);
+          } else {
+              // Handle other unexpected types if necessary
+              console.warn(`Modifier value for "${targetAttribute}" has an unexpected type: ${typeof value}. Defaulting to 0.`);
+              calculatedValue = 0;
+          }
+
           const currentAttribute = store.current.secondary_attributes.find(attr => attr.name === targetAttribute);
-          currentAttribute.modifiers.push({description: eventResult.description, value })
+
+          if (currentAttribute) {
+              // Push the modifier with the calculated integer value
+              currentAttribute.mods.push({ description: eventResult.description, value: calculatedValue });
+              console.log(`Added modifier to ${targetAttribute}: ${eventResult.description}, value: ${calculatedValue}`);
+          } else {
+              console.error(`Secondary attribute "${targetAttribute}" not found in store.current.secondary_attributes.`);
+          }
         }
         // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
       });

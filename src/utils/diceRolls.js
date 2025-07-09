@@ -30,10 +30,11 @@ export function rollDiceString(diceString) {
     let results = [];
     for (let i = 0; i < n; i++) {
       const roll = rollDice(sides);
-      results.push(roll);
       if (roll === sides) {
         // Explode into 2 more dice
         results = results.concat(rollExplodingDice(2, sides));
+      } else {
+        results.push(roll);
       }
     }
     return results;
