@@ -1,6 +1,6 @@
 // src/stores/characterActions/careerActions.js
 
-import { rollDice } from '../../utils/diceRolls'; // For characteristic rolls
+import { rollDiceString } from '../../utils/diceRolls'; // For characteristic rolls
 import { resolveEvent } from '../../utils/eventResolver'; // For career events
 
 // Import all career event tables
@@ -16,10 +16,11 @@ function applyCharacteristicRolls(store, career) {
         return;
     }
     career.characteristicRolls.forEach(attrName => {
-        // Roll 1D100 for each characteristic (as per your game, adjust if 3D6/4D6)
-        const rollResult = rollDice(100);
+        // Roll Ob3D6 for each characteristic (as per your game, adjust if 3D6/4D6)
+        const rollResult = rollDiceString("Ob3T6");
+        
         // Assuming updateAttribute sets the value
-        store.updateAttribute(attrName, rollResult);
+        //store.updateAttribute(attrName, rollResult);
         console.log(`Rolled ${rollResult} for ${attrName}.`);
     });
 }
@@ -60,56 +61,83 @@ export function selectCareerLogic(store, careerId, allBackgroundCareers, allGene
 
 // --- NEW/REFACTORED Logic for Applying Career Effects (Called after selection, before skill spending) ---
 export function applyCareerEffectsLogic(store) {
+    const currentStage = store.current.currentCareerStage;
     const selectedCareer = store.current.currentCareerDetails;
 
     if (!selectedCareer) {
-        console.warn(`No career selected. Cannot apply effects.`);
+        console.warn(`No career selected for stage ${currentStage}. Cannot advance.`);
         return;
     }
 
-    console.log(`Applying effects for career: ${selectedCareer.name} for stage ${store.current.currentCareerStage}...`);
+    console.log(`Advancing through career: ${selectedCareer.name} for stage ${currentStage}...`);
 
-    // 2) Roll against 3 different characteristics
+    // 1) Roll against 3 different characteristics
     applyCharacteristicRolls(store, selectedCareer);
 
-    // 3) User gets some skill points to buy career skills
+    // 2) User gets some skill points to buy career skills
     store.current.careerPointsPool += selectedCareer.baseCareerSkillPoints;
-    // Mark associated skills as buyable
+    // --- NEW: Set initial award for career points ---
+    store.current.initialCareerPointsAwarded = selectedCareer.baseCareerSkillPoints;
     enableCareerSkills(store, selectedCareer);
 
-    // 4) User gets a number of free skill points
+    // 3) User gets a number of free skill points
     store.current.freeSkillPointsPool += selectedCareer.baseFreeSkillPoints;
+    // --- NEW: Set initial award for free points ---
+    store.current.initialFreeSkillPointsAwarded = selectedCareer.baseFreeSkillPoints;
 
-    // 5) User gets a number of skillpoints for "Stridsvana"
+    // 4) User gets a number of skillpoints for "Stridsvana"
     store.current.stridsvanaSkillPointsPool += selectedCareer.baseStridsvanaPoints;
+    // --- NEW: Set initial award for Stridsvana points ---
+    store.current.initialStridsvanaSkillPointsAwarded = selectedCareer.baseStridsvanaPoints;
 
-    // 6) Character age increases
+    // 5) Character age increases
     store.current.age += selectedCareer.yearsInCareer;
 
-    // 7) Character gets a promotion
-    // Ensure promotion is not null/undefined before pushing
-    if (selectedCareer.promotion) {
-      store.current.promotions.push(selectedCareer.promotion);
-    } else {
-      console.warn(`No promotion defined for career: ${selectedCareer.name} in current stage.`);
-    }
+    // 6) Character gets a promotion
+    store.current.promotions.push(selectedCareer.promotion);
 
-    // 8) Characters gets money for their starting capital
+    // 7) Characters gets money for their starting capital
     store.current.money += selectedCareer.startingCapital;
 
-    // 9) Character rolls two times on the career event table
+    // 8) Character rolls two times on the career event table
     if (selectedCareer.eventTable) {
         const eventTable = careerEventTables[selectedCareer.eventTable];
         if (eventTable) {
-            store.rollLifeEvent(selectedCareer.eventTable); // Roll 1
-            store.rollLifeEvent(selectedCareer.eventTable); // Roll 2
+            store.rollLifeEvent(selectedCareer.eventTable);
+            store.rollLifeEvent(selectedCareer.eventTable);
         } else {
             console.warn(`Career event table "${selectedCareer.eventTable}" not found.`);
         }
     }
-    // IMPORTANT: DO NOT reset selectedCareerId/Details or advance stage here.
-    // That happens AFTER skill spending.
-    console.log(`Applied effects for ${selectedCareer.name}. Ready for skill spending.`);
+
+    /*
+    // Store this completed career in history
+    store.current.careerHistory.push({
+        stage: currentStage,
+        careerId: selectedCareer.id,
+        name: selectedCareer.name,
+        promotion: selectedCareer.promotion,
+        years: selectedCareer.yearsInCareer,
+    });
+
+    // Reset current career details for the next stage's selection
+    store.current.selectedCareerId = null;
+    store.current.currentCareerDetails = null;
+    // Optionally disable previously enabled skills
+    // disableAllBuyableSkills(store); // Uncomment if you want to clear 'buyable' status after each stage completes
+
+    // Advance to the next career stage
+    if (currentStage === 'background') {
+        store.current.currentCareerStage = 'career1';
+    } else if (currentStage === 'career1') {
+        store.current.currentCareerStage = 'career2';
+    } else if (currentStage === 'career2') {
+        store.current.currentCareerStage = 'career3';
+    } else if (currentStage === 'career3') {
+        store.current.currentCareerStage = 'finished';
+    }
+    console.log(`Character advanced to new stage: ${store.current.currentCareerStage}`);
+    */
 }
 
 // --- NEW Logic for Completing Current Career Stage and Advancing ---

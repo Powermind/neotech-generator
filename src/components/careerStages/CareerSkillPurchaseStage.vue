@@ -11,6 +11,11 @@ const careerPoints = computed(() => characterStore.current.careerPointsPool);
 const freePoints = computed(() => characterStore.current.freeSkillPointsPool);
 const stridsvanaPoints = computed(() => characterStore.current.stridsvanaSkillPointsPool);
 
+// --- NEW: Computed properties for initial awarded amounts ---
+const initialCareerPoints = computed(() => characterStore.current.initialCareerPointsAwarded);
+const initialFreePoints = computed(() => characterStore.current.initialFreeSkillPointsAwarded);
+const initialStridsvanaPoints = computed(() => characterStore.current.initialStridsvanaSkillPointsAwarded);
+
 // Get a list of skills for display and spending
 const careerBuyableSkills = computed(() => characterStore.buyableSkills);
 const allSkillsSorted = computed(() => characterStore.sortedSkills); // For free points
@@ -118,11 +123,11 @@ const isReductionLevelDisabled = (skill, poolType) => {
         <h3>Career Skill Points: {{ careerPoints }}</h3>
         <p>Spend these points on skills associated with this career.</p>
       </div>
-      <div class="pool-item">
+      <div class="pool-item" v-if="initialFreePoints > 0">
         <h3>Free Skill Points: {{ freePoints }}</h3>
         <p>Spend these points on any skill.</p>
       </div>
-      <div class="pool-item">
+      <div class="pool-item" v-if="initialStridsvanaPoints > 0">
         <h3>Stridsvana Points: {{ stridsvanaPoints }}</h3>
         <p>Spend these points specifically on "Stridsvana".</p>
       </div>
@@ -149,7 +154,7 @@ const isReductionLevelDisabled = (skill, poolType) => {
         <p v-else>No career-specific skills to buy with career points.</p>
       </div>
 
-      <div class="skill-category">
+      <div class="skill-category" v-if="initialFreePoints > 0">
         <h4>Spend Free Skill Points ({{ freePoints }} remaining)</h4>
         <div class="skill-list">
           <div v-for="skill in allSkillsSorted" :key="skill.name" class="skill-item">
@@ -168,7 +173,7 @@ const isReductionLevelDisabled = (skill, poolType) => {
         </div>
       </div>
 
-      <div class="skill-category">
+      <div class="skill-category" v-if="initialFreePoints > 0">
         <h4>Spend Stridsvana Points ({{ stridsvanaPoints }} remaining)</h4>
         <div class="skill-list">
           <div class="skill-item">
@@ -188,7 +193,7 @@ const isReductionLevelDisabled = (skill, poolType) => {
       </div>
     </div>
 
-    <button @click="characterStore.completeCurrentCareerStageAndAdvance()" :disabled="!isContinueEnabled" class="continue-button">
+    <button @click="characterStore.completeCurrentCareerStageAndAdvance()" class="continue-button">
       Confirm Skills & Proceed
     </button>
   </div>

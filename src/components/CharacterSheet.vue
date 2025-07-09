@@ -45,7 +45,7 @@ watch(() => characterStore.current.name, (newNameInStore) => {
 
 // Functions to handle user interactions and call store actions
 const rerollAttributes= () => {
-    characterStore.rollAllAttributes4D6DropLowest()
+    characterStore.rerollAttributes()
 }
 
 const resetCurrent = () => {
@@ -110,6 +110,10 @@ const careerHistorySlots = computed(() => {
             :attribute-index="index"
         />
     </div>
+    <div class="secondary-attributes-wrapper">
+      <p>Turordning: {{ characterStore.turordning }}</p>
+      <p>Cool: {{ characterStore.cool }}</p>
+    </div>
     <div id="attribute-button">
         <button @click="rerollAttributes">Reroll Attributes</button>
     </div>
@@ -154,7 +158,6 @@ const careerHistorySlots = computed(() => {
 
     <CareerPathStepper />
 
-    <p>Total Attribute Points: {{ characterStore.totalAttributePoints }}</p>
     <div class="actions">
       <button @click="saveCurrent">Save Character</button>
       <button @click="resetCurrent">Reset Character</button>

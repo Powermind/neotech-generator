@@ -99,6 +99,16 @@ export function rollLifeEventLogic(store, tableName) {
           console.log('Logged startkapital')
           const amount = rollDiceString(modifier.diceFormula) * modifier.multiplier
           store.current.startkapital.push({ amount, description: modifier.title })
+        } else if (modifier.type === 'lattlard') {
+          console.log('Logged lättlärd')
+          const skill = modifier.skill
+          store.setSkillEasy(skill)
+        } else if (modifier.type === 'secondary_attribute') {
+          console.log('Logged secondary attribute')
+          const targetAttribute = modifier.name
+          const value = modifier.value
+          const currentAttribute = store.current.secondary_attributes.find(attr => attr.name === targetAttribute);
+          currentAttribute.modifiers.push({description: eventResult.description, value })
         }
         // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
       });

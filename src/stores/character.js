@@ -2,11 +2,10 @@ import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if needed)
 
 // Import your dice rolling helpers (if you moved them to utils/diceRolls.js)
-import { rollDice, roll3D6, roll4D6DropLowest } from '../utils/diceRolls';
+import { rollDice, roll3D6, roll4D6DropLowest, rollDiceString } from '../utils/diceRolls';
 
 // Import the refactored action logic
 import { rollLifeEventLogic } from './characterActions/lifeEventActions'; // <--- NEW IMPORT
-
 
 // Import career data
 import backgroundCareers from '../gameData/careers/backgroundCareers';
@@ -36,6 +35,11 @@ const defaultCharacterState = () => ({
     { name: 'Syn', abbr: 'SYN', value: 0, mods: []},
     { name: 'Hörsel', abbr: 'HÖR', value: 0, mods: []}, 
   ],
+  secondary_attributes: [
+    { name: 'Tur', value: 0, mods: [] },
+    { name: 'Cool', value: 0, mods: [] },
+    { name: 'Turordning', value: 0, mods: [] }
+  ],
   skills: JSON.parse(JSON.stringify(skillsData)), // Deep copy to prevent shared references
   notes: '',
   lifeEvents: [],
@@ -44,6 +48,7 @@ const defaultCharacterState = () => ({
   startkapital: [],
   hasRolledAdvantages: false,
   hasRolledDisadvantages: false,
+  hasRolledBackground: false,
 
   // --- NEW CAREER TRACKING STATE ---
   currentCareerStage: 'background_selection', // <--- CHANGED HERE!
@@ -55,6 +60,11 @@ const defaultCharacterState = () => ({
   currentCareerDetails: null, // Full details of the selected career for the current stage
   pendingSkillDistributions: [], // Events waiting for skill point distribution
   contacts: [],
+
+  // --- NEW: Track initial points awarded ---
+  initialCareerPointsAwarded: 0,
+  initialFreeSkillPointsAwarded: 0,
+  initialStridsvanaSkillPointsAwarded: 0,
 });
 
 export const useCharacterStore = defineStore('character', {
@@ -87,6 +97,48 @@ export const useCharacterStore = defineStore('character', {
     sortedSkills: (state) => {
         // Sort skills alphabetically by name for display
         return [...state.current.skills].sort((a, b) => a.name.localeCompare(b.name));
+    },
+    getAttributeValue: (state) => (key) => {
+      const attr = state.current.attributes.find(
+        a => a.name === key || a.abbr === key
+      );
+      if (!attr) {
+        console.warn(`Attribute "${key}" not found.`);
+        return 0;
+      }
+
+      const modsSum = attr.mods.reduce((sum, mod) => sum + (mod.value || 0), 0);
+      return attr.value + modsSum;
+    },
+    cool: (state) => {
+      const coolAttr = state.current.secondary_attributes.find(
+        attr => attr.name === 'Cool'
+      );
+      const modsum = coolAttr?.mods?.reduce(
+        (sum, mod) => sum + (mod.value || 0),
+        0
+      ) || 0;
+      return coolAttr.value + modsum
+    },
+    turordning: (state) => {
+      const getAttr = state.getAttributeValue
+
+      const turordningAttr = state.current.secondary_attributes.find(
+        attr => attr.name === 'Turordning'
+      );
+
+      const modsum = turordningAttr?.mods?.reduce(
+        (sum, mod) => sum + (mod.value || 0),
+        0
+      ) || 0;
+
+      const rörlighet = getAttr('Rörlighet');
+      const syn = getAttr('Syn');
+      const cool = state.cool;
+
+      const value = (rörlighet + syn) / 2 + cool + modsum;
+
+      return Math.round(value);
     },
     // --- NEW GETTERS for career data ---
     // Returns all background careers
@@ -165,6 +217,17 @@ export const useCharacterStore = defineStore('character', {
             console.warn(`Skill with name "${skillName}" not found.`);
         }
     },
+    setSkillEasy(skillName) {
+      const skillToToggle = this.current.skills.find(skill => skill.name === skillName);
+      if (skillToToggle) {
+            this.toggleSkillEasy(skillName)
+            if (skillToToggle.value < 10) {
+              skillToToggle.value = 10
+            }
+        } else {
+            console.warn(`Skill with name "${skillName}" not found.`);
+        }
+    },
     calculateSkillAdvancementCost(currentSkillValue, levelsToAdvance) {
         let cost = 0;
         if (currentSkillValue < 5) {
@@ -233,6 +296,21 @@ export const useCharacterStore = defineStore('character', {
       });
       console.log('All attributes (4D6 drop lowest) rolled!');
     },
+    rerollAttributes() {
+      // Roll primary attributes
+      this.rollAllAttributes4D6DropLowest()
+
+      // Roll secondary Attributes
+      const getAttr = this.getAttributeValue
+      const attr = this.current.secondary_attributes.find(a => a.name === 'Cool');
+      if (attr) {
+        const psy = getAttr('Psyke')
+        const vil = getAttr('Vilja')
+        const base = Math.round((psy + vil) / 5)
+        console.log('Generated cool, base was ', base)
+        attr.value = base + rollDiceString("2T6")
+      }
+    },
 
     // --- REFACTORED ACTION: rollLifeEvent ---
     rollLifeEvent(tableName) {
@@ -263,6 +341,15 @@ export const useCharacterStore = defineStore('character', {
           // Fallback if currentStage is not a '_selection' stage for some reason
           this.current.currentCareerStage = 'background_skill_purchase';
       }
+    },
+
+    // Action: Determine background on the background table randomly
+    rollBackground() {
+      const rollResult = rollDice(100);
+      if (rollResult <= 100) {
+          this.selectCareer('bg-homeless');
+      }
+      this.current.hasRolledBackground = true;
     },
 
     // NEW Action: Complete the current career stage (after skill spending) and advance to the next selection phase

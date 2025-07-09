@@ -2,7 +2,7 @@
 
 const backgroundCareers = [
   {
-    id: 'bg-urban',
+    id: 'bg-homeless',
     name: 'Hemlös',
     type: 'background',
     description: 'Rollpersonen har levt ett liv på gatan eller i ödemarken. Rollpersonen har inte gått i någon skola och det är tveksamt om rollpersonen kan läsa.',

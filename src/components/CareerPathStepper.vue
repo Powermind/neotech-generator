@@ -4,6 +4,8 @@ import { computed } from 'vue';
 
 // Import all stage components
 import CareerSelectionStage from './careerStages/CareerSelectionStage.vue';
+import BackgroundSelectionStage from './careerStages/BackgroundSelectionStage.vue';
+
 import CareerSkillPurchaseStage from './careerStages/CareerSkillPurchaseStage.vue'; // <--- NEW IMPORT
 
 const characterStore = useCharacterStore();
@@ -12,6 +14,7 @@ const currentStageComponent = computed(() => {
   switch (characterStore.current.currentCareerStage) {
     // Selection Stages
     case 'background_selection':
+      return BackgroundSelectionStage;
     case 'career1_selection':
     case 'career2_selection':
     case 'career3_selection':

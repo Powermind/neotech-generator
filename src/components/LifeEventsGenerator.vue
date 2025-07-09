@@ -28,7 +28,6 @@ const clearLifeEvents = () => {
           <strong>[Roll: {{ event.roll }}]</strong> {{ event.description }}
         </li>
       </ul>
-      <button v-if="characterStore.current.lifeEvents.length > 0" @click="clearLifeEvents" class="clear-button">Clear All Events</button>
     </div>
   </div>
 </template>
