@@ -4,7 +4,7 @@ import { rollDiceString } from '../../utils/diceRolls'; // For characteristic ro
 import { resolveEvent } from '../../utils/eventResolver'; // For career events
 
 // Import all career event tables
-import * as careerEventTables from '../../gameData/careers/careerEventTables';
+import * as careerEventTables from '../../gameData/careers/backgroundEventTables';
 
 // Helper function to apply characteristic rolls (Step 2 of career path)
 // IMPORTANT: Clarify if this should ADD or SET attribute values.

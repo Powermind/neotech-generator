@@ -109,8 +109,8 @@ const careerHistorySlots = computed(() => {
       <p>Mediastatus: {{ characterStore.mediastatus }}</p>
     </div>
     </div>
-    <div id="attribute-button">
-        <button @click="rerollAttributes">Reroll Attributes</button>
+    <div class="attribute-button-wrapper">
+        <button @click="rerollAttributes" class="attribute-button">Reroll Attributes</button>
     </div>
     <div class="life-event-roll-section" v-if="!characterStore.current.hasRolledAdvantages">
         <p>Roll events for different stages of your character's life.</p>
@@ -120,10 +120,17 @@ const careerHistorySlots = computed(() => {
         <p>Roll events for different stages of your character's life.</p>
         <button @click="handleRollDisadvantages" class="roll-button roll-life-event">Slå två nackdelar</button>
     </div>
+    
     <LifeEventsGenerator />
 
     <EventSkillDistribution />
 
+    <CareerPathStepper />
+
+    <div class="actions">
+      <button @click="saveCurrent">Save Character</button>
+      <button @click="resetCurrent">Reset Character</button>
+    </div>
 
     <div class="career-history-boxes">
         <h3>Career History</h3>
@@ -147,13 +154,6 @@ const careerHistorySlots = computed(() => {
         </div>
     </div>
 
-    <CareerPathStepper />
-
-    <div class="actions">
-      <button @click="saveCurrent">Save Character</button>
-      <button @click="resetCurrent">Reset Character</button>
-    </div>
-
     <SkillList />
 
     <h3>Validation</h3>
@@ -175,7 +175,7 @@ const careerHistorySlots = computed(() => {
     flex-direction: row;
     background-color: black;
     color: white;
-    border-top: solid 1px white;
+    border-top: solid 1px #007bff;
 }
 
 .secondary-attributes-wrapper {
@@ -188,7 +188,22 @@ const careerHistorySlots = computed(() => {
 
 .secondary-attributes-wrapper p {
   margin: 0;
-  padding: 0;
+  padding: 5px;
+}
+
+.attribute-button-wrapper {
+  width: 100%;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.attribute-button {
+  margin: 0px auto;
+  background: #007bff;
+}
+
+.attribute-button:hover {
+  background-color: #0056b3;
 }
 
 .character-sheet {

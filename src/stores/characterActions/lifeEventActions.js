@@ -12,17 +12,19 @@ import {
     medelklassenBackgroundEvents,
     overklassenBackgroundEvents,
     socialElitBackgroundEvents
-} from '../../gameData/careers/careerEventTables'; // <-- Import individual tables
+} from '../../gameData/careers/backgroundEventTables'; // <-- Import individual tables
 
 import {
   advantagesEvents,
   disadvantagesEvents
-} from '../../gameData/lifeEvents/upbringingEvents'
+} from '../../gameData/specialAbilities'
 
 import {
   genetics,
   sideeffects
 } from '../../gameData/lifeEvents/genetics'
+
+import generalEvents from '../../gameData/lifeEvents/generalEvents'
 
 const lifeEventTables = {
     hemlosBackgroundEvents: hemlosBackgroundEvents, // <-- Add this
@@ -33,7 +35,8 @@ const lifeEventTables = {
     advantages: advantagesEvents,
     disadvantages: disadvantagesEvents,
     genetics: genetics,
-    sideeffects: sideeffects
+    sideeffects: sideeffects,
+    generalEvents: generalEvents
     // Add more tables here as you create them for other careers/stages
 };
 
@@ -45,7 +48,7 @@ const lifeEventTables = {
  * @param {object} store The Pinia store instance (e.g., 'this' from the action)
  * @param {string} tableName The name of the table to roll on (e.g., 'childhood')
  */
-export function rollLifeEventLogic(store, tableName) {
+export function rollLifeEventLogic(store, tableName, redirect = false) {
   const table = lifeEventTables[tableName];
   if (!table) {
     console.error(`Life event table "${tableName}" not found.`);
@@ -55,9 +58,8 @@ export function rollLifeEventLogic(store, tableName) {
   const eventResult = resolveEvent(table); // Get the full event object, including modifiers
   console.log('Event result',eventResult)
   if (eventResult) {
-    store.current.lifeEvents.push(eventResult); // Store the event with its description and roll
-
     // Apply modifiers
+    let storeResult = true
     if (eventResult.modifiers && Array.isArray(eventResult.modifiers)) {
       console.log(`Applying modifiers for event: "${eventResult.description}"`);
       eventResult.modifiers.forEach(modifier => {
@@ -104,7 +106,9 @@ export function rollLifeEventLogic(store, tableName) {
           console.log(store.current.pendingSkillDistributions)
         } else if (modifier.type === 'redirect') {
           // Roll on new table
-          rollLifeEventLogic(store, modifier.table)
+          rollLifeEventLogic(store, modifier.table, true)
+          // Do not log result
+          storeResult = false
         } else if (modifier.type === 'kontakt') {
           // Roll the dice for points
           console.log('Logged kontakt')
@@ -114,6 +118,10 @@ export function rollLifeEventLogic(store, tableName) {
           console.log('Logged startkapital')
           const amount = rollDiceString(modifier.diceFormula) * modifier.multiplier
           store.current.startkapital.push({ amount, description: modifier.title })
+        } else if (modifier.type === 'reroll10') {
+          // Special genetic manipulation case
+          console.log('Logged genetic reroll all under 10')
+          store.rerollAttributesUnder10()
         } else if (modifier.type === 'lattlard') {
           console.log('Logged lättlärd')
           const skill = modifier.skill
@@ -158,6 +166,12 @@ export function rollLifeEventLogic(store, tableName) {
         }
         // Add other modifier types here later (e.g., 'skill', 'inventory', etc.)
       });
+    }
+    if (redirect) {
+      eventResult.description = "(Omdirigerad) " + eventResult.description
+    }
+    if (storeResult) {
+      store.current.lifeEvents.push(eventResult); // Store the event with its description and roll
     }
   }
 }

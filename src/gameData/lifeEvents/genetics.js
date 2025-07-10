@@ -10,7 +10,7 @@ export const genetics = [
 
 
 export const sideeffects = [
-  { min: 1, max: 80, description: "Inga bieffekt." },
+  { min: 1, max: 80, description: "Inga bieffekter från genmanipulation." },
   { min: 81, max: 82, description: "Bieffekt. Rollpersonen blev svag.", modifiers: [{type: 'attribute', amount: '-1T6', target: 'Styrka' }] },
   { min: 83, max: 84, description: "Bieffekt. Rollpersonen blev sjuklig.", modifiers: [{type: 'attribute', amount: '-1T6', target: 'Tålighet' }] },
   { min: 85, max: 86, description: "Bieffekt. Rollpersonen blev fumlig.", modifiers: [{type: 'attribute', amount: '-1T6', target: 'Rörlighet' }] },

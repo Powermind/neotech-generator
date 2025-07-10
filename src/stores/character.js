@@ -345,7 +345,16 @@ export const useCharacterStore = defineStore('character', {
         attr.value = base + rollDiceString("2T6")
       }
     },
-
+    rerollAttributesUnder10() {
+      // Special genetic manipulation case
+      this.current.attributes.forEach(attribute => {
+        if (attribute.value < 10) {
+          const rollResult = roll4D6DropLowest(); // Use the new helper function
+          attribute.value = rollResult;
+          console.log(`Rerolled ${attribute.name}: ${rollResult}`);
+        }
+      });
+    },
     // --- REFACTORED ACTION: rollLifeEvent ---
     rollLifeEvent(tableName) {
       // Call the external logic function, passing 'this' (the store instance) and tableName
@@ -415,8 +424,6 @@ export const useCharacterStore = defineStore('character', {
           rollLifeEventLogic(this, 'genetics');
           rollLifeEventLogic(this, 'sideeffects');
         }
-
-
       } else {
         console.warn(`Modifier target attribute "${targetAttributeName}" not found.`);
       }
