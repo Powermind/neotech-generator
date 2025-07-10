@@ -22,8 +22,8 @@ export const hemlosBackgroundEvents = [
   { min: 62, max: 64, description: "Upplopp: Rollpersonen har deltagit i ett upplopp som slogs ner brutalt av ordningsmakten.", modifiers: [{ type: 'attribute', target: 'TÅL', amount: -1, description: 'Misshandlad' }, { type: 'brottsregister', value: true }, { type: 'startkapital', description: 'Böter', diceFormula: 'Ob3T6', multiplier: -10 }] },
   { min: 65, max: 67, description: "Okänd välgörare: Rollpersonen har fått hjälp från en okänd person.", modifiers: [{ type: 'kontakt', title: 'Okänd välgörare', resources: '3T6' }, { type: 'startkapital', description: 'Okänd välgörare', diceFormula: 'Ob3T6', multiplier: 100 } ] },
   { min: 68, max: 70, description: "Övergiven: Föräldrarna har lämnat rollpersonen och rollpersonen vet inte var de finns." },
-  { min: 71, max: 80, description: "Slå på händelsetabellen för underklassen (N2.22)." },
-  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21)." },
+  { min: 71, max: 80, description: "Slå på händelsetabellen för underklassen (N2.22).", modifiers: [{type: 'redirect', table: 'underklassenBackgroundEvents' }]  },
+  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21).", modifiers: [{type: 'redirect', table: 'generalEvents' }] },
 ];
 
 export const underklassenBackgroundEvents = [
@@ -52,8 +52,8 @@ export const underklassenBackgroundEvents = [
   { min: 53, max: 54, description: "Torped. Rollpersonen har lärt känna en torped som sysslar med att inkassera förfallna skulder och att mörda folk som inte betalar (anteckna som kontakt med 2T6 resurser).", modifiers: [{ type: 'kontakt', title: 'Torped', resources: '2T6' }] },
   { min: 55, max: 57, description: "Vräkt. Rollpersonens familj betalade inte hyran och blev vräkt från sin bostad. Anteckna hyresvärden som fiende med 2T6+8 resurser.", modifiers: [{ type: 'fiende', title: 'Hyresvärd', resources: '2T6+8' }] },
   { min: 58, max: 60, description: "Övervakare. Rollpersonen har blivit villkorligt dömd för mindre brott.", modifiers: [{ type: 'kontakt', title: 'Övervakare', resources: '2T6' }] },
-  { min: 61, max: 70, description: "Slå på händelsetabellen för hemlösa (N2.17)." },
-  { min: 71, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21)." },
+  { min: 61, max: 70, description: "Slå på händelsetabellen för hemlösa (N2.17).", modifiers: [{type: 'redirect', table: 'hemlosBackgroundEvents' }]  },
+  { min: 71, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21).", modifiers: [{type: 'redirect', table: 'generalEvents' }] },
 ];
 
 export const medelklassenBackgroundEvents = [
@@ -79,9 +79,9 @@ export const medelklassenBackgroundEvents = [
   { min: 53, max: 55, description: "Tips. Rollpersonen har tipsat en journalist om en nyhet som blev ett scoop. Öka personens startkapital med Ob3T6 x 100 Euro (anteckna som kontakt med 2T6+3 resurser).", modifiers: [{ type: 'startkapital', description: 'Tips', diceFormula: 'Ob3T6', multiplier: 100 }, { type: 'kontakt', title: 'Journalist', resources: '2T6+3' }] },
   { min: 56, max: 58, description: "Troende. Rollpersonen har varit med i en mystisk sekt men är numera avprogrammerad (anteckna en sektledare som fiende med 3T6 resurser).", modifiers: [{ type: 'kontakt', title: 'Sektledaare', resources: '3T6' }] },
   { min: 59, max: 60, description: "Uppror. Rollpersonen har gjort uppror mot sina föräldrar. Även som vuxen finns det hatiska känslor (anteckna som fiender med 3T6 resurser).", modifiers: [{ type: 'fiende', title: 'Föräldrar', resources: '3T6' }] },
-  { min: 61, max: 70, description: "Slå på händelsetabellen för underklassen (N2.18)." },
-  { min: 71, max: 80, description: "Slå på händelsetabellen för överklassen (N2.20)." },
-  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21)." },
+  { min: 61, max: 70, description: "Slå på händelsetabellen för underklassen (N2.18).", modifiers: [{type: 'redirect', table: 'underklassenBackgroundEvents' }]  },
+  { min: 71, max: 80, description: "Slå på händelsetabellen för överklassen (N2.20).", modifiers: [{type: 'redirect', table: 'overklassenBackgroundEvents' }]  },
+  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21).", modifiers: [{type: 'redirect', table: 'generalEvents' }] },
 ];
 
 export const overklassenBackgroundEvents = [
@@ -105,49 +105,29 @@ export const overklassenBackgroundEvents = [
   { min: 52, max: 53, description: "Toppolitiker. Rollpersonen har arbetat ideellt i en valkampanj. Politikern lyckades bli vald och fungerar nu som mentor och en viktig röst (anteckna som kontakt med 1T6+12 resurser).", modifiers: [{ type: 'kontakt', title: 'Politiker', resources: '1T6+12' }] },
   { min: 54, max: 58, description: "Utanlandsutbildning. Rollpersonen har gått i en känd skola i väst, såsom Eton, Harrow eller annan utländsk vishetsskola. Familjen har en viktig diplomat anställd som vän (anteckna som kontakt med 1T6+12 resurser).", modifiers: [{ type: 'kontakt', title: 'Diplomat', resources: '1T6+12' }] },
   { min: 59, max: 60, description: "Vetenskapsman. Rollpersonen har fått en mentor som är en erkänd forskare inom ett vetenskapligt område (anteckna som kontakt med 1T6+12 resurser).", modifiers: [{ type: 'kontakt', title: 'Forskare', resources: '1T6+12' }] },
-  { min: 61, max: 70, description: "Slå på händelsetabellen för medelklassen (N2.19)." },
-  { min: 71, max: 80, description: "Slå på händelsetabellen för underklassen (N2.18)." },
-  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21)." },
+  { min: 61, max: 70, description: "Slå på händelsetabellen för medelklassen (N2.19).", modifiers: [{type: 'redirect', table: 'medelklassenBackgroundEvents' }]  },
+  { min: 71, max: 80, description: "Slå på händelsetabellen för social eliten (N2.18).", modifiers: [{type: 'redirect', table: 'socialElitBackgroundEvents' }]  },
+  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21).", modifiers: [{type: 'redirect', table: 'generalEvents' }] },
 ];
 
-
-
-
-export const ruralBackgroundEvents = [
-    { min: 1, max: 50, event: "Faced down a wild animal.", modifiers: [{ type: 'attribute', target: 'Jakt', amount: 1 }] },
-    { min: 51, max: 100, event: "Helped a struggling farm family.", modifiers: [{ type: 'attribute', target: 'Tålighet', amount: 1 }] },
+export const socialElitBackgroundEvents = [
+  { min: 1, max: 4, description: "Anonymt betalkort. Rollpersonen har lyckats få tag på ett anonymt betalkort på vilket det finns Ob3T6 × 1.000 euro. Kortet kan ej laddas upp med mer pengar. Alla transaktioner med kortet är så gott som omöjliga att spåra.", modifiers: [{ type: 'startkapital', description: 'Anonymt betalkort', diceFormula: 'Ob3T6', multiplier: 1000 }] },
+  { min: 5, max: 8, description: "Chef för ett megaföretag. Rollpersonens familj känner en chef för ett megaföretag (anteckna som kontakt med 1T6+18 resurser). Denna har hjälpt rollpersonen att göra flera lyckade investeringar. Öka rollpersonens startkapital med Ob3T6 × 10.000 euro.", modifiers: [{ type: 'kontakt', title: 'Chef för megaföretag', resources: '1T6+18' }, { type: 'startkapital', description: 'Lyckade investeringar', diceFormula: 'Ob3T6', multiplier: 10000 }] },
+  { min: 9, max: 13, description: "Drogmissbruk. Rollpersonen har börjat använda en beroendeframkallande drog. Rollpersonens beroendegrad är nu 2T6 för den aktuella drogen. Minska rollpersonens startkapital med Ob3T6 × 1.000 euro. Efter en överdos lades rollpersonen in på en privat sjukis (anteckna som kontakt med 1T6+16 resurser).", modifiers: [{ type: 'startkapital', description: 'Drogmissbruk', diceFormula: 'Ob3T6', multiplier: -1000 }, { type: 'kontakt', title: 'Privat läkare', resources: '1T6+16' }] },
+  { min: 14, max: 17, description: "Egen penthousevåning. Rollpersonens familj känner en rik investerare (anteckna som kontakt med 1T6+18 resurser). Som tack för en tjänst skänkte investeraren en penthousevåning till rollpersonens föräldrar. Denna lägenhet (med 1T6+3 rum) får rollpersonen disponera fritt.", modifiers: [{ type: 'kontakt', title: 'Investerare', resources: '1T6+18' }] },
+  { min: 18, max: 20, description: "Kidnappad arvtagare. Rollpersonen skall ärva en av världens rikaste personer. Rollpersonen kan räkna med ett arv på Ob3T6 × 10.000.000 euro då släktingen dör. Släktingen startade dock krav på att rollpersonen skall få visa krav i testamente och domstol (anteckna som fiende med Ob1T6+10 resurser). Det väntade arvet gjorde dock att rollpersonen blev kidnappad. Det hela tystades ner av släkten och polisen. Öka rollpersonens Mediastatus med 1T6.", modifiers: [{ type: 'fiende', title: 'Släkting', resources: 'Ob1T6+10' }, { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }] },
+  { min: 21, max: 26, description: "Klubbägare. Rollpersonen är vän med alla i en lyxklubb. Rollpersonen är med i en kärntrupp av medlemmar i en sluten klubb där kandidater måste väljas in med varandra (anteckna som kontakt med 1T6+18 resurser).", modifiers: [{ type: 'kontakt', title: 'Klubbägare', resources: '1T6+18' }] },
+  { min: 27, max: 29, description: "Nyhetsankare. Rollpersonens familj känner ett mycket känt nyhetsankare (anteckna som kontakt med 1T6+16 resurser); tack vare denna kontakt har rollpersonen fått ett fördelaktigt reklamkontrakt vilket ökar rollpersonens startkapital med Ob3T6 × 10.000 euro. Rollpersonens Mediastatus ökar med 1T6.", modifiers: [{ type: 'kontakt', title: 'Nyhetsankare', resources: '1T6+16' }, { type: 'startkapital', description: 'Reklamkontrakt', diceFormula: 'Ob3T6', multiplier: 10000 }, { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }] },
+  { min: 30, max: 34, description: "Offentlig kärleksaffär. Rollpersonen har haft en kortare romans med en mycket känd popstjärna (anteckna som fiende med 2T6+16 i resurser). Rykten om affären cirkulerade i skvallerpressen, öka mediastatus med 1T6.", modifiers: [{ type: 'fiende', title: 'Popstjärna', resources: '2T6+16' }, { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }] },
+  { min: 35, max: 37, description: "Personlig konkurs. Rollpersonen har startat ett företag tillsammans med en affärsman. Rollpersonen satsade företagets gemensamma pengar på optioner och förlorade allt och mer därtill. Minska startkapital med Ob3T6 × 1.000.000 euro. Om rollpersonen är skuldsatt måste han betala varenda officiellt inlagda euro till fordringsägare. Anteckna dessutom en affärsman som fiende med 1T6+18 resurser.", modifiers: [{ type: 'startkapital', description: 'Personlig konkurs', diceFormula: 'Ob3T6', multiplier: -1000000 }, { type: 'fiende', title: 'Affärsman', resources: '1T6+18' }] },
+  { min: 38, max: 43, description: "Psykoterapi. Rollpersonen har deltagit i en ungdomsdepression och har gått i terapi hos en känd psykolog (anteckna som kontakt med 1T6+14 resurser). Rollpersonen får 1T6 psykoskryss.", modifiers: [{ type: 'kontakt', title: 'Känd psykolog', resources: '1T6+14' }] },
+  { min: 44, max: 46, description: "Självbiografi. Rollpersonen har avslöjat familjens mörka hemligheter i en självbiografi. Faderna har därför gjort rollpersonen arvslös (anteckna som fiende med 1T6+16 resurser). Det extra tålde rollpersonen länna en känd filmregissör som ville göra en film om rollpersonens liv (anteckna som kontakt med 2T6+12 resurser).", modifiers: [{ type: 'fiende', title: 'Far', resources: '1T6+16' }, { type: 'kontakt', title: 'Filmregissör', resources: '2T6+12' }] },
+  { min: 47, max: 51, description: "Skönhetsoperation. Rollpersonen har genomfört ett antal skönhetsoperationer. Öka rollpersonens PER med två (+2). Minska rollpersonens startkapital med Ob2T6 × 1.000 euro. Rollpersonen har lärt känna en mycket känd skönhetskirurg (anteckna som kontakt med 1T6+16 resurser).", modifiers: [{ type: 'attribute', target: 'PER', amount: 2 }, { type: 'startkapital', description: 'Skönhetsoperationer', diceFormula: 'Ob2T6', multiplier: -1000 }, { type: 'kontakt', title: 'Skönhetskirurg', resources: '1T6+16' }] },
+  { min: 52, max: 54, description: "Stjärnreporter. Rollpersonen hamnar i rampljuset efter en uppseendeväckande händelse. Detta ökar rollpersonens Mediastatus med tre (+3). Den som förmedlade nyheten var en stjärnreporter (anteckna som kontakt med 1T6+14 resurser).", modifiers: [{ type: 'secondary_attribute', name: 'Mediastatus', amount: 3 }, { type: 'kontakt', title: 'Stjärnreporter', resources: '1T6+14' }] },
+  { min: 55, max: 57, description: "Supermodell. Rollpersonen arbetar som modell till och från. Har lärt känna en supermodell (anteckna som kontakt med 1T6+18 resurser). Rollpersonen får öka sitt startkapital med Ob3T6 × 50.000 euro på olika modelldbilder.", modifiers: [{ type: 'kontakt', title: 'Supermodell', resources: '1T6+18' }, { type: 'startkapital', description: 'Modellbilder', diceFormula: 'Ob3T6', multiplier: 50000 }] },
+  { min: 58, max: 62, description: "Utlandsutbildning. Rollpersonen har gått i en känd skola i västländer som är en av världens ledande utlandsskolor. Skolan är en utlandsbygd med internationella visioner. Den som hjälpte in rollpersonen i skolan var en person av kunglig börd (anteckna som kontakt med 1T6+14 resurser).", modifiers: [{ type: 'kontakt', title: 'Kungaättling', resources: '1T6+14' }] },
+  { min: 63, max: 65, description: "Utpressare. Rollpersonen har blivit utpressad för utpressningsmaterial kopplat till sitt liv. Minska startkapital med Ob2T6 × 1.000 euro. Det hela slutade dock lyckligt när rollpersonens familj kallade in rikspolischefen (anteckna som kontakt med 1T6+18 resurser).", modifiers: [{ type: 'startkapital', description: 'Utpressning', diceFormula: 'Ob2T6', multiplier: -1000 }, { type: 'kontakt', title: 'Rikspolischef', resources: '1T6+18' }] },
+  { min: 66, max: 80, description: "Slå på händelsetabellen för överklassen (N2.20).", modifiers: [{type: 'redirect', table: 'overklassenBackgroundEvents' }] },
+  { min: 81, max: 100, description: "Slå på den allmänna händelsetabellen (N2.21).", modifiers: [{type: 'redirect', table: 'generalEvents' }]  },
 ];
 
-export const academicBackgroundEvents = [
-    { min: 1, max: 50, event: "Discovered a forgotten text.", modifiers: [{ type: 'attribute', target: 'Bildning', amount: 1 }] },
-    { min: 51, max: 100, event: "Had a public debate with a rival scholar.", modifiers: [{ type: 'attribute', target: 'Filosofi', amount: 1 }] },
-];
-
-// Add specific event tables for Soldier, Medic, Scout, etc.
-export const soldierCareerEvents = [
-    { min: 1, max: 2, event: "Participated in a successful skirmish.", modifiers: [{ type: 'attribute', target: 'Stridsvana', amount: 1 }] },
-    { min: 3, max: 4, event: "Witnessed a strategic blunder.", modifiers: [{ type: 'attribute', target: 'Taktik', amount: 1 }] },
-    { 
-    min: 5, 
-    max: 100, 
-    event: "Military training experience", 
-    modifiers: [
-      { 
-        type: 'skill_distribution', 
-        diceFormula: '1d6+6',
-        allowedSkills: ['Pistol', 'Gevär', 'Smyga'],
-        description: 'Distribute points among combat skills'
-      }
-    ] 
-  },
-];
-
-export const medicCareerEvents = [
-    { min: 1, max: 50, event: "Successfully treated a rare disease.", modifiers: [{ type: 'attribute', target: 'Medicin', amount: 1 }] },
-    { min: 51, max: 100, event: "Failed to save a critical patient.", modifiers: [{ type: 'attribute', target: 'Psyke', amount: -1 }] },
-];
-
-export const scoutCareerEvents = [
-    { min: 1, max: 50, event: "Discovered a hidden route.", modifiers: [{ type: 'attribute', target: 'Spaning', amount: 1 }] },
-    { min: 51, max: 100, event: "Got lost in treacherous territory.", modifiers: [{ type: 'attribute', target: 'Överlevnad', amount: 1 }] },
-];

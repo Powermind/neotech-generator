@@ -37,7 +37,7 @@ const defaultCharacterState = () => ({
     { name: 'Hörsel', abbr: 'HÖR', value: 0, mods: []}, 
   ],
   secondary_attributes: [
-    { name: 'Tur', value: 0, mods: [] },
+    { name: 'Tur', value: 11, mods: [] },
     { name: 'Cool', value: 0, mods: [] },
     { name: 'Turordning', value: 0, mods: [] },
     { name: 'Mediastatus', value: 0, mods: [] },
@@ -380,13 +380,46 @@ export const useCharacterStore = defineStore('character', {
     // Action: Determine background on the background table randomly
     rollBackground() {
       rollUpbringing(this);
-      // Startkapital
+      
       this.selectCareer(this.current.socialClass.socialClass)
 
+      // Startkapital
       const amountRoll = rollDiceString('Ob3T6')
       console.log(amountRoll)
       const amount = amountRoll * this.current.currentCareerDetails.startingCapital
       this.current.startkapital.push({ amount , description: "Social status"});
+
+      // Apply bilmod
+      // Find the current value of the attribute from the store's state
+      const currentAttribute = this.current.attributes.find(attr => attr.name === 'Bildning');
+
+      if (currentAttribute) {
+        // Calculate the new value
+        let bilAmount = this.current.currentCareerDetails.bilMod
+        // If the amount is a string, roll the dice
+          if (typeof bilAmount === 'string') {
+            try {
+              bilAmount = rollDiceString(bilAmount);
+            } catch (error) {
+              console.error(`Error rolling dice string "${bilAmount}":`, error);
+              return;
+            }
+          }
+        const newValue = currentAttribute.value + bilAmount;
+        // Use the existing updateAttribute action from the store
+        this.updateAttribute('Bildning', newValue);
+        console.log(`  - Bildning changed by ${bilAmount} to ${newValue}`);
+
+        // Genetics
+        if (this.current.currentCareerDetails.genetics) {
+          rollLifeEventLogic(this, 'genetics');
+          rollLifeEventLogic(this, 'sideeffects');
+        }
+
+
+      } else {
+        console.warn(`Modifier target attribute "${targetAttributeName}" not found.`);
+      }
 
       this.current.hasRolledBackground = true;
     },

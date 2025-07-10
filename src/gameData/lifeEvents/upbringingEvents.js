@@ -71,7 +71,7 @@ export const advantagesEvents = [
   { min: 68, max: 68, description: "Rollpersonen besitter ett specialintresse. En valfri kunskapsfärdighet (ej Expertfärdigheter) är lättlärd." },
   { min: 69, max: 69, description: "Rollpersonen gillar helikoptrar. Färdigheten Pilot:helikopter är lättlärd.", modifiers: [{type: 'lattlard', skill: 'Pilot' }] },
   { min: 70, max: 70, description: "Rymdmänniska. Färdigheten Fritt fall är lättlärd. 1", modifiers: [{type: 'lattlard', skill: 'Fritt Fall' }]  },
-  { min: 71, max: 71, description: "Råstark. Rollpersonen vet hur man åsankrar skada på omgivningen. Öka rollpersonens skadevärden med +Ob1T6 när rollpersonen använder färdigheten Närstrid:slagmål." },
+  { min: 71, max: 71, description: "Råstark. Rollpersonen vet hur man åsamkar skada på omgivningen. Öka rollpersonens skadevärden med +Ob1T6 när rollpersonen använder färdigheten Närstrid:slagmål." },
   { min: 72, max: 72, description: "Seglivad. Rollpersonen får en nivå enklare (−Ob1T6) på alla Dödsslag." },
   { min: 73, max: 73, description: "Sinne för värdering. Färdigheten Värdering är lättlärd. 1", modifiers: [{type: 'lattlard', skill: 'Värdera' }] },
   { min: 74, max: 74, description: "Skadetålig. Rollpersonen får en extra kolumn på Trauma under Skadesektionen (dock inte fler än 10 kolumner)." },
@@ -86,7 +86,7 @@ export const advantagesEvents = [
   { min: 83, max: 83, description: "Sprängexpert. Rollpersonen är fascinerad av explosioner. Färdigheten Sprängteknik är lättlärd.", modifiers: [{type: 'lattlard', skill: 'Sprängteknik' }] },
   { min: 84, max: 84, description: "Stark överlevnadsinstinkt. Rollpersonen kan utföra responshandlingen Försvara sig en nivå enklare (-Ob1T6)." },
   { min: 85, max: 85, description: "Stark. Rollpersonen får höja sin STY med två (+2).", modifiers: [{type: 'attribute', amount: 2, target: 'Styrka' }] },
-  { min: 86, max: 86, description: "Stigfinnare. Färdigheten Spåra är lättlärd",  modifiers: [{type: 'lattlard', skill: 'Spåra' }]},
+  { min: 86, max: 86, description: "Stigfinnare. Färdigheten Spåra är lättlärd",  modifiers: [{type: 'lattlard', skill: 'Spåra' }] },
   { min: 87, max: 87, description: "Strålande Ögon. Alla slag mot färdigheten Övertala är en enivå enklare (-Ob1T6) under förutsättningar att Rollpersonen har ögonkontakt." },
   { min: 88, max: 88, description: "Stålnäve. Rollpersonen gör Ob2T6 extra i skada när hen angriper någon med enbart nävarna. Gäller alla närstridsfärdigheter så länge skadan kommer från händerna." },
   { min: 89, max: 89, description: "Synsk. Rollpersonen har förmågan att då och då få en 'minnesbild' av något som kommer att hända. Spelledaren bestämmer när och var detta händer." },
@@ -95,11 +95,11 @@ export const advantagesEvents = [
   { min: 92, max: 92, description: "Tursam. Öka rollpersonens Tur med +1T6.", modifiers: [{type: 'secondary_attribute', name: 'Tur', value: "1T6" }] },
   { min: 93, max: 93, description: "Tålig. Höj TÅL med två (+2).", modifiers: [{type: 'attribute', amount: 2, target: 'Tålighet' }] },
   { min: 94, max: 94, description: "Uppmärksam. Höj både SYN och HÖR med två (+2)", modifiers: [{type: 'attribute', amount: 2, target: 'Hörsel' }, {type: 'attribute', amount: '2', target: 'Syn' }] },
-  { min: 95, max: 95, description: "Vacker. Höj PER med två (+2).", modifiers: [{type: 'attribute', amount: 2, target: 'Personlighet' }]  },
-  { min: 96, max: 96, description: "Viljestark. Höj VIL med två (+2).", modifiers: [{type: 'attribute', amount: 2, target: 'Vilja' }]  },
+  { min: 95, max: 95, description: "Vacker. Höj PER med två (+2).", modifiers: [{type: 'attribute', amount: 2, target: 'Personlighet' }] },
+  { min: 96, max: 96, description: "Viljestark. Höj VIL med två (+2).", modifiers: [{type: 'attribute', amount: 2, target: 'Vilja' }] },
   { min: 97, max: 97, description: "Lättlärd. Valfri färdighet är lättlärd." },
-  { min: 98, max: 98, description: "Överlevnadskonstnär. Färdigheten Överlevnad är lättlärd.", modifiers: [{type: 'lattlard', skill: 'Överlevnad' }]  },
-  { min: 99, max: 100, description: "Slå två gånger på denna tabell och använd båda resultaten." },
+  { min: 98, max: 98, description: "Överlevnadskonstnär. Färdigheten Överlevnad är lättlärd.", modifiers: [{type: 'lattlard', skill: 'Överlevnad' }] },
+  { min: 99, max: 100, description: "Slå två gånger på denna tabell och använd båda resultaten.", modifiers: [{type: 'redirect', table: 'advantages' }, {type: 'redirect', table: 'advantages' }] },
 ]
 
 export const disadvantagesEvents = [
@@ -173,97 +173,6 @@ export const disadvantagesEvents = [
   { min: 96, max: 96, description: "Vanställt ansikte: Fram till att rollpersonen har övertygat dem att hen innerst inne är snäll får rollpersonen en nivå svårare på alla sociala färdigheter." },
   { min: 97, max: 97, description: "Viskande röst: Rollpersonen kan inte skrika på grund av sina stämband och hörs maximalt fem meter bort." },
   { min: 98, max: 98, description: "Ärrad och dålig hy: Rollpersonen har alltid en nivå svårare på Förföra." },
-  { min: 99, max: 100, description: "Slå två gånger på denna tabell och använd båda resultaten." },
+  { min: 99, max: 100, description: "Slå två gånger på denna tabell och använd båda resultaten.", modifiers: [{type: 'redirect', table: 'disadvantages' }, {type: 'redirect', table: 'disadvantages' }] },
 ]
 
-
-const upbringingEvents = [
- {
-    min: 1,
-    max: 5,
-    event: "Born into a noble family, comfortable upbringing.",
-    // No modifiers for this event
-  },
-  {
-    min: 6,
-    max: 15,
-    event: "Grew up in a bustling merchant town, learned about trade.",
-    // Example: This event increases Bildning (Education)
-    modifiers: [
-      { type: 'attribute', target: 'Bildning', amount: 1 },
-      // You could add other types of modifiers here too, e.g.,
-      // { type: 'skill', target: 'Trade', amount: 5 },
-      // { type: 'inventory', item: { name: 'Small Coin Pouch', quantity: 1 } }
-    ]
-  },
-  {
-    min: 16,
-    max: 25,
-    event: "Lived in a quiet farming village, close-knit community.",
-  },
-  {
-    min: 26,
-    max: 35,
-    event: "Orphaned early, learned to survive on the streets.",
-    modifiers: [
-      { type: 'attribute', target: 'Rörlighet', amount: 2 }, // Agility
-      { type: 'attribute', target: 'Tålighet', amount: 1 }, // Toughness
-    ]
-  },
-  {
-    min: 36,
-    max: 45,
-    event: "Raised by a reclusive sage, gained unusual knowledge.",
-    modifiers: [
-      { type: 'attribute', target: 'Psyke', amount: 2 }, // Psyche
-      { type: 'attribute', target: 'Vilja', amount: 1 }, // Willpower
-    ]
-  },
-  {
-    min: 46,
-    max: 55,
-    event: "Childhood spent in a military camp, disciplined and tough.",
-    modifiers: [
-      { type: 'attribute', target: 'Styrka', amount: 2 }, // Strength
-      { type: 'attribute', target: 'Tålighet', amount: 1 }, // Toughness
-    ]
-  },
-  {
-    min: 56,
-    max: 65,
-    event: "Survived a major natural disaster (flood, fire, earthquake).",
-    modifiers: [
-      { type: 'attribute', target: 'Tålighet', amount: 2 },
-      { type: 'attribute', target: 'Psyke', amount: -1 }, // Could also be negative!
-    ]
-  },
-  {
-    min: 66,
-    max: 75,
-    event: "Encountered a magical creature, leaving a lasting impression.",
-    modifiers: [
-      { type: 'attribute', target: 'Syn', amount: 1 }, // Sight
-    ]
-  },
-  {
-    min: 76,
-    max: 85,
-    event: "Witnessed a significant historical event (battle, royal wedding).",
-  },
-  {
-    min: 86,
-    max: 95,
-    event: "Had a loving and supportive family, generally happy."
-  },
-  {
-    min: 96,
-    max: 100,
-    event: "Experienced a profound personal loss, shaping your worldview.",
-    modifiers: [
-      { type: 'attribute', target: 'Vilja', amount: 2 },
-      { type: 'attribute', target: 'Personlighet', amount: -1 },
-    ]
-  },
-]
-
-export default upbringingEvents;

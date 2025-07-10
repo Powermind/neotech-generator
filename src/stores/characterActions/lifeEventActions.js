@@ -2,7 +2,6 @@
 
 // Re-import the necessary utilities and tables that this action needs
 import { resolveEvent } from '../../utils/eventResolver';
-import upbringingEvents from '../../gameData/lifeEvents/upbringingEvents';
 import { rollDiceString } from '../../utils/diceRolls';
 import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if needed)
 
@@ -12,9 +11,7 @@ import {
     underklassenBackgroundEvents,
     medelklassenBackgroundEvents,
     overklassenBackgroundEvents,
-    soldierCareerEvents,
-    medicCareerEvents,
-    scoutCareerEvents,
+    socialElitBackgroundEvents
 } from '../../gameData/careers/careerEventTables'; // <-- Import individual tables
 
 import {
@@ -22,17 +19,21 @@ import {
   disadvantagesEvents
 } from '../../gameData/lifeEvents/upbringingEvents'
 
+import {
+  genetics,
+  sideeffects
+} from '../../gameData/lifeEvents/genetics'
+
 const lifeEventTables = {
-    upbringing: upbringingEvents, // Keep your upbringing table if it's distinct
     hemlosBackgroundEvents: hemlosBackgroundEvents, // <-- Add this
     underklassenBackgroundEvents: underklassenBackgroundEvents, // <-- Add this
     medelklassenBackgroundEvents: medelklassenBackgroundEvents, // <-- Add this
     overklassenBackgroundEvents: overklassenBackgroundEvents, // <-- Add this
-    soldierCareerEvents: soldierCareerEvents, // <-- Add this
-    medicCareerEvents: medicCareerEvents, // <-- Add this
-    scoutCareerEvents: scoutCareerEvents, // <-- Add this
+    socialElitBackgroundEvents: socialElitBackgroundEvents, // <-- Add this
     advantages: advantagesEvents,
     disadvantages: disadvantagesEvents,
+    genetics: genetics,
+    sideeffects: sideeffects
     // Add more tables here as you create them for other careers/stages
 };
 
@@ -62,8 +63,17 @@ export function rollLifeEventLogic(store, tableName) {
       eventResult.modifiers.forEach(modifier => {
         if (modifier.type === 'attribute') {
           const targetAttributeName = modifier.target;
-          const amount = modifier.amount;
+          let amount = modifier.amount;
 
+          // If the amount is a string, roll the dice
+          if (typeof amount === 'string') {
+            try {
+              amount = rollDiceString(amount);
+            } catch (error) {
+              console.error(`Error rolling dice string "${modifier.amount}":`, error);
+              return;
+            }
+          }
           // Find the current value of the attribute from the store's state
           const currentAttribute = store.current.attributes.find(attr => attr.name === targetAttributeName);
 
@@ -92,6 +102,9 @@ export function rollLifeEventLogic(store, tableName) {
             completed: false
           });
           console.log(store.current.pendingSkillDistributions)
+        } else if (modifier.type === 'redirect') {
+          // Roll on new table
+          rollLifeEventLogic(store, modifier.table)
         } else if (modifier.type === 'kontakt') {
           // Roll the dice for points
           console.log('Logged kontakt')

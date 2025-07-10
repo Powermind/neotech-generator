@@ -6,16 +6,22 @@ export function rollDiceString(diceString) {
   // Normalize "T" to "D" for Swedish compatibility
   let normalized = diceString.replace(/T/gi, 'D');
 
+  // Track leading minus
+  const hasLeadingMinus = normalized.startsWith('-');
+  if (hasLeadingMinus) {
+    normalized = normalized.slice(1); // Remove the minus for parsing
+  }
+
   // Check for 'Ob' exploding dice
   const isExploding = normalized.startsWith('Ob');
   if (isExploding) {
-    normalized = normalized.slice(2); // remove 'Ob' prefix
+    normalized = normalized.slice(2); // Remove 'Ob' prefix
   }
 
   // Match the dice string
   const match = normalized.match(/^(\d+)D(\d+)([+-]\d+)?$/i);
   if (!match) {
-    console.error(`Invalid dice string format: "${diceString}". Expected format like "1D6+2" or "Ob3D6".`);
+    console.error(`Invalid dice string format: "${diceString}". Expected format like "1D6+2", "-2D8", or "-Ob2D6+1".`);
     return 0;
   }
 
@@ -50,8 +56,10 @@ export function rollDiceString(diceString) {
 
   const total = rolls.reduce((sum, val) => sum + val, 0);
   const modifier = modifierString ? parseInt(modifierString, 10) : 0;
+  const finalTotal = total + modifier;
 
-  return total + modifier;
+  // Apply leading minus if necessary
+  return hasLeadingMinus ? -finalTotal : finalTotal;
 }
 
 // Helper function to roll 3d6 (sum of three 6-sided dice)

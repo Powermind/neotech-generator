@@ -15,7 +15,9 @@ const backgroundCareers = [
     eventTable: 'hemlosBackgroundEvents', // Name of a career-specific event table
     associatedSkills: ['Fingerfärdighet', 'Genomsöka', 'Gömma', 'Klättra', 'Närstrid', 'Smyga', 'Supa', 'Undre världen', 'Värdering', 'Överlevnad', 'Övertalning'], // Skills to enable/buy
     restrictions: [], // No restrictions for background careers
-    yearsInCareer: 3, // Example: how many years this career path represents
+    yearsInCareer: 4, // Example: how many years this career path represents
+    bilMod: -3,
+    genetics: false
   },
   {
     id: 'bg-underklass',
@@ -31,7 +33,9 @@ const backgroundCareers = [
     eventTable: 'underklassenBackgroundEvents',
     associatedSkills: ['Förföra', 'Genomsöka', 'Hasardspel', 'Idrott', 'Musik', 'Närstrid', 'Supa', 'Undre världen', 'Värdering', 'Övertalning'],
     restrictions: [],
-    yearsInCareer: 7,
+    yearsInCareer: 4,
+    bilMod: -1,
+    genetics: false
   },
   {
     id: 'bg-medelklass',
@@ -47,7 +51,9 @@ const backgroundCareers = [
     eventTable: 'medelklassenBackgroundEvents',
     associatedSkills: ['Dans', 'Förföra', 'Idrott', 'Köra bil', 'Musik', 'Simma', 'Socialt uppträdande', 'Övertalning', 'Administration', 'Biologi', 'Datateknik', 'Ekonomi', 'Fysik', 'Historia', 'Kemi', 'Matematik', 'Media', 'Programmering', 'Psykologi', 'Skriva/Läsa'],
     restrictions: [],
-    yearsInCareer: 6,
+    yearsInCareer: 4,
+    bilMod: 0,
+    genetics: false
   },
   {
     id: 'bg-overklass',
@@ -63,7 +69,27 @@ const backgroundCareers = [
     eventTable: 'medelklassenBackgroundEvents',
     associatedSkills: ['Dans', 'Förföra', 'Geografi', 'Köra bil', 'Ledarskap', 'Politik', 'Simma', 'Socialt uppträdande', 'Stil & Smak', 'Övertalning', 'Administration', 'Biologi', 'Datateknik', 'Ekonomi', 'Fysik', 'Historia', 'Kemi', 'Matematik', 'Media', 'Programmering', 'Psykologi', 'Skriva/Läsa'],
     restrictions: [],
-    yearsInCareer: 6,
+    yearsInCareer: 4,
+    bilMod: '1T6-2',
+    genetics: true
+  },
+  {
+    id: 'bg-socialElit',
+    name: 'Social Elit',
+    type: 'background',
+    description: 'Rollpersonens uppväxt var ensam, föräldrarna var ständigt ute på jobb eller i media. Familjesn rykte och status betyder allt och rollpersonen har sedan barnsben varit omgiven av betjänter, privatlärare och livvakter. Detta har starkt präglat rollpersonens uppväxt och människosyn - alla människor är giriga och kan köpas för pengar.',
+    characteristicRolls: ['Bildning', 'Psyke', 'Vilja'],
+    baseCareerSkillPoints: 30,
+    baseFreeSkillPoints: 0,
+    baseStridsvanaPoints: 0,
+    promotion: 'Scholar',
+    startingCapital: 10000,
+    eventTable: 'medelklassenBackgroundEvents',
+    associatedSkills: ['Dans', 'Förföra', 'Geografi', 'Köra bil', 'Ledarskap', 'Simma', 'Socialt uppträdande', 'Stil & Smak', 'Övertalning', 'Administration', 'Biologi', 'Datateknik', 'Ekonomi', 'Fysik', 'Historia', 'Kemi', 'Matematik', 'Media', 'Programmering', 'Psykologi', 'Skriva/Läsa'],
+    restrictions: [],
+    yearsInCareer: 4,
+    bilMod: '1T6-3',
+    genetics: true
   },
   // Add more background careers as needed
 ];
