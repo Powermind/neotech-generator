@@ -1,4 +1,4 @@
-// src/gameData/careers/careerEventTables.js
+// src/gameData/careers/backgroundEventTables.js
 
 export const hemlosBackgroundEvents = [
   { min: 1, max: 3, description: "Adopterad: Rollpersonen blev adopterad av en tiggare som lär upp rollpersonen (anteckna som kontakt med T16 resurser).", modifiers: [{ type: 'kontakt', title: 'Tiggare', resources: '1T6' }]  },
@@ -10,7 +10,7 @@ export const hemlosBackgroundEvents = [
   { min: 24, max: 25, description: "Gängmedlem: Välj ett typ av gäng på sidan 43. Anteckna gängledare som kontakt.", modifiers: [{ type: 'kontakt', title: 'Gängledare', resources: '1T6' }]  },
   { min: 26, max: 28, description: "Härbärge: Rollpersonen har haft rätt att bo och äta på ett härbärge. Anteckna kontakt med Resurser T16+2.", modifiers: [{ type: 'kontakt', title: 'Socialarbetare', resources: '1T6+2' }]  },
   { min: 29, max: 31, description: "Härdad. Rollpersonen har varit med om mycket lidande och får därför 1T6 psykoskryss." },
-  { min: 32, max: 35, description: "Langat knart. Rollpersonen har langat knark och finns därför med i brottsregistret.", modifiers: [{ type: 'kontakt', title: 'Langare', resources: '1T6+2' }, { type: 'startkapital', description: 'Knarklangare', diceFormula: 'Ob3T6', multiplier: 100 }, { type: 'brottsregister', value: true }] },
+  { min: 32, max: 35, description: "Langat knark. Rollpersonen har langat knark och finns därför med i brottsregistret.", modifiers: [{ type: 'kontakt', title: 'Langare', resources: '1T6+2' }, { type: 'startkapital', description: 'Knarklangare', diceFormula: 'Ob3T6', multiplier: 100 }, { type: 'brottsregister', value: true }] },
   { min: 36, max: 38, description: "Misshandlad: Har blivit misshandlad av ett gäng överklassungdomar. PER minskar med två (–2). Plastikkirurgi kan förbättra.", modifiers: [{ type: 'attribute', target: 'PER', amount: -2 }] },
   { min: 39, max: 40, description: "Misshandlad av polisen: Fick permanenta men. Minska TÅL med ett (–1) och STY med ett (–1).",  modifiers: [{ type: 'attribute', target: 'TÅL', amount: -1, description: 'Misshandlad' }, { type: 'attribute', target: 'STY', amount: -1, description: 'Misshandlad' }] },
   { min: 41, max: 44, description: "Prostituerad: Rollpersonen har prostituerat sig för att överleva men tröttnade och flydde från sin hallick.", modifiers: [{ type: 'fiende', title: 'Hallick', resources: '2T6' }] },
@@ -58,7 +58,7 @@ export const underklassenBackgroundEvents = [
 
 export const medelklassenBackgroundEvents = [
   { min: 1, max: 2, description: "Adopterad. Rollperson blev bortadopterad som liten. Byrån som arrangerade adoptionen vägrar att avslöja vilka de biologiska föräldrarna är." },
-  { min: 3, max: 5, description: "Bil. Rollpersonen har en rejält begåvad bil. Rollpersonen är stamkund hos en bilmekaniker (anteckna som kontakt med 3T6 resurser).", modifiers: [{ type: 'kontakt', title: 'Bilmekaniker', resources: '3T6' }] },
+  { min: 3, max: 5, description: "Bil. Rollpersonen har en rejält begagnad bil. Rollpersonen är stamkund hos en bilmekaniker (anteckna som kontakt med 3T6 resurser).", modifiers: [{ type: 'kontakt', title: 'Bilmekaniker', resources: '3T6' }] },
   { min: 6, max: 8, description: "Drogmissbruk. Rollpersonen har börjat använda en beroendeframkallande drog. Se kapitlet om droger för att avgöra vilken. Rollpersonens beroendegrad är 2T6 för den aktuella drogen. Minska rollpersonens startkapital med Ob3T6 × 100 euro. Rollpersonen känner en langare (anteckna som kontakt med 3T6 resurser).", modifiers: [{ type: 'startkapital', description: 'Drogmissbruk', diceFormula: 'Ob3T6', multiplier: -100 }, { type: 'kontakt', title: 'Langare', resources: '3T6' }] },
   { min: 9, max: 11, description: "Engagerad släkting. Rollpersonen har en släkting som verkligen bryr sig om hur det går för rollpersonen. Slå 1T6: 1 Mormor, 2 Morfar, 3 Farmor, 4 Farfar, 5 Morbror, 6 Farbror (anteckna som kontakt med 3T6 resurser).", modifiers: [{ type: 'kontakt', title: 'Engagerad släkting', resources: '3T6' }] },
   { min: 12, max: 15, description: "Extraknäck. Rollpersonen har jobbat extra i en närbutik. För detta får rollpersonen Ob3T6 × 100 euro i extra startkapital. Anteckna en butiksinnehavare som kontakt med 3T6 resurser.", modifiers: [{ type: 'startkapital', description: 'Extraknäck', diceFormula: 'Ob3T6', multiplier: 100 }, { type: 'kontakt', title: 'Butiksinnehavare', resources: '3T6' }] },

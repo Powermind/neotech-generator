@@ -52,6 +52,7 @@ const defaultCharacterState = () => ({
   hasRolledAdvantages: false,
   hasRolledDisadvantages: false,
   hasRolledBackground: false,
+  hasDegree: false,
 
   // --- NEW CAREER TRACKING STATE ---
   currentCareerStage: 'background_selection', // <--- CHANGED HERE!
@@ -124,6 +125,14 @@ export const useCharacterStore = defineStore('character', {
 
       return baseValue + modsSum;
     },
+    getSkillValue: (state) => (skillName) => {
+      const skillToUpdate = state.current.skills.find(skill => skill.name === skillName);
+      if (skillToUpdate) {
+        return skillToUpdate.value;
+      } else {
+        console.warn(`Skill with name "${skillName}" not found.`);
+      }
+    },
     cool: (state) => {
       const coolAttr = state.current.secondary_attributes.find(
         attr => attr.name === 'Cool'
@@ -173,6 +182,9 @@ export const useCharacterStore = defineStore('character', {
         0
       ) || 0;
       return msAttr.value + modsum
+    },
+    hasDegree: (state) => {
+      return state.current.hasDegree
     },
     // --- NEW GETTERS for career data ---
     // Returns all background careers

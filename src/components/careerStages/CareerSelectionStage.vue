@@ -68,22 +68,21 @@ const stageDisplayName = computed(() => {
           :id="career.id"
           :value="career.id"
           v-model="selectedCareerId"
-          :disabled="props.careerType === 'general' && career.restrictions && career.restrictions.length > 0 && !characterStore.availableGeneralCareers.some(c => c.id === career.id)"
+          :disabled="props.careerType === 'general' && !characterStore.availableGeneralCareers.some(c => c.id === career.id)"
         />
         <label :for="career.id">
           <h3>{{ career.name }}</h3>
           <p>{{ career.description }}</p>
           <div class="career-info">
             <span v-if="career.associatedSkills && career.associatedSkills.length">Skills: {{ career.associatedSkills.join(', ') }}</span>
-            <span v-if="career.restrictions && career.restrictions.length" class="restrictions">
-              (Requires:
-              <span v-for="(restriction, rIndex) in career.restrictions" :key="rIndex">
-                <span v-if="restriction.type === 'min_attribute'">
-                  {{ restriction.attribute }} {{ restriction.value }}+
+            <span v-if="career.characteristicRolls && career.characteristicRolls.length" class="restrictions">
+              Framgångsslag:
+              <span v-for="(restriction, rIndex) in career.characteristicRolls" :key="rIndex">
+                <span>
+                  {{ restriction }}
                 </span>
-                <span v-if="rIndex < career.restrictions.length - 1">, </span>
+                <span v-if="rIndex < career.characteristicRolls.length - 1">, </span>
               </span>
-              )
             </span>
           </div>
         </label>

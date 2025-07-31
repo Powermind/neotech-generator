@@ -4,25 +4,62 @@ import { rollDiceString } from '../../utils/diceRolls'; // For characteristic ro
 import { resolveEvent } from '../../utils/eventResolver'; // For career events
 
 // Import all career event tables
-import * as careerEventTables from '../../gameData/careers/backgroundEventTables';
+import * as backgroundEventTables from '../../gameData/careers/backgroundEventTables';
+import * as careerEventTables from '../../gameData/careers/careerEventTables';
+
+// Helper function to see if the success roll is an attribute
+function isAttribute(name) {
+    return name === name.toUpperCase();
+}
 
 // Helper function to apply characteristic rolls (Step 2 of career path)
-// IMPORTANT: Clarify if this should ADD or SET attribute values.
-// For now, keeping it as setting, as per your original code.
-// We discussed this before, and it's a critical decision for your game's math.
+// Returns the number of succesful career rolls MINUS 1 to keep for array indexing
 function applyCharacteristicRolls(store, career) {
     if (!career.characteristicRolls || career.characteristicRolls.length === 0) {
         console.log(`No characteristic rolls defined for ${career.name}.`);
-        return;
+        // Assume career only has one choice
+        return 0;
     }
+    let successfulRolls = 0
     career.characteristicRolls.forEach(attrName => {
         // Roll Ob3D6 for each characteristic (as per your game, adjust if 3D6/4D6)
-        const rollResult = rollDiceString("Ob3T6");
-        
-        // Assuming updateAttribute sets the value
-        //store.updateAttribute(attrName, rollResult);
-        console.log(`Rolled ${rollResult} for ${attrName}.`);
+        if (attrName === 'Startkapital') {
+            if (store.totalStartkapital >= 10000) {
+                successfulRolls += 1;
+                console.log(`Automatic success for ${attrName}.`);
+            } else {
+                console.log(`Fail for ${attrName}.`, store.totalStartkapital);
+            }
+        } else if (attrName === 'Mediastatus') {
+            const targetValue = store.mediastatus
+            const rollResult = rollDiceString("Ob3T6");
+            if (rollResult <= targetValue) {
+                 successfulRolls += 1;
+            }
+            console.log(`Rolled ${rollResult} for ${attrName}.`);
+        } else if (attrName === 'Examen') {
+            const targetValue = store.hasDegree
+            if (targetValue) {
+                successfulRolls += 1;
+            }
+        } else {
+            let targetValue = 0
+            if (isAttribute(attrName)) {
+                targetValue = store.getAttributeValue(attrName);
+                console.log(`Target is ${targetValue} for ${attrName}.`);
+            } else {
+                targetValue = store.getSkillValue(attrName);
+                console.log(`Target is ${targetValue} for ${attrName}.`);
+            }
+            const rollResult = rollDiceString("Ob3T6");
+            if (rollResult <= targetValue) {
+                 successfulRolls += 1;
+            }
+            console.log(`Rolled ${rollResult} for ${attrName}.`);
+        }
     });
+    console.log(`Rolled ${successfulRolls} successes.`);
+    return Math.max(0, successfulRolls - 1)
 }
 
 // Helper function to enable career-specific skills for buying (Part of Step 3)
@@ -72,23 +109,25 @@ export function applyCareerEffectsLogic(store) {
     console.log(`Advancing through career: ${selectedCareer.name} for stage ${currentStage}...`);
 
     // 1) Roll against 3 different characteristics
-    applyCharacteristicRolls(store, selectedCareer);
-
+    let successRate = 0
+    if (currentStage !== 'background_selection') {
+        successRate = applyCharacteristicRolls(store, selectedCareer);
+    }
     // 2) User gets some skill points to buy career skills
-    store.current.careerPointsPool += selectedCareer.baseCareerSkillPoints;
+    store.current.careerPointsPool = selectedCareer.baseCareerSkillPoints[successRate];
     // --- NEW: Set initial award for career points ---
-    store.current.initialCareerPointsAwarded = selectedCareer.baseCareerSkillPoints;
+    store.current.initialCareerPointsAwarded = selectedCareer.baseCareerSkillPoints[successRate];
     enableCareerSkills(store, selectedCareer);
 
     // 3) User gets a number of free skill points
-    store.current.freeSkillPointsPool += selectedCareer.baseFreeSkillPoints;
+    store.current.freeSkillPointsPool += selectedCareer.baseFreeSkillPoints[successRate];
     // --- NEW: Set initial award for free points ---
-    store.current.initialFreeSkillPointsAwarded = selectedCareer.baseFreeSkillPoints;
+    store.current.initialFreeSkillPointsAwarded = selectedCareer.baseFreeSkillPoints[successRate];
 
     // 4) User gets a number of skillpoints for "Stridsvana"
-    store.current.stridsvanaSkillPointsPool += selectedCareer.baseStridsvanaPoints;
+    store.current.stridsvanaSkillPointsPool += selectedCareer.baseStridsvanaPoints[successRate];
     // --- NEW: Set initial award for Stridsvana points ---
-    store.current.initialStridsvanaSkillPointsAwarded = selectedCareer.baseStridsvanaPoints;
+    store.current.initialStridsvanaSkillPointsAwarded = selectedCareer.baseStridsvanaPoints[successRate];
 
     // 5) Character age increases
     store.current.age += selectedCareer.yearsInCareer;
@@ -97,7 +136,7 @@ export function applyCareerEffectsLogic(store) {
     store.current.promotions.push(selectedCareer.promotion);
 
     // 7) Characters gets money for their starting capital
-    store.current.money += selectedCareer.startingCapital;
+    store.current.money += selectedCareer.startingCapital[successRate];
 
     // 8) Character rolls two times on the career event table
     if (selectedCareer.eventTable) {
@@ -106,7 +145,14 @@ export function applyCareerEffectsLogic(store) {
             store.rollLifeEvent(selectedCareer.eventTable);
             store.rollLifeEvent(selectedCareer.eventTable);
         } else {
-            console.warn(`Career event table "${selectedCareer.eventTable}" not found.`);
+            // Check background table
+            const eventTable = backgroundEventTables[selectedCareer.eventTable]
+            if (eventTable) {
+                store.rollLifeEvent(selectedCareer.eventTable);
+                store.rollLifeEvent(selectedCareer.eventTable);
+            } else {
+                console.warn(`Career event table "${selectedCareer.eventTable}" not found.`);
+            }
         }
     }
 

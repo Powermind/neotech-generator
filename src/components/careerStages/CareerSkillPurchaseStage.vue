@@ -173,7 +173,7 @@ const isReductionLevelDisabled = (skill, poolType) => {
         </div>
       </div>
 
-      <div class="skill-category" v-if="initialFreePoints > 0">
+      <div class="skill-category" v-if="initialStridsvanaPoints > 0">
         <h4>Spend Stridsvana Points ({{ stridsvanaPoints }} remaining)</h4>
         <div class="skill-list">
           <div class="skill-item">

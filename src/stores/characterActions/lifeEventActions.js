@@ -12,7 +12,14 @@ import {
     medelklassenBackgroundEvents,
     overklassenBackgroundEvents,
     socialElitBackgroundEvents
-} from '../../gameData/careers/backgroundEventTables'; // <-- Import individual tables
+} from '../../gameData/careers/backgroundEventTables';
+
+import {
+  arbetareCareerEvents,
+  artistCareerEvents,
+  affarsmanCareerEvents,
+  foretagsmanCareerEvents
+} from '../../gameData/careers/careerEventTables';
 
 import {
   advantagesEvents,
@@ -27,16 +34,20 @@ import {
 import generalEvents from '../../gameData/lifeEvents/generalEvents'
 
 const lifeEventTables = {
-    hemlosBackgroundEvents: hemlosBackgroundEvents, // <-- Add this
-    underklassenBackgroundEvents: underklassenBackgroundEvents, // <-- Add this
-    medelklassenBackgroundEvents: medelklassenBackgroundEvents, // <-- Add this
-    overklassenBackgroundEvents: overklassenBackgroundEvents, // <-- Add this
-    socialElitBackgroundEvents: socialElitBackgroundEvents, // <-- Add this
+    hemlosBackgroundEvents: hemlosBackgroundEvents,
+    underklassenBackgroundEvents: underklassenBackgroundEvents,
+    medelklassenBackgroundEvents: medelklassenBackgroundEvents,
+    overklassenBackgroundEvents: overklassenBackgroundEvents,
+    socialElitBackgroundEvents: socialElitBackgroundEvents,
     advantages: advantagesEvents,
     disadvantages: disadvantagesEvents,
     genetics: genetics,
     sideeffects: sideeffects,
-    generalEvents: generalEvents
+    generalEvents: generalEvents,
+    arbetareCareerEvents: arbetareCareerEvents,
+    artistCareerEvents: artistCareerEvents,
+    affarsmanCareerEvents: affarsmanCareerEvents,
+    foretagsmanCareerEvents: foretagsmanCareerEvents
     // Add more tables here as you create them for other careers/stages
 };
 
