@@ -63,6 +63,7 @@ const skillsData = [
   { name: 'Köra/lastbil', value: 0, easy: false, buyable: false },
   { name: 'Köra/motorcykel', value: 0, easy: false, buyable: false },
   { name: 'Köra/svävare', value: 0, easy: false, buyable: false },
+  { name: 'Köra/truck', value: 0, easy: false, buyable: false },
   { name: 'Ledarskap', value: 0, easy: false, buyable: false },
   { name: 'Lingvistik', value: 0, easy: false, buyable: false },
   { name: 'Manövrera stridsrustning', value: 0, easy: false, buyable: false },

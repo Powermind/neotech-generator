@@ -14,7 +14,7 @@ function isAttribute(name) {
 
 // Helper function to apply characteristic rolls (Step 2 of career path)
 // Returns the number of succesful career rolls MINUS 1 to keep for array indexing
-function applyCharacteristicRolls(store, career) {
+function applyCharacteristicRolls(store, career, bribedAttribute = null) {
     if (!career.characteristicRolls || career.characteristicRolls.length === 0) {
         console.log(`No characteristic rolls defined for ${career.name}.`);
         // Assume career only has one choice
@@ -22,6 +22,14 @@ function applyCharacteristicRolls(store, career) {
     }
     let successfulRolls = 0
     career.characteristicRolls.forEach(attrName => {
+        // NEW: Check if this is the bribed attribute.
+        if (attrName === bribedAttribute) {
+            successfulRolls += 1;
+            console.log(`Bribe applied for ${attrName}. Automatic success!`);
+            store.current.startkapital.push({ amount: -10000, description: 'Mutat bort framgångsslag' })
+            return; // Skip the roll for this attribute
+        }
+        
         // Roll Ob3D6 for each characteristic (as per your game, adjust if 3D6/4D6)
         if (attrName === 'Startkapital') {
             if (store.totalStartkapital >= 10000) {
@@ -97,7 +105,7 @@ export function selectCareerLogic(store, careerId, allBackgroundCareers, allGene
 }
 
 // --- NEW/REFACTORED Logic for Applying Career Effects (Called after selection, before skill spending) ---
-export function applyCareerEffectsLogic(store) {
+export function applyCareerEffectsLogic(store, bribedAttribute) {
     const currentStage = store.current.currentCareerStage;
     const selectedCareer = store.current.currentCareerDetails;
 
@@ -111,7 +119,7 @@ export function applyCareerEffectsLogic(store) {
     // 1) Roll against 3 different characteristics
     let successRate = 0
     if (currentStage !== 'background_selection') {
-        successRate = applyCharacteristicRolls(store, selectedCareer);
+        successRate = applyCharacteristicRolls(store, selectedCareer, bribedAttribute);
     }
     // 2) User gets some skill points to buy career skills
     store.current.careerPointsPool = selectedCareer.baseCareerSkillPoints[successRate];

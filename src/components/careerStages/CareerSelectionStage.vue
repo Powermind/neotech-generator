@@ -24,12 +24,22 @@ const availableCareers = computed(() => {
 // Local ref to hold the currently selected career ID from the dropdown/radio buttons
 const selectedCareerId = ref(characterStore.current.selectedCareerId);
 
+// NEW: A local ref to store the attribute the user wants to bribe
+const selectedBribeAttribute = ref(null);
+
 // Watch for changes in the local selectedCareerId and update the store
 watch(selectedCareerId, (newId) => {
   if (newId !== null) {
     characterStore.selectCareer(newId);
   }
 });
+
+// A local computed property to check if a bribe can be afforded
+const canAffordBribe = computed(() => {
+    // For this example, we'll use a fixed cost of 10000.
+    return characterStore.totalStartkapital >= 10000;
+});
+
 
 // Watch for store changes to `selectedCareerId` (e.g., if a reset or advanceCareerStage clears it)
 watch(() => characterStore.current.selectedCareerId, (newIdInStore) => {
@@ -54,6 +64,15 @@ const stageDisplayName = computed(() => {
     if (characterStore.current.currentCareerStage === 'career3_selection') return 'Third Career';
     return 'Career Stage';
 });
+
+// NEW: Method to handle advancing the stage with the bribe info
+const handleAdvanceWithBribe = () => {
+    // Pass the selected bribe attribute to the store action
+    console.log(selectedBribeAttribute.value)
+    characterStore.applySelectedCareerEffects(selectedBribeAttribute.value);
+    // Reset the local bribe selection after advancing
+    selectedBribeAttribute.value = null;
+};
 </script>
 
 <template>
@@ -74,6 +93,23 @@ const stageDisplayName = computed(() => {
           <h3>{{ career.name }}</h3>
           <p>{{ career.description }}</p>
           <div class="career-info">
+            <div v-if="props.careerType !== 'background' && career.characteristicRolls && career.characteristicRolls.length">
+                <p>You can use a bribe to guarantee success on one roll. Select one below if you can afford it.</p>
+                <div class="bribe-options">
+                    <div v-for="roll in career.characteristicRolls" :key="roll" class="bribe-option">
+                        <input
+                            type="radio"
+                            :id="`bribe-${career.id}-${roll}`"
+                            :value="roll"
+                            v-model="selectedBribeAttribute"
+                            :name="`bribe-for-${career.id}`"
+                            :disabled="!canAffordBribe || selectedCareerId !== career.id"
+                        />
+                        <label :for="`bribe-${career.id}-${roll}`">{{ roll }}</label>
+                    </div>
+                </div>
+                <p v-if="!canAffordBribe" class="cannot-afford-message">You need at least 10000€ to bribe a roll.</p>
+            </div>
             <span v-if="career.associatedSkills && career.associatedSkills.length">Skills: {{ career.associatedSkills.join(', ') }}</span>
             <span v-if="career.characteristicRolls && career.characteristicRolls.length" class="restrictions">
               Framgångsslag:
@@ -102,7 +138,7 @@ const stageDisplayName = computed(() => {
       </ul>
     </div>
 
-    <button @click="characterStore.applySelectedCareerEffects()" :disabled="!isNextButtonEnabled" class="next-step-button">
+    <button @click="handleAdvanceWithBribe()" :disabled="!isNextButtonEnabled" class="next-step-button">
       Next Step: Apply Career Effects & Spend Skills
     </button>
   </div>
@@ -247,5 +283,22 @@ h2 {
 
 .next-step-button:hover:not(:disabled) {
   background-color: #483d8b; /* Darker Slate Blue */
+}
+
+/* Add these new styles */
+.bribe-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.bribe-option {
+    display: flex;
+    align-items: center;
+}
+
+.bribe-option input[type="radio"] {
+    margin-right: 5px;
 }
 </style>

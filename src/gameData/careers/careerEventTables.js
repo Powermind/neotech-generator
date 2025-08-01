@@ -343,3 +343,236 @@ export const gangmedlemCareerEvents = [
    }
 ]
 
+export const hackerCareerEvents = [
+  { min: 1, max: 5, description: "Asocial. Rollpersonen har blivit extremt beroende av nätet. Om rollpersonen inte får surfa varje dygn får rollpersonen ett extra psykoskryss." },
+  { min: 6, max: 15, description: "Avslöjande. Rollpersonen har brutit sig in i ett storföretags datorer och hittat bevis på företagets olagliga verksamhet. Slå 1T6 för att avgöra vad: 1 förbjudna varor, 2 skattebrott, 3 olaga hot, 4 miljöbrott, 5 illegal konkurrensbegränsning, 6 mutor. Informationen gav rollpersonen till en journalist (anteckna som kontakt med 2T6+6 resurser). Anteckna en säkerhetskonsult som fiende med 1T6+10. Höj startkapitalet med Ob3T6 × 1.000 euro och Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'kontakt', title: 'Journalist', resources: '2T6+6' },
+      { type: 'fiende', title: 'Säkerhetskonsult', resources: '1T6+10' },
+      { type: 'startkapital', description: 'Arvode', diceFormula: 'Ob3T6', multiplier: 1000 },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  { min: 16, max: 23, description: "Het info. Rollpersonen har av en händelse fått tag på information som han helst skulle vilja vara utan. En prisjägare försöker ta reda på vem som döljer sig bakom rollpersonens alias (anteckna som fiende med 2T6+6 resurser).",
+     modifiers: [
+      { type: 'fiende', title: 'Prisjägare', resources: '2T6+6' }
+     ]
+  },
+  { min: 24, max: 32, description: "Hotad. Rollpersonen har efter diverse oegentligheter blivit hotad av en torped från ett säkerhetsföretag (anteckna som fiende med 2T6+8 resurser). Rollpersonen bestämde sig för att lägga av med hacking (nästa sysselsättningsperiod måste man välja en annan sysselsättning).",
+      modifiers: [
+        { type: 'fiende', title: 'Torped', resources: '2T6+8' },
+        { type: 'fired', reason: 'Hotad av torped från säkerhetsföretag' }
+      ]
+  },
+  { min: 33, max: 40, description: "Illegal kopiering. Rollpersonen har åkt fast för olaglig piratkopiering av en värdefull algoritm. Upphovsmannen lyckades dock inte få någon ersättning (anteckna som fiende med 2T6+6 resurser). Rollpersonen måste tillbringa nästa sysselsättningsperiod i Fängelse, 1T6 år.",
+      modifiers: [
+        { type: 'fiende', title: 'Upphovsman till algoritm', resources: '2T6+6' },
+        { type: 'prison', reason: 'Piratkopiering' }
+      ]
+  },
+  { min: 41, max: 46, description: "Kontokortsbedrägeri. Rollpersonen har genomfört ett bedrägeri och fått ett bankkonto. Höj startkapitalet med Ob3T6 × 100.000 euro. Anteckna en banksäkerhetsman som fiende med 1T6+10 resurser (denna fiende aktiveras inte förrän rollpersonen börjar använda bankkontot).",
+      modifiers: [
+        { type: 'fiende', title: 'Säkerhetsman på bank', resources: '1T6+10' },
+        { type: 'startkapital', description: 'Kontokortsbedrägeri', diceFormula: 'Ob3T6', multiplier: 100000 }
+      ]
+  },
+  { min: 47, max: 55, description: "Kändis. Rollpersonen har brutit sig in i ett ytterst avancerat datasystem och lämnat sitt signum. Öka Mediastatus med fyra (+4), detta är dock under rollpersonens alias ('hackernamn').",
+     modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: 4 }
+    ]
+  },
+  { min: 56, max: 63, description: "Lamer. Rollpersonen har mot betalning lärt upp en nybörjare från överklassen. Anteckna en rik lamer som kontakt med 1T6+12 resurser. Höj startkapitalet med Ob3T6 × 1.000 euro.",
+    modifiers: [
+        { type: 'kontakt', title: 'Rik lamer', resources: '1T6+12' },
+        { type: 'startkapital', description: 'Upplärning av lamer', diceFormula: 'Ob3T6', multiplier: 1000 }
+      ]
+  },
+  { min: 64, max: 67, description: "Nattuggla. Rollpersonen är beroende av en stimulerande drog som gör att han orkar sitta uppe på nätterna. Beroendegraden för drogen är 2T6. Minska startkapitalet med Ob3T6 × 100 euro. Anteckna en knarklangare som kontakt med 3T6 resurser.",
+    modifiers: [
+        { type: 'kontakt', title: 'Knarklangare', resources: '3T6' },
+        { type: 'startkapital', description: 'Drogberoende', diceFormula: 'Ob3T6', multiplier: -100 }
+      ]
+  },
+  { min: 68, max: 76, description: "Wilson. Rollpersonen har försökt bryta sig in i ett datasystem, men klantade till det ordentligt. Rollpersonen blev arresterad och dömd för dataintrång. Rollpersonen måste tillbringa nästa sysselsättningsperiod i Fängelse, 1T6 år.",
+    modifiers: [
+        { type: 'prison', reason: 'Hacking' }
+      ]
+  },
+  { min: 77, max: 80, description: "Voodoo. Rollpersonen tror att det finns en AI som intresserar sig för vad rollpersonen gör på nätet (anteckna som kontakt med 1T6+12 resurser). Exakt vad AIn vill är ännu okänt.",
+    modifiers: [
+        { type: 'kontakt', title: 'AI', resources: '1T6+12' }
+      ]
+  },
+  { min: 81, max: 100, description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+export const kriminellCareerEvents = [
+  { min: 1, max: 7, description: "Avslöjad i media. En journalist har avslöjat rollpersonen som blev dömd till fängelse. Nästa sysselsättningsperiod måste spenderas i Fängelse, 1T6 år. Öka Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'prison', reason: 'Avslöjad' },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  { min: 8, max: 12, description: "Avslöjande bevis. Rollpersonen har kommit över bevis mot en korrupt politiker (anteckna som fiende med 1T6+12 resurser). Eftersom rollpersonen gömt bevismaterialet så vågar politikern inte göra något mot rollpersonen. Rollpersonen har lyckats pressa politikern på pengar. Öka därför startkapitalet med Ob3T6 × 10.000 euro.",
+    modifiers: [
+      { type: 'fiende', title: 'Korrupt politiker', resources: '1T6+12' },
+      { type: 'startkapital', description: 'Utpressning', diceFormula: 'Ob3T6', multiplier: 10000 }
+    ]
+  },
+  { min: 13, max: 19, description: "Beskyddad. Rollpersonen tvingas betala maffian för beskydd. Minska startkapitalet med Ob3T6 × 1.000 euro. Maffian anser dock att detta är för lite så rollpersonen har flera gånger besökts av en torped (anteckna som fiende med 1T6+10 resurser).",
+    modifiers: [
+      { type: 'fiende', title: 'Maffiatorped', resources: '1T6+10' },
+      { type: 'startkapital', description: 'Beskyddad', diceFormula: 'Ob3T6', multiplier: -1000 }
+    ]
+  },
+  { min: 20, max: 26, description: "Blåst. Rollpersonen blir blåst av en kumpan. Rollpersonens startkapital minskar med Ob3T6 × 10.000 euro. Som hämnd tjallade rollpersonen på kumpanen som åkte i fängelse (anteckna som fiende med 3T6 resurser).",
+    modifiers: [
+      { type: 'fiende', title: 'Kriminell', resources: '3T6' },
+      { type: 'startkapital', description: 'Blåst', diceFormula: 'Ob3T6', multiplier: -10000 }
+    ]
+  },
+  { min: 27, max: 33, description: "Callgirl. Rollpersonen samarbetar med en lyxprostituerad för att komma över information som kan användas för kriminell verksamhet (anteckna som kontakt med 2T6+6 resurser).",
+    modifiers: [
+      { type: 'kontakt', title: 'Lyxprostituerad', resources: '2T6+6' },
+    ]
+  },
+  { min: 34, max: 38, description: "Drogmissbruk. Rollpersonen har börjat ta droger. Beroendegraden för drogen är 2T6. Minska startkapitalet med Ob3T6 × 100 euro. Anteckna en knarklangare som kontakt med 2T6+6 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Knarklangare', resources: '2T6+6' },
+      { type: 'startkapital', description: 'Drogberoende', diceFormula: 'Ob3T6', multiplier: -100 }
+    ]
+  },
+  { min: 39, max: 45, description: "Eldstrid. Rollpersonen har blivit jagad av polisen vilket slutade i en eldstrid. En av poliserna blev invalidiserad (anteckna som fiende med 3T6 resurser). Nästa sysselsättningsperiod måste spenderas i Fängelse, 3T6 år.",
+    modifiers: [
+      { type: 'fiende', title: 'Polis', resources: '3T6' },
+      { type: 'prison', reason: 'Eldstrid med polis' }
+    ]
+  },
+  { min: 46, max: 52, description: "Falska ID-handlingar. Rollpersonen har fått en extra identitet av en skicklig förfalskare (anteckna som kontakt med 1T6+10 resurser). Spelaren måste hitta på ytterligare ett namn åt identiteten.",
+    modifiers: [
+      { type: 'kontakt', title: 'Förfalskare', resources: '1T6+10' }
+    ]
+  },
+  { min: 53, max: 59, description: "Korrupt polis. Rollpersonen har under lång tid mutat en kriminalpolis som ger rollpersonen viktig information (anteckna som kontakt med 2T6+6 resurser).",
+    modifiers: [
+      { type: 'kontakt', title: 'Korrupt polis', resources: '2T6+6' }
+    ]
+  },
+  { min: 60, max: 66, description: "Lyckad stöt. Rollpersonen har genomfört en lyckad kupp. Öka startkapitalet med Ob3T6 × 10.000 euro. Rollpersonen 'investerade' en stor del av pengarna på en innekrog och lärde känna en bartender (anteckna som kontakt med 2T6+6 resurser).",
+    modifiers: [
+      { type: 'kontakt', title: 'Bartender', resources: '2T6+6' },
+      { type: 'startkapital', description: 'Lyckad stöt', diceFormula: 'Ob3T6', multiplier: 10000 }
+    ]
+  },
+  { min: 67, max: 73, description: "Stöldgods. Efter en polisrazzia blev rollpersonen avslöjad med ett innehav av stulna varor. Slå 1T6 för att avgöra vilken typ: 1 vapen, 2 datorer, 3 elektronik, 4 bilar, 5 programvara, 6 juveler. Gravearande bevis hittades och rollpersonen blev dömd till fängelse. Nästa sysselsättningsperiod måste spenderas i Fängelse, 1T6 år.",
+    modifiers: [
+      { type: 'prison', reason: 'Ertappad med stöldgods' }
+    ]
+  },
+  { min: 74, max: 80, description: "Tagen på bar gärning. Rollpersonen blev tagen på bar gärning under ett rån eller en olaglig affär. Nästa sysselsättningsperiod måste därför spenderas i Fängelse, 1T6 år.",
+    modifiers: [
+      { type: 'prison', reason: 'Tagen på bar gärning under rån' }
+    ]
+  },
+  { min: 81, max: 100, description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+export const mediaarbetareCareerEvents = [
+  {
+    min: 1,
+    max: 11,
+    description: "Förtal. Rollpersonen har producerat snaskiga skandalreportage om en känd person. Slå 1T6 för att avgöra vem det var: 1 popstjärna, 2 politiker, 3 playboy, 4 företagschef, 5 maffiaboss, 6 polischef. Anteckna denne person som fiende med 1T6+10 resurser. Rollpersonen tjänade dock en rejäl hacka och blev dessutom känd (slå: öka startkapitalet med Ob3T6 × 2.000 euro och höj Mediastatus med 1T6+1). Rollpersonen blev dock stämd och blev tvungen att betala ett stort skadestånd (sänk startkapitalet med Ob3T6 × 5.000 euro).",
+    modifiers: [
+      { type: 'startkapital', description: 'Skandalreportage', diceFormula: 'Ob3T6', multiplier: 2000 },
+      { type: 'fiende', title: 'Kändis', resources: '1T6+10' },
+      { type: 'startkapital', description: 'Skadestånd', diceFormula: 'Ob3T6', multiplier: -5000 },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6+1' }
+    ]
+  },
+  {
+    min: 12,
+    max: 15,
+    description: "Grov ärekränkning. Förtal. Rollpersonen har producerat snaskiga skandalreportage om en känd person. Slå 1T6 för att avgöra vem det var: 1 popstjärna, 2 politiker, 3 playboy, 4 företagschef, 5 maffiaboss, 6 polischef. Dömd till fängelse istället för skadestånd (nästa sysselsättningsperiod måste rollpersonen tillbringa i Fängelse, 1T6 år).",
+    modifiers: [
+      { type: 'prison', reason: 'Grov ärekränkning' }
+    ]
+  },
+  {
+    min: 16,
+    max: 25,
+    description: "Hemlig källa. Rollpersonen har en hemlig källa som då och då läcker värdefull information. Slå 1T6 för att avgöra vem källan är: 1 politiker, 2 hög militär, 3 polischef, 4 hacker, 5 playboy, 6 maffiaboss. Anteckna som kontakt med 2T6+8 resurser.",
+    modifiers: [
+    { type: 'kontakt', title: 'Hemlig källa', resources: '2T6+8' }
+    ]
+  },
+  {
+    min: 26,
+    max: 35,
+    description: "Intermezoo. Rollpersonen har varit med om en uppslakande händelse. Slå 1T6 för att se vad som hände: 1 gisslandrama, 2 flygolycka, 3 naturkatastrof, 4 våldsamt upplopp, 5 lönnmord, 6 kidnappning. Rollpersonen får 1T6 psykosyrkss. Trots chocken så rapporterar rollpersonen om det inträffade. Höj Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 36,
+    max: 43,
+    description: "Krigsrapportör. Rollpersonen har rapporterat från en oroshärd. Använd 1T6+1 enheter för att öka färdigheten Strategi, Stridsvana eller Taktik.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Strategi', 'Stridsvana', 'Taktik'], description: 'Krigskorrespondent', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 44,
+    max: 53,
+    description: "Opinionsbildare. Rollpersonen har i grova ordalag kritiserat landets president eller premiärminister (anteckna som fiende med 2T6+16 resurser). Rollpersonens politiska åsikter är dock populära bland en viss grupp. Slå 1T6 för att avgöra vilken grupp: 1 sociaa eliten, 2 underklassen, 3 militären, 4 näringslivet, 5 arbetslösa, 6 medelklassen. Öka Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 54,
+    max: 61,
+    description: "Programledare. Rollpersonen har blivit en känd programledare för ett nyhetsprogram. Öka rollpersonens Mediastatus med 1T6. Anteckna en teveproducent som kontakt med 2T6+10 resurser. Öka rollpersonens startkapital med Ob3T6 × 10.000 euro.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'kontakt', title: 'TV-Producent', resources: '2T6+10' },
+      { type: 'startkapital', description: 'Skadestånd', diceFormula: 'Ob3T6', multiplier: 10000 }
+    ]
+  },
+  {
+    min: 62,
+    max: 71,
+    description: "Scoop. Rollpersonen har gjort ett stort scoop och blivit känd för sin journalistiska skicklighet. Höj rollpersonens Mediastatus med 1T6. Öka dessutom rollpersonens startkapital med Ob3T6 × 1.000 euro.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'startkapital', description: 'Skadestånd', diceFormula: 'Ob3T6', multiplier: 1000 }
+    ]
+  },
+  {
+    min: 72,
+    max: 77,
+    description: "Tystad. Rollpersonen kom en viktig historia på spåren men blev tystad av hotfulla män som tog upp saken med rollpersonens överordnade. Rollpersonen blev avskedad (nästa period måste man välja en annan sysselsättning).",
+    modifiers: [
+      { type: 'fired', reason: 'Mörkläggning' }
+    ]
+  },
+  {
+    min: 78,
+    max: 85,
+    description: "Utrikeskorrespondent. Rollpersonen har varit korrespondent i ett främmande land. Använd 1T6+2 enheter för att höja ett valfritt språk.",
+    modifiers: [ 
+      { type: 'skill_distribution', allowedSkills: ['Språk'], description: 'Utrikeskorrespondent', diceFormula: '1T6+2' }
+    ]
+  },
+  {
+    min: 86,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+

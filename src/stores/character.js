@@ -72,7 +72,12 @@ const defaultCharacterState = () => ({
 
   // --- Upbringing ---
   upbringing: '',
-  socialClass: {}
+  socialClass: {},
+
+  // --- Track Bribes ---
+  // --- NEW: Bribing State ---
+  pendingBribes: {}, // e.g., { 'STY': { type: 'kontakt', cost: 'Agent A' }, 'PER': { type: 'money', cost: 1000 } }
+  
 });
 
 export const useCharacterStore = defineStore('character', {
@@ -373,31 +378,50 @@ export const useCharacterStore = defineStore('character', {
       rollLifeEventLogic(this, tableName);
     },
 
-    // --- NEW CAREER ACTIONS ---
-
     // Action to set the selected career ID and details for the current stage
     selectCareer(careerId) {
       selectCareerLogic(this, careerId, backgroundCareers, generalCareers);
     },
 
-    // NEW Action: Apply effects of the selected career and move to skill purchase phase
-    // This replaces the first part of the old advanceCareerStage.
-    applySelectedCareerEffects() {
-      // This 'this' is the store instance
-      applyCareerEffectsLogic(this);
-      // After applying effects, move to the skill purchase phase for the current career.
-      // This assumes currentCareerStage is like 'background_selection' or 'career1_selection'
+    // NEW: Updated action to pass the bribe choice.
+    applySelectedCareerEffects(bribedAttribute = null) {
+      // Pass the bribed attribute to the core logic function.
+      applyCareerEffectsLogic(this, bribedAttribute);
       const currentStage = this.current.currentCareerStage;
       if (currentStage.includes('_selection')) {
           this.current.currentCareerStage = currentStage.replace('_selection', '_skill_purchase');
           console.log(`Moved to skill purchase stage: ${this.current.currentCareerStage}`);
       } else {
           console.error(`Unexpected stage for applying effects: ${currentStage}. Force advancing to background_skill_purchase.`);
-          // Fallback if currentStage is not a '_selection' stage for some reason
           this.current.currentCareerStage = 'background_skill_purchase';
       }
     },
 
+    // --- NEW ACTION: Bribe a Characteristic Roll ---
+    bribeCharacteristicRoll(attributeName, bribeType, cost) {
+      if (bribeType === 'money') {
+        const costAmount = parseInt(cost);
+        if (this.current.money >= costAmount) {
+          this.current.money -= costAmount;
+          this.current.pendingBribes[attributeName] = { type: 'money', cost: costAmount };
+          console.log(`Bribed ${attributeName} roll for ${costAmount} money.`);
+        } else {
+          console.warn('Not enough money to bribe this roll!');
+        }
+      } else if (bribeType === 'contact') {
+        const contactIndex = this.current.contacts.findIndex(c => c.title === cost);
+        if (contactIndex !== -1) {
+          const usedContact = this.current.contacts[contactIndex];
+          console.log(`Bribed ${attributeName} roll using contact: ${usedContact.title}`);
+        } else {
+          console.warn('Contact not found or already used for this roll.');
+        }
+      }
+    },
+    // Action to set the selected career ID and details for the current stage
+    selectCareer(careerId) {
+      selectCareerLogic(this, careerId, backgroundCareers, generalCareers);
+    },
     // Action: Determine background on the background table randomly
     rollBackground() {
       rollUpbringing(this);
