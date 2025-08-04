@@ -15,10 +15,18 @@ import {
 } from '../../gameData/careers/backgroundEventTables';
 
 import {
+  affarsmanCareerEvents,
   arbetareCareerEvents,
   artistCareerEvents,
-  affarsmanCareerEvents,
-  foretagsmanCareerEvents
+  foretagsmanCareerEvents,
+  gangmedlemCareerEvents,
+  gangsterCareerEvents,
+  hackerCareerEvents,
+  kriminellCareerEvents,
+  mediaarbetareCareerEvents,
+  officerCareerEvents,
+  playboyCareerEvents,
+  polisCareerEvents
 } from '../../gameData/careers/careerEventTables';
 
 import {
@@ -47,7 +55,15 @@ const lifeEventTables = {
     arbetareCareerEvents: arbetareCareerEvents,
     artistCareerEvents: artistCareerEvents,
     affarsmanCareerEvents: affarsmanCareerEvents,
-    foretagsmanCareerEvents: foretagsmanCareerEvents
+    foretagsmanCareerEvents: foretagsmanCareerEvents,
+    gangmedlemCareerEvents,
+    gangsterCareerEvents,
+    hackerCareerEvents,
+    kriminellCareerEvents,
+    mediaarbetareCareerEvents,
+    officerCareerEvents,
+    playboyCareerEvents,
+    polisCareerEvents
     // Add more tables here as you create them for other careers/stages
 };
 

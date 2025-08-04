@@ -95,6 +95,10 @@ export const useCharacterStore = defineStore('character', {
     totalStartkapital: (state) => {
       return state.current.startkapital.reduce((sum, event) => sum + event.amount, 0);
     },
+    socialClass: (state) => {
+      console.log(state.current.socialClass)
+      return state.current.socialClass.socialClass
+    },
     isCharacterValid: (state) => {
       // Example validation logic
       return state.current.name.length > 0 && state.current.level > 0;
@@ -249,6 +253,9 @@ export const useCharacterStore = defineStore('character', {
         } else {
             console.warn(`Skill with name "${skillName}" not found.`);
         }
+    },
+    setSocialClass(socialClassEntry) {
+      this.current.socialClass = socialClassEntry
     },
     // NEW ACTION: Update a skill's value
     updateSkill(skillName, newValue) {

@@ -38,6 +38,13 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
             } else {
                 console.log(`Fail for ${attrName}.`, store.totalStartkapital);
             }
+        } else if (attrName === 'Playboy') {
+            if (store.totalStartkapital >= 100000 || store.socialClass === 'bg-socialElit') {
+                successfulRolls += 1;
+                console.log(`Passed ${attrName} automatically.`);
+            } else {
+                console.log(`Failed ${attrName}, `, store.socialClass);
+            }
         } else if (attrName === 'Mediastatus') {
             const targetValue = store.mediastatus
             const rollResult = rollDiceString("Ob3T6");

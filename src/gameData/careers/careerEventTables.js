@@ -576,3 +576,286 @@ export const mediaarbetareCareerEvents = [
   }
 ]
 
+export const officerCareerEvents = [
+  {
+    min: 1,
+    max: 5,
+    description: "Atombombad. Rollpersonen får medalj efter att ha blivit drabbad av radioaktivitet i samband med en kärnvapenattack. Anteckna en strålskada på 1T6 Tgr."
+  },
+  {
+    min: 6,
+    max: 13,
+    description: "Hjältedåd. Rollpersonen har räddat en känd person. Slå 1T6 för att avgöra vem: 1 journalist, 2 politiker, 3 officer, 4 affärsman, 5 läkare, 6 tekniker. Anteckna denna person som kontakt med 2T6+6 resurser. Rollpersonen får en medalj och dessutom ökar Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'kontakt', title: 'Kändis', resources: '2T6+6' }
+    ]
+  },
+  {
+    min: 14,
+    max: 21,
+    description: "Hårda strider. Rollpersonen har varit med i en krigszon med mycket hårda strider. Rollpersonen får en medalj och blir dessutom befordrad en grad (+1). Rollpersonen får 1T6 Psykoskryss och dessutom 1T6+1 enheter för att höja Stridsvana.",
+    modifiers: [
+        { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'Krigskorrespondent', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 22,
+    max: 29,
+    description: "Krigsrätt. Rollpersonen har ställts inför krigsrätt. Slå 1T6 för att avgöra varför: 1 ordervägran, 2 desertering, 3 krigsförbrytelser, 4 misshandel under permiess, 5 spionmisstänkt, 6 vållande till dödsolycka. Rollpersonen ställdes inför krigsrätt men friades (trots detta måste rollpersonen byta sysselsättning nästa period).",
+    modifiers: [
+      { type: 'fired', reason: 'Krigsrätt'}
+    ]
+  },
+  {
+    min: 30,
+    max: 35,
+    description: "Krigsrätt. Som ovan, fast rollpersonen blev fälld i krigsrätten. Nästa sysselsättningsperiod måste spenderas i Fängelse, 2T6 år. Rollpersonen mister dessutom sin militära grad.",
+    modifiers: [
+      { type: 'prison', reason: 'Krigsrätt'}
+    ]
+  },
+  {
+    min: 36,
+    max: 43,
+    description: "Misslyckad operation. Rollpersonen har misslyckats katastrofalt under en viktig operation. Rollpersonen blir degraderad.",
+    modifiers: [
+      { type: 'demoted', reason: 'Misslyckad militär operation'}
+    ]
+  },
+  {
+    min: 44,
+    max: 50,
+    description: "Omkommen vän. En officerskollega och nära vän dog under en strid i ett främmande land. Detta har påverkat rollpersonen starkt som får 1T6 psykoskryss. Rollpersonen hjälpte vänens änka (anteckna som kontakt med 3T6 resurser).",
+    modifiers: [
+      { type: 'kontakt', title: 'Änka', resources: '3T6'}
+    ]
+  },
+  {
+    min: 51,
+    max: 58,
+    description: "Skandal. Rollpersonen har tipsat media om oegentligheter inom militären. Slå 1T6 för att avgöra vad: 1 förskingring, 2 mutor, 3 samröre med olaglig organisation, 4 lönnmord, 5 olaglig operation, 6 olagliga vapenystem. Anteckna överordnad officer som fiende med 2T6+10 resurser. Anteckna en journalist som kontakt med 2T6+6 resurser. Höj Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'kontakt', title: 'Journalist', resources: '2T6+6'},
+      { type: 'fiende', title: 'Hög officer', resources: '2T6+10'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 59,
+    max: 65,
+    description: "Specialförband. Rollpersonen är medlem i ett specialförband. Använd 2T6+6 enheter för att höja Dykning, Fritt fall, Rymddräkt, Förhörsteknik, Spåra och Överlevnad. Använd dessutom 1T6+1 enheter för att höja Stridsvana.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'Specialförband', diceFormula: '1T6+1' },
+      { type: 'skill_distribution', allowedSkills: ['Dykning', 'Fritt fall', 'Rymddräkt', 'Förhörsteknik', 'Spåra', 'Överlevnad'], description: 'Krigskorrespondent', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 66,
+    max: 73,
+    description: "Specialist. Rollpersonen har blivit specialutbildad på ett speciellt vapensystem. Slå 1T6 för att avgöra vilken: 1 stridsvagnskanon, 2 sentry-gun, 3 laserkanon, 4 robot, 5 artilleri, 6 raketartilleri. Rollpersonen får 2T6+2 enheter för höja motsvarande Vapensystem-färdighet.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Vapensystem'], description: 'Specialutbildad', diceFormula: '2T6+2' }
+    ]
+  },
+  {
+    min: 74,
+    max: 80,
+    description: "Tjänstgjort utomlands. Rollpersonen har tjänstgjort utomlands, som militär rådgivare eller i en fredsbevarande operation. Använd 2T6 enheter för att höja färdigheten Diplomati och ett valfritt språkfärdighet. Under utlandsvistelsen lär rollpersonen känna en utländsk officer med samma grad (anteckna som kontakt med 2T6+6 resurser).",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Språk', 'Diplomati'], description: 'Tjänstgjort utomlands', diceFormula: '2T6' },
+      { type: 'kontakt', title: 'Utländsk officer', resources: '2T6+6'}
+    ]
+  },
+  {
+    min: 86,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+
+export const playboyCareerEvents = [
+  {
+    min: 1,
+    max: 8,
+    description: "Adelstitel. Rollpersonen har i en uppmärksammad process förvärvat en adlig titel från någon riddarorden. Slå 1T6 för att avgöra vilken titel: 1 knight, 2 baron, 3 vicomte, 4 marquis, 5 earl, 6 graf. Höj rollpersonens Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 9,
+    max: 17,
+    description: "Delägare. Rollpersonen är delaktig i en känd verksamhet som bär rollpersonens namn. Slå 1T6 för att avgöra vilken: 1 designhus, 2 golfklubb, 3 inredkub, 4 lyxrestaurang, 5 konstgalleri, 6 bilugnslåda. Öka Mediastatus med 1T6. Verksamheten sköts av en skicklig affärsman (anteckna som kontakt med 1T6+12 resurser).",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'kontakt', title: 'Affärsman', resources: '1T6+12'}
+    ]
+  },
+  {
+    min: 18,
+    max: 24,
+    description: "Drogberoende. Rollpersonen är beroende av en lyxdrog. Beroendegraden för drogen är 2T6. Rollpersonen tillbringade en längre tid i behandling på ett lyxhotell. Minska startkapitalet med Ob3T6 x 5.000 euro. Anteckna en hotellchef som kontakt med 2T6+12 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Hotellchef', resources: '2T6+12'},
+      { type: 'startkapital', description: 'Skadestånd', diceFormula: 'Ob3T6', multiplier: -1000 }
+    ]
+  },
+  {
+    min: 25,
+    max: 33,
+    description: "Kidnappad. Rollpersonen har blivit kidnappad. Efter ett misslyckat försök att betala kidnapparna (sänk startkapitalet med Ob3T6 x 10.000 euro) lyckades polisen rädda rollpersonen med en väpnad insats. En av terroristerna kom undan i förvirringen (anteckna som fiende med 2T6+8 resurser). Hela händelsen chockade rollpersonen ordentligt och rollpersonen får därför 1T6 psykoskryss.",
+    modifiers: [
+      { type: 'fiende', title: 'Terrorist', resources: '2T6+8'},
+      { type: 'startkapital', description: 'Lösensumma', diceFormula: 'Ob3T6', multiplier: -10000 }
+    ]
+  },
+  {
+    min: 34,
+    max: 42,
+    description: "Lurad. Rollpersonen blev kär och gifte sig. Efter några veckor försvann motparten med många dyrbarheter och mycket pengar. Rollpersonen minskar startkapitalet med Ob3T6 x 10.000 euro.",
+    modifiers: [
+      { type: 'startkapital', description: 'Lurad', diceFormula: 'Ob3T6', multiplier: -10000 }
+    ]
+  },
+  {
+    min: 46,
+    max: 53,
+    description: "Paparazzi. Rollpersonen har blivit avslöjad i en pinsam situation. Öka Mediastatus med två (+2). Rollpersonen anlitade en advokat (anteckna som kontakt med 1T6+12 resurser) och lyckades stämma journalisten på Ob3T6 x 10.000 euro (anteckna som fiende med 3T6 resurser).",
+    modifiers: [
+      { type: 'startkapital', description: 'Stämning', diceFormula: 'Ob3T6', multiplier: 10000 },
+      { type: 'fiende', title: 'Journalist', resources: '3T6'},
+      { type: 'kontakt', title: 'Advokat', resources: '1T6+12'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: 2 }
+    ]
+  },
+  {
+    min: 54,
+    max: 62,
+    description: "Skönhetsoperation. Rollpersonen har genomfört ett antal skönhetsoperationer och ser numera nästan tio yngre ut. Öka rollpersonens PER med två (+2). Minska rollpersonens startkapital med Ob3T6 x 1.000 euro. Anteckna plastikkirurg som kontakt med 2T6+10 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Plastikkirurg', resources: '2T6+10'},
+      { type: 'attribute', target: 'PER', amount: 2 },
+      { type: 'startkapital', description: 'Lurad', diceFormula: 'Ob3T6', multiplier: -1000 }
+    ]
+  },
+  {
+    min: 63,
+    max: 71,
+    description: "Traumatisk skilsmässa. Rollpersonen gifte sig med en kändis. Slå 1T6: 1 rockstjärna, 2 skådespelare, 3 hög politiker, 4 adelsman/-dam, 5 programledare, 6 gangstersboss. Efter några månader i ett stormigt äktenskap krävde rollpersonen att få skilsmässa. Rollpersonen lyckas få ut en rejäl äktenskapsskillnad från sin före detta (anteckna som fiende med 3T6+6 resurser). Öka rollpersonens startkapital med Ob3T6 x 10.000 euro och Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'startkapital', description: 'Lurad', diceFormula: 'Ob3T6', multiplier: 10000 },
+      { type: 'fiende', title: 'Kändis', resources: '3T6+6'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 72,
+    max: 80,
+    description: "Utskrattad. Rollpersonen har gjort en rejäl social fadas och ingen av rollpersonens tidigare vänner vill umgås med rollpersonen. Minska Mediastatus med 1T6 (dock aldrig lägre än till noll). Rollpersonen måste välja en annan sysselsättning nästa sysselsättningsperiod.",
+    modifiers: [
+      { type: 'fired', reason: 'Utskrattad' },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '-1T6' }
+    ]
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+export const polisCareerEvents = [
+  {
+    min: 1,
+    max: 8,
+    description: "Cover up. Rollpersonen har tipsat media om oegentligheter inom poliskåren. Slå 1T6 för att avgöra vad: 1 förskingring, 2 justitiemord, 3 mord, 4 mutor, 5 diskriminering, 6 beskyddarverksamhet. Anteckna en överordnad polis som fiende med 2T6+10 resurser. Anteckna en journalist som kontakt med 2T6+6 resurser. Öka Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'fiende', title: 'Journalist', resources: '2T6+6'},
+      { type: 'kontakt', title: 'Polischef', resources: '2T6+10'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 9,
+    max: 17,
+    description: "Hjälte. Rollpersonen har räddat livet på en känd person. Slå 1T6 för att avgöra vem: 1 playboy, 2 politiker, 3 stjärnskådespelare, 4 företagschef, 5 rockstjärna, 6 programledare. Anteckna denna person som kontakt med 2T6+12 resurser. Slå därefter 1T6 för att avgöra i vilken situation det skedde: 1 kidnappning, 2 mordförsök, 3 rån, 4 gisslandrama 5 flygplanskapning, 6 självmordsförsök. Öka Mediastatus med två (+2).",
+    modifiers: [
+      { type: 'kontakt', title: 'Kändis', resources: '2T6+12'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: 2 }
+    ]
+  },
+  {
+    min: 18,
+    max: 26,
+    description: "Insatsenhet. Rollpersonen är medlem i en speciell polisär insatsenhet (exempelvis SWAT). Använd 2T6+6 enheter för att höja Automateld, Diplomati, Gevär, Sprängteknik och Taktik. Använd dessutom 1T6+1 för att höja Stridsvana.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Automateld', 'Diplomati', 'Gevär', 'Sprängteknik', 'Taktik'], description: 'SWAT', diceFormula: '2T6+6' },
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'SWAT', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 27,
+    max: 35,
+    description: "Korrupt. Rollpersonen har tagit emot mutor från en gangster (anteckna som kontakt med 2T6+10 resurser). Höj startkapitalet med Ob3T6 × 1.000 euro. De hela avslöjades dock och rollpersonen blev dömd till fängelse (nästa sysselsättningsperiod måste spenderas i Fängelse, 1T6 år).",
+    modifiers: [
+      { type: 'prison', reason: 'Korrupt' },
+      { type: 'kontakt', title: 'Gangster', resources: '2T6+10'},
+      { type: 'startkapital', description: 'Lurad', diceFormula: 'Ob3T6', multiplier: 1000 },
+    ]
+  },
+  {
+    min: 36,
+    max: 44,
+    description: "Pension. Rollpersonen har blivit allvarligt skadad i en eldstrid. Sänk TÅL med ett. Rollpersonen tvingades gå i pension. Höj startkapitalet med Ob3T6 × 1.000 euro. Nästa sysselsättningsperiod måste man välja en annan sysselsättning.",
+    modifiers: [
+      { type: 'fired', reason: 'Eldstrid' },
+      { type: 'attribute', target: 'TÅL', amount: 1 },
+      { type: 'startkapital', description: 'Lurad', diceFormula: 'Ob3T6', multiplier: 1000 }
+    ]
+  },
+  {
+    min: 45,
+    max: 53,
+    description: "Polisbrutalitet. Rollpersonen har blivit anmäld för polisbrutalitet. Slå 1T6 för att se vem det var: 1 gängmedlem, 2 arbetare, 3 arbetslös, 4 langare, 5, journalist, 6 journalist. Anteckna denne person som fiende med 3T6 resurser.",
+    modifiers: [
+      { type: 'fiende', title: 'Polisbrutalitetsoffer', resources: '3T6'},
+    ]
+  },
+  {
+    min: 54,
+    max: 62,
+    description: "Undercover. Rollpersonen har arbetat undercover inom en gangsteroorganisation. Använd 2T6+6 enheter för att höja färdigheten Agera, Förklädnad och Undre världen. Anteckna en gangstersboss som fiende med 2T6+10 resurser.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Agera', 'Förklädnad', 'Undre världen'], description: 'Undercover', diceFormula: '2T6+6' },
+      { type: 'fiende', title: 'Gangsterboss', resources: '2T6+10'}
+    ]
+  },
+  {
+    min: 63,
+    max: 71,
+    description: "Upprättelse. Rollpersonen har arbetat vidare med ett fall som chefen officiellt förklarat avslutat. Detta ledde till att rollpersonen för en tid blev avstängd från tjänsten, men rollpersonen fortsatte ändå. Till slut kunde rollpersonen avslöja sanningen och fick på så sätt upprättelse. Höj rollpersonens befattningsgrad med en nivå (+1). Öka dessutom Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'promoted', reason: 'Uppklarat gammal fall' },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 72,
+    max: 80,
+    description: "Utbränd. Rollpersonen har arbetat mycket övertid och haft en mycket stressig arbetssituation. Efter djupa samtal med en psykolog (anteckna som kontakt med 2T6+8 resurser) så har rollpersonen beslutat sig för att säga upp sig (rollpersonen måste välja en annan sysselsättning nästa sysselsättningsperiod). Rollpersonen får dessutom 1T6 psykoskryss.",
+    modifiers: [
+      { type: 'fired', reason: 'Utbränd' },
+      { type: 'kontakt', title: 'Psykolog', resources: '2T6+8'}
+    ]
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]

@@ -40,7 +40,9 @@ export function rollUpbringing(store) {
         const socialClassEntry = socialTable.find(entry => newRoll >= entry.min && newRoll <= entry.max);
 
         console.log(`Rolled ${newRoll} on social class table. Social class: "${socialClassEntry.socialClass}"`);
-        store.current.socialClass = socialClassEntry
+        store.setSocialClass(socialClassEntry)
+        console.log('Social class set to object', socialClassEntry)
+        console.log('Social object:', store.socialClass)
         return;
     } else {
         console.warn(`No event found for roll ${roll} in the provided table.`);
