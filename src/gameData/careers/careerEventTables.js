@@ -859,3 +859,306 @@ export const polisCareerEvents = [
     modifiers: [{type: 'redirect', table: 'generalEvents' }]
   }
 ]
+
+export const rymdarbetareCareerEvents = [
+  {
+    min: 1,
+    max: 9,
+    description: "Atrofi. Rollpersonen har tillbringat för lång tid i viktlöst tillstånd utan att motionera på föreskrivet vis. Detta har resulterat i att rollpersonens muskulatur och benstomme har blivit försvagade. Minska både TÅL och STY med två (–2).",
+    modifiers: [
+      { type: 'attribute', target: 'TÅL', amount: -2 },
+      { type: 'attribute', target: 'STY', amount: -2 }
+    ]
+  },
+  {
+    min: 10,
+    max: 18,
+    description: "Avslöjande. Rollpersonen har avslöjat en entreprenör som håller på med illegal aktivitet. Slå 1T6 för att avgöra vad: 1 utpressning, 2 förbjuden medicinsk forskning, 3 otillåten gruvdrift, 4 förskingring, 5 drogillverkning, 6 illegal militär verksamhet. Verksamheten stoppades och entreprenören gick i konkurs (anteckna som fiende med 2T6+6 resurser).",
+    modifiers: [
+      { type: 'fiende', title: 'Entreprenör', resources: '2T6+8'}
+    ]
+  },
+  {
+    min: 19,
+    max: 27,
+    description: "Expedition. Rollpersonen har deltagit i en djuprymdsexpedition. Slå 1T6 för att avgöra vart: 1 asteroiderbältet, 2 Jupiters månar, 3 Saturnus månar, 4 Neptunus månar, 5 Merkurius, 6 Pluto. Öka Mediastatus med 1T6. Anteckna en forskare som kontakt med 2T6+6 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Forskare', resources: '2T6+6'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 28,
+    max: 36,
+    description: "Hjälte. Rollpersonen har räddat en rymdarbetare från en säker död (anteckna som kontakt med 2T6+6 resurser). Rollpersonens Mediastatus höjs med 1T6.",
+    modifiers: [
+      { type: 'kontakt', title: 'Rymdarbetare', resources: '2T6+6'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 37,
+    max: 45,
+    description: "Internationella samarbeten. Rollpersonen har samarbetat med personer från andra länder i ett internationellt projekt. Använd 2T6+6 enheter för att öka Diplomati och valfri språkfärdighet. Anteckna en utländsk rymdarbetare som kontakt med 2T6+6 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Rymdarbetare', resources: '2T6+6'},
+      { type: 'skill_distribution', allowedSkills: ['Diplomati', 'Språk'], description: 'Specialutbildning', diceFormula: '2T6+6' }
+    ]
+  },
+  {
+    min: 46,
+    max: 54,
+    description: "Isolering. Rollpersonen har vistats för länge ensam i rymden och blivit psykotisk (rollpersonen får 2T6 psykoskryss). Efter en tumultartad insats så landsätts rollpersonen på jorden. Efter djupa samtal med en psykolog (anteckna som kontakt med 2T6+6 resurser) så blir rollpersonen avskedad (välj en annan sysselsättning nästa sysselsättningsperiod).",
+    modifiers: [
+      { type: 'kontakt', title: 'Psykolog', resources: '2T6+6'},
+      { type: 'fired', reason: 'Isolering' }
+    ]
+  },
+  {
+    min: 55,
+    max: 63,
+    description: "Olycka. Rollpersonen har varit med om en olycka där flera människor dog. Slå 1T6 för att avgöra vad som hände: 1 krasch, 2 explosion, 3 brand, 4 radioaktivt läckage, 5 tryckfall, 6 kollapsad gruvgång. Rollpersonen får 1T6 Psykoskryss. Efteråt utpekades rollpersonen som skyldig till olyckan. Därför måste rollpersonen spendera nästa sysselsättningsperiod i Fängelse, 1T6 år.",
+     modifiers: [
+      { type: 'prison', reason: 'Olycka' }
+    ]
+  },
+  {
+    min: 64,
+    max: 72,
+    description: "Pionjär. Rollpersonen har gjort något som ingen tidigare utfört. Rollpersonen har dessutom fått ge namn åt någon plats eller något rymdobjekt. Öka Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 73,
+    max: 81,
+    description: "Specialist. Rollpersonen har fått specialistutbildning. Använd 1T6+6 enheter för att höja någon av färdigheterna: Biologi, Förhörsteknik, Genteknik, Kemi, Medicin, Programmering, Sprängteknik eller Säkerhetssystem.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Biologi', 'Förhörsteknik', 'Genteknik', 'Kemi', 'Medicin', 'Programmering', 'Sprängteknik', 'Säkerhetssystem'], description: 'Internationellt samarbete', diceFormula: '1T6+6' }
+    ]
+  },
+  {
+    min: 82,
+    max: 90,
+    description: "Strålskadad. Rollpersonen har råkat ut för kraftig strålning. Slå 1T6 för att avgöra anledningen: 1 kärnreaktorolycka, 2 radioaktivt läckage, 3 atomsmältning i gruvdrift, 4–6 solstorm. Anteckna en strålskada på 1T6 GY."
+  },
+  {
+    min: 91,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+export const sjukvardareCareerEvents = [
+  {
+    min: 1,
+    max: 7,
+    description: "Ambulansservice. Rollpersonen har arbetat för ett ambulanslevererande företag. Använd 1T6+1 enheter för att höja någon av färdigheterna Stridsvana, Pilot-helikopter eller Första hjälpen.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana', 'Pilot/helikopter', 'Första Hjälpen'], description: 'Ambulansservice', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 8,
+    max: 15,
+    description: "Arbetat utomlands. Rollpersonen har arbetat på ett utländskt sjukhus. Använd 1T6+3 enheter för att höja en valfri språkfärdighet.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Språk'], description: 'Utlandsarbete', diceFormula: '1T6+3' }
+    ]
+  },
+  {
+    min: 16,
+    max: 23,
+    description: "Avslöjande. Rollpersonen har tipsat media om oegentligheter. Slå 1T6 för att avgöra vad rollpersonen avslöjade: 1 oetiska experiment, 2 olaglig genteknik, 3 plågsamma djurförsök, 4 förskingring, 5 mutor från läkemedelsföretag, 6 försäkringsbedrägeri. Anteckna en journalist som kontakt med 2T6+6 resurser. Anteckna en överläkare som fiende med 2T6+8 resurser. Höj rollpersonens Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'kontakt', title: 'Journalist', resources: '2T6+6'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'fiende', title: 'Överläkare', resources: '2T6+8'},
+    ]
+  },
+  {
+    min: 24,
+    max: 28,
+    description: "Droger. Rollpersonen har skrivit ut beroendeframkallande preparat åt en drogmissbrukare (anteckna som kontakt med 3T6 resurser). Öka startkapitalet med Ob3T6 × 1.000 euro. Rollpersonen blev dock avslöjad och därefter avskedad (nästa sysselsättningsperiod måste man välja en annan sysselsättning).",
+    modifiers: [
+      { type: 'kontakt', title: 'Drogmissbrukare', resources: '3T6'},
+      { type: 'fired', reason: 'Avskedad för drogförsäljning' },
+      { type: 'startkapital', description: 'Drogförsäljning', diceFormula: 'Ob3T6', multiplier: 1000 }, 
+    ]
+  },
+  {
+    min: 29,
+    max: 36,
+    description: "Hjälte. Rollpersonen har räddat livet på en känd person. Slå 1T6 för att avgöra vem: 1 politiker, 2 tjänstskadad spelare, 3 företagsledare, 4 rockstjärna, 5 playboy, 6 polischef. Anteckna denna person som kontakt med 2T6+10 resurser. Höj rollpersonens Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'kontakt', title: 'Kändis', resources: '2T6+10'},
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 37,
+    max: 40,
+    description: "Grovt försummelse. Rollpersonen blir åtalad då en patient dör och befinns skyldig. Nästa period måste rollpersonen spendera i Fängelse, 1T6 år.",
+    modifiers: [
+      { type: 'prison', reason: 'Grov försummelse'}
+    ]
+  },
+  {
+    min: 41,
+    max: 47,
+    description: "Krigszon. Rollpersonen har arbetat som sjukvårdare i en krigszon. Använd 1T6+1 enheter för att höja rollpersonens Stridsvana. Rollpersonen har sett fruktansvärda scener och får därför 1T6 Psykoskryss.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'Krigszon', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 48,
+    max: 55,
+    description: "Lyckad behandling. Rollpersonen lyckas rädda livet på en patient som alla andra ansåg vara omöjlig att rädda. Slå 1T6 för att avgöra vem det var: 1 affärsman, 2 polis, 3 soldat, 4 gängmedlem, 5 mediaarbetare, 6 hacker. Anteckna denna person som kontakt med 3T6 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Patient', resources: '3T6'}
+    ]
+  },
+  {
+    min: 56,
+    max: 63,
+    description: "Privatpraktik. Rollpersonen har lyckats mycket väl med att praktisera privat. Öka startkapitalet med Ob3T6 × 1.000 euro.",
+    modifiers: [
+      { type: 'startkapital', description: 'Privatpraktik', diceFormula: 'Ob3T6', multiplier: 1000 }, 
+    ]
+  },
+  {
+    min: 64,
+    max: 70,
+    description: "Stämd. Rollpersonen blir stämd för försummelse då en patient fått allvarliga men efter en behandling. Slå 1T6 för att se vem det var: 1 gangster, 2 polis, 3 rymdarbetare, 4 militär, 5 gängmedlem, 6 hacker. Minska rollpersonens startkapital med Ob3T6 × 1.000 euro. Anteckna denna person som fiende med 2T6+6 resurser.",
+    modifiers: [
+      { type: 'kontakt', title: 'Patient', resources: '2T6+6'},
+      { type: 'startkapital', description: 'Stämd', diceFormula: 'Ob3T6', multiplier: -1000 }, 
+    ]
+  },
+  {
+    min: 71,
+    max: 80,
+    description: "Överarbetad. Rollpersonen har arbetat för mycket övertid. Rollpersonen får 1T6 Psykoskryss. Efter samtal med sin chef (anteckna som kontakt med 2T6+8 resurser) har rollpersonen bestämt sig för att säga upp sig (nästa sysselsättningsperiod måste man välja en annan sysselsättning).",
+    modifiers: [
+      { type: 'kontakt', title: 'Läkare', resources: '2T6+8'},
+      { type: 'fired', reason: 'Överarbetad' }
+    ]
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+export const soldatCareerEvents = [
+  {
+    min: 1,
+    max: 5,
+    description: "Atombombad. Rollpersonen får en medalj efter att ha blivit drabbad av radioaktivitet i samband med en kärnvapenattack. Anteckna en stråldos på 1T6 Gy."
+  },
+  {
+    min: 6,
+    max: 14,
+    description: "Blodiga strider. Rollpersonen har varit med i en krigszon med mycket hårda strider. Rollpersonen får 1T6 Psykoskryss och 1T6+6 enheter för att höja Stridsvana.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'Blodiga strider', diceFormula: '1T6+6' }
+    ]
+  },
+  {
+    min: 15,
+    max: 20,
+    description: "Exemplariskt soldat. Rollpersonen är lojal och mycket militärisk. Detta är mycket uppskattat av plutonens löjtnant (anteckna som kontakt med 2T6+6 resurser).",
+    modifiers: [
+      { type: 'kontakt', title: 'Löjtnant', resources: '2T6+6'}
+    ]
+  },
+  {
+    min: 21,
+    max: 27,
+    description: "Hjältedåd. Rollpersonen har räddat livet på en nära vän i det militära. Denna vän har nu ett annat yrke. Slå 1T6 för att avgöra vad: 1 gangster, 2 affärsman, 3 kriminell, 4 rymdarbetare, 5 journalist, 6 domare. Anteckna denna person som kontakt med 2T6+6 resurser. Rollpersonen får dessutom en tapperhetsmedalj.",
+    modifiers: [
+      { type: 'kontakt', title: 'Nära vän', resources: '2T6+6'}
+    ]
+  },
+  {
+    min: 28,
+    max: 33,
+    description: "Krigsfånge. Rollpersonen har blivit tillfångatagen av fienden och torterad. Rollpersonen får 2T6 Psykoskryss. Nästa sysselsättningsperiod måste man tillbringa i Fängelse, 2T6 år. Observera att det rör sig om ett utländskt fängelse.",
+    modifiers: [
+      { type: 'prison', reason: 'Krigsfånge'}
+    ]
+  },
+  {
+    min: 34,
+    max: 39,
+    description: "Krigsrätt. Rollpersonen har ställts inför krigsrätt. Slå 1T6 för att avgöra varför: 1 ordervägran, 2 desertering, 3 feghet, 4 misshandel under permission, 5 slagit överordnad, 6 vållande till olycka. Rollpersonen ställdes inför krigsrätt men friades (trots detta måste rollpersonen byta sysselsättning nästa period).",
+    modifiers: [
+      { type: 'fired', reason: 'Krigsrätt'}
+    ]
+  },
+  {
+    min: 40,
+    max: 43,
+    description: "Krigsrätt. Som ovan, men rollpersonen blev fälld och satt i fängelse. Nästa sysselsättningsperiod måste man tillbringa i Fängelse, 2T6 år.",
+    modifiers: [
+      { type: 'prison', reason: 'Krigsrätt'}
+    ]
+  },
+  {
+    min: 44,
+    max: 49,
+    description: "Latmask. Rollpersonen är en hopplös soldat som alltid ställde till problem för sin plutonchef. Till slut blev rollpersonen avskedad (nästa sysselsättningsperiod måste man välja en annan sysselsättning). Anteckna en officer som fiende med 2T6+6 resurser.",
+    modifiers: [
+      { type: 'fiende', title: 'Officer', resources: '2T6+6'},
+      { type: 'fired', reason: 'Krigsrätt'}
+    ]
+  },
+  {
+    min: 50,
+    max: 56,
+    description: "Mist nära vän. En nära vän dog under en strid i ett främmande land. Detta har påverkat rollpersonen starkt som får 1T6 psykoskryss. Rollpersonen hjälpte vänens änka (anteckna som kontakt med 3T6 resurser).",
+    modifiers: [
+      { type: 'kontakt', title: 'Änka', resources: '3T6'}
+    ]
+  },
+  {
+    min: 57,
+    max: 63,
+    description: "Skadad. Rollpersonen har blivit skadad i strid (sänk TÅL med ett). Rollpersonen får tillbringa en tid på ett sjukhus för veteraner och lär känna en annan krigsveteran (anteckna som kontakt med 3T6 resurser). Rollpersonen får en medalj.",
+    modifiers: [
+      { type: 'kontakt', title: 'Krigsveteran', resources: '3T6'},
+      { type: 'attribute', target: 'TÅL', amount: -1 },
+    ]
+  },
+  {
+    min: 64,
+    max: 69,
+    description: "Specialförband. Rollpersonen är medlem i ett specialförband. Använd 2T6+6 enheter för att höja Dykning, Fritt fall, Förhörsteknik, Rymddräkt, Spåra och Överlevnad. Använd dessutom 1T6+1 för att höja Stridsvana.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'Specialförband', diceFormula: '1T6+1' },
+      { type: 'skill_distribution', allowedSkills: ['Dykning', 'Fritt fall', 'Förhörsteknik', 'Rymddräkt', 'Spåra', 'Överlevnad'], description: 'Specialförband', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 70,
+    max: 80,
+    description: "Specialutbildning. Rollpersonen har fått specialutbildning. Slå 1T6 för att se vilken färdighet: 1 Sprängteknik, 2 Kirurgi, 3 Mekanik, 4 Rekylfria vapen, 5 Köra bandvagn, 6 Administration. Använd 1T6+6 enheter för att höja denna färdighet.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Sprängteknik', 'Kirurgi', 'Mekanik', 'Rekylfria vapen', 'Köra/bandvang', 'Administration'], description: 'Specialutbildad', diceFormula: '1T6+6' }
+    ]
+
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+

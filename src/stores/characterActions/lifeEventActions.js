@@ -26,7 +26,10 @@ import {
   mediaarbetareCareerEvents,
   officerCareerEvents,
   playboyCareerEvents,
-  polisCareerEvents
+  polisCareerEvents,
+  rymdarbetareCareerEvents,
+  sjukvardareCareerEvents,
+  soldatCareerEvents
 } from '../../gameData/careers/careerEventTables';
 
 import {
@@ -63,7 +66,10 @@ const lifeEventTables = {
     mediaarbetareCareerEvents,
     officerCareerEvents,
     playboyCareerEvents,
-    polisCareerEvents
+    polisCareerEvents,
+    rymdarbetareCareerEvents,
+    sjukvardareCareerEvents,
+    soldatCareerEvents
     // Add more tables here as you create them for other careers/stages
 };
 
@@ -142,9 +148,10 @@ export function rollLifeEventLogic(store, tableName, redirect = false) {
           const resources = rollDiceString(modifier.resources);
           store.current.contacts.push({ title: modifier.title, resources })
         } else if (modifier.type === 'startkapital') {
-          console.log('Logged startkapital')
           const amount = rollDiceString(modifier.diceFormula) * modifier.multiplier
           store.current.startkapital.push({ amount, description: modifier.title })
+          console.log(`Logged startkapital: ${modifier.diceFormula}, ${amount}`)
+
         } else if (modifier.type === 'reroll10') {
           // Special genetic manipulation case
           console.log('Logged genetic reroll all under 10')

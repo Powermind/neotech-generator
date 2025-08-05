@@ -97,6 +97,7 @@ const skillsData = [
   { name: 'Socialt uppträdande', value: 0, easy: false, buyable: false },
   { name: 'Sociologi', value: 0, easy: false, buyable: false },
   { name: 'Spaning', value: 0, easy: false, buyable: false },
+  { name: 'Språk', value: 0, easy: false, buyable: false },
   { name: 'Spåra', value: 0, easy: false, buyable: false },
   { name: 'Sprängteknik', value: 0, easy: false, buyable: false },
   { name: 'Stil & smak', value: 0, easy: false, buyable: false },
