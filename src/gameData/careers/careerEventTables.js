@@ -588,7 +588,7 @@ export const officerCareerEvents = [
     description: "Hjältedåd. Rollpersonen har räddat en känd person. Slå 1T6 för att avgöra vem: 1 journalist, 2 politiker, 3 officer, 4 affärsman, 5 läkare, 6 tekniker. Anteckna denna person som kontakt med 2T6+6 resurser. Rollpersonen får en medalj och dessutom ökar Mediastatus med 1T6.",
     modifiers: [
       { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
-      { type: 'kontakt', title: 'Kändis', resources: '2T6+6' }
+      { type: 'kontakt', title: ['Journalist', 'Politiker', 'Officer', 'Affärsman', 'Läkare', 'Tekniker'], resources: '2T6+6' }
     ]
   },
   {
@@ -668,7 +668,7 @@ export const officerCareerEvents = [
     ]
   },
   {
-    min: 86,
+    min: 81,
     max: 100,
     description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
     modifiers: [{type: 'redirect', table: 'generalEvents' }]
@@ -784,7 +784,7 @@ export const polisCareerEvents = [
     max: 17,
     description: "Hjälte. Rollpersonen har räddat livet på en känd person. Slå 1T6 för att avgöra vem: 1 playboy, 2 politiker, 3 stjärnskådespelare, 4 företagschef, 5 rockstjärna, 6 programledare. Anteckna denna person som kontakt med 2T6+12 resurser. Slå därefter 1T6 för att avgöra i vilken situation det skedde: 1 kidnappning, 2 mordförsök, 3 rån, 4 gisslandrama 5 flygplanskapning, 6 självmordsförsök. Öka Mediastatus med två (+2).",
     modifiers: [
-      { type: 'kontakt', title: 'Kändis', resources: '2T6+12'},
+      { type: 'kontakt', title: ['Playboy', 'Politiker', 'Stjärnskådespelare', 'Företagschef', 'Rockstjärna', 'Programledare'], resources: '2T6+12'},
       { type: 'secondary_attribute', name: 'Mediastatus', value: 2 }
     ]
   },
@@ -991,9 +991,9 @@ export const sjukvardareCareerEvents = [
   {
     min: 29,
     max: 36,
-    description: "Hjälte. Rollpersonen har räddat livet på en känd person. Slå 1T6 för att avgöra vem: 1 politiker, 2 tjänstskadad spelare, 3 företagsledare, 4 rockstjärna, 5 playboy, 6 polischef. Anteckna denna person som kontakt med 2T6+10 resurser. Höj rollpersonens Mediastatus med 1T6.",
+    description: "Hjälte. Rollpersonen har räddat livet på en känd person. Slå 1T6 för att avgöra vem: 1 politiker, 2 stjärnskådespelare, 3 företagsledare, 4 rockstjärna, 5 playboy, 6 polischef. Anteckna denna person som kontakt med 2T6+10 resurser. Höj rollpersonens Mediastatus med 1T6.",
     modifiers: [
-      { type: 'kontakt', title: 'Kändis', resources: '2T6+10'},
+      { type: 'kontakt', title: ['Politiker', 'Stjärnskådespelare', 'Företagsledare', 'Rockstjärna', 'Playboy', 'Polischef'], resources: '2T6+10'},
       { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
     ]
   },
@@ -1018,7 +1018,7 @@ export const sjukvardareCareerEvents = [
     max: 55,
     description: "Lyckad behandling. Rollpersonen lyckas rädda livet på en patient som alla andra ansåg vara omöjlig att rädda. Slå 1T6 för att avgöra vem det var: 1 affärsman, 2 polis, 3 soldat, 4 gängmedlem, 5 mediaarbetare, 6 hacker. Anteckna denna person som kontakt med 3T6 resurser.",
     modifiers: [
-      { type: 'kontakt', title: 'Patient', resources: '3T6'}
+      { type: 'kontakt', title: ['Affärsman', 'Polis', 'Soldat', 'Gängmedlem', 'Mediaarbetare', 'Hacker'], resources: '3T6'}
     ]
   },
   {
@@ -1034,7 +1034,7 @@ export const sjukvardareCareerEvents = [
     max: 70,
     description: "Stämd. Rollpersonen blir stämd för försummelse då en patient fått allvarliga men efter en behandling. Slå 1T6 för att se vem det var: 1 gangster, 2 polis, 3 rymdarbetare, 4 militär, 5 gängmedlem, 6 hacker. Minska rollpersonens startkapital med Ob3T6 × 1.000 euro. Anteckna denna person som fiende med 2T6+6 resurser.",
     modifiers: [
-      { type: 'kontakt', title: 'Patient', resources: '2T6+6'},
+      { type: 'fiende', title: ['Gangster', 'Polis', 'Rymdarbetare', 'Militär', 'Gängmedlem', 'Hacker'], resources: '2T6+6'},
       { type: 'startkapital', description: 'Stämd', diceFormula: 'Ob3T6', multiplier: -1000 }, 
     ]
   },
@@ -1082,7 +1082,7 @@ export const soldatCareerEvents = [
     max: 27,
     description: "Hjältedåd. Rollpersonen har räddat livet på en nära vän i det militära. Denna vän har nu ett annat yrke. Slå 1T6 för att avgöra vad: 1 gangster, 2 affärsman, 3 kriminell, 4 rymdarbetare, 5 journalist, 6 domare. Anteckna denna person som kontakt med 2T6+6 resurser. Rollpersonen får dessutom en tapperhetsmedalj.",
     modifiers: [
-      { type: 'kontakt', title: 'Nära vän', resources: '2T6+6'}
+      { type: 'kontakt', title: ['Gangster', 'Affärsman', 'Kriminell', 'Rymdarbetare', 'Journalist', 'Domare'], resources: '2T6+6'}
     ]
   },
   {
@@ -1149,7 +1149,7 @@ export const soldatCareerEvents = [
     max: 80,
     description: "Specialutbildning. Rollpersonen har fått specialutbildning. Slå 1T6 för att se vilken färdighet: 1 Sprängteknik, 2 Kirurgi, 3 Mekanik, 4 Rekylfria vapen, 5 Köra bandvagn, 6 Administration. Använd 1T6+6 enheter för att höja denna färdighet.",
     modifiers: [
-      { type: 'skill_distribution', allowedSkills: ['Sprängteknik', 'Kirurgi', 'Mekanik', 'Rekylfria vapen', 'Köra/bandvang', 'Administration'], description: 'Specialutbildad', diceFormula: '1T6+6' }
+      { type: 'skill_distribution', allowedSkills: ['Sprängteknik', 'Kirurgi', 'Mekanik', 'Rekylfria vapen', 'Köra/bandvagn', 'Administration'], description: 'Specialutbildad', diceFormula: '1T6+6' }
     ]
 
   },
@@ -1161,4 +1161,315 @@ export const soldatCareerEvents = [
   }
 ]
 
+export const soloCareerEvents = [
+  {
+    min: 1,
+    max: 7,
+    description: "Avslöjad. En journalist har avslöjat rollpersonens skumma verksamhet. Det hela slutade med att rollpersonen blev dömd till fängelse. Nästa sysselsättningsperiod måste spenderas i Fängelse, 1T6 år. Öka Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'prison', reason: 'Avslöjad' },
+    ]
+  },
+  {
+    min: 8,
+    max: 14,
+    description: "Blodbad. Rollpersonen har varit med om en blodig sammandrabbning. Slå 1T6 för att avgöra vem: 1 gangster, 2 gängmedlem, 3 lönnmördare, 4 affärsman, 5 rånare, 6 legosoldat. Anteckna som fiende med 2T6+6 resurser. Använd 1T6+1 enheter för att öka Stridsvana. Rollpersonen får dessutom 2T6 psykoskryss.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana'], description: 'Blodbad', diceFormula: '1T6+1' },
+      { type: 'fiende', resources: '2T6+6', title: ['Gangster', 'Gängmedlem', 'Lönnmördare', 'Affärsman', 'Rånare', 'Legosoldat'] }
+    ]
+  },
+  {
+    min: 15,
+    max: 22,
+    description: "Eldstrid. Rollpersonen råkade in i en eldstrid med en polis som blev invaliderad (anteckna som fiende med 3T6 resurser). Nästa sysselsättningsperiod spenderas i Fängelse, 3T6 år.",
+    modifiers: [
+      { type: 'fiende', resources: '3T6', title: 'Polis' },
+      { type: 'prison', reason: 'Eldstrid' }
+    ]
+  },
+  {
+    min: 23,
+    max: 29,
+    description: "Jagad. Maffian anser att rollpersonen inkräktat på deras område. En hyrd torped fick stryk av rollpersonen (anteckna som fiende med 1T6+10 resurser).",
+    modifiers: [
+      { type: 'fiende', resources: '1T6+10', title: 'Polis' }
+    ]
+  },
+  {
+    min: 30,
+    max: 36,
+    description: "Licensierad. Rollpersonen blir licensierad privatdetektiv. Detta ger rollpersonen möjlighet att ta del av bevismaterial, förhörsprotokoll och att undersöka brottsplaster. För att behålla licensen krävs att rollpersonen inte finns med i polisens brottsregister."
+  },
+  {
+    min: 37,
+    max: 44,
+    description: "Mördare. Rollpersonen åker dit för ett mord. Nästa sysselsättningsperiod måste spenderas i Fängelse, 2T6+6 år. Försvarsadvokaten anser dock att rollpersonen är oskyldig (anteckna som kontakt med 2T6+6 resurser), men det gör inte änkan (anteckna som fiende med 3T6 resurser).",
+    modifiers: [
+      { type: 'fiende', resources: '3T6', title: 'Polis' },
+      { type: 'kontakt', resources: '2T6+6', title: 'Advokat' },
+      { type: 'prison', reason: 'Mord' }
+    ]
+  },
+  {
+    min: 45,
+    max: 51,
+    description: "Räddat uppdragsgivare. Rollpersonen har räddat sin uppdragsgivare. Slå 1T6 för att avgöra vem det var: 1 skådespelare, 2 popstjärna, 3 playboy, 4 företagsledare, 5 gangsterboss, 6 journalist. Anteckna denna person som kontakt med 2T6+12 resurser. Öka Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'kontakt', resources: '2T6+12', title: ['Skådespelare', 'Popstjärna', 'Playboy', 'Företagsledare', 'Gangsterboss', 'Journalist'] },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 52,
+    max: 58,
+    description: "Set-up. Rollpersonen blev värvad för att få skulden för ett brott. Rollpersonen blev fasttagen av polisen och erkände allt samt avslöjade uppdragsgivarens illegala verksamhet. Både rollpersonen och uppdragsgivaren åker i fängelse (anteckna som fiende med 2T6+10 resurser). Nästa sysselsättningsperiod spenderas i Fängelse, 2T6 år.",
+    modifiers: [
+      { type: 'fiende', resources: '2T6+10', title: 'Uppdragsgivare' },
+      { type: 'prison', reason: 'Set-up' }
+    ]
+  },
+  {
+    min: 59,
+    max: 66,
+    description: "Specialutbildad. Rollpersonen har skaffat sig specialkunskaper. Anteckna en militärinstruktör som kontakt med 2T6+6 resurser. Slå 1T6 för att avgöra vilken färdighet: 1 Automateld, 2 Dykning, 3 Fritt fall, 4 Sprängteknik, 5 Taktik, 6 Överlevnad. Använd 1T6+6 enheter för att höja färdigheten.",
+    modifiers: [
+      { type: 'kontakt', resources: '2T6+12', title: 'Militärinstruktör' },
+      { type: 'skill_distribution', allowedSkills: ['Automateld', 'Dykning', 'Fritt fall', 'Sprängteknik', 'Taktik', 'Överlevnad'], description: 'Specialutbildad', diceFormula: '1T6+6' }
+    ]
+  },
+  {
+    min: 67,
+    max: 73,
+    description: "Täcknamn. Rollpersonen har blivit tvungen att köpa en extra identitet av en skicklig förfalskare (anteckna som kontakt med 1T6+10 resurser). Spelaren måste hitta på ett nytt namn. Sätt startkapitalet med Ob3T6 x 1.000 euro.",
+    modifiers: [
+      { type: 'kontakt', resources: '1T6+10', title: 'Förfalskare' },
+      { type: 'startkapital', description: 'Falsk identitet', diceFormula: 'Ob3T6', multiplier: -1000 }
+    ]
+  },
+  {
+    min: 74,
+    max: 80,
+    description: "Utlandsoperation. Rollpersonen har arbetat i utlandet under en längre tid. Använd 2T6 enheter för att höja en valfri språkfärdighet.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Språk'], description: 'Specialutbildad', diceFormula: '2T6' }
+    ]
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
 
+export const teknikerCareerEvents = [
+  {
+    min: 1,
+    max: 8,
+    description: "Anklagad. Rollpersonen blev anklagad, med fog eller inte, för att ha stulit och sålt mynt av en uppfinnares idéer. Denna uppfinnare hatar nu rollpersonen (anteckna som fiende med 3T6 resurser).",
+    modifiers: [
+      { type: 'kontakt', resources: '3T6', title: 'Uppfinnare' }
+    ]
+  },
+  {
+    min: 9,
+    max: 16,
+    description: "Arbetat utomlands. Rollpersonen har arbetat ett tag i ett främmande land. Använd 1T6+6 enheter för att höja en valfri språkfärdighet.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Språk'], description: 'Arbetat utomlands', diceFormula: '1T6+6' }
+    ]
+  },
+  {
+    min: 17,
+    max: 24,
+    description: "Avslöjanden. Rollpersonen har avslöjat oegentligheter i det företag som rollpersonen arbetar för. Slå 1T6 för att avgöra vad: 1 illegala affärsmetoder, 2 industrispionage, 3 patentintrång, 4 miljöfarliga produkter, 5 forskning, 6 livsfarliga produkter. Anteckna en journalist som kontakt med 2T6+6 resurser. Rollpersonens startkapital ökar med Ob3T6 × 1.000 euro. Men det hela leder till att rollpersonen blev sparkad (nästa period måste en annan sysselsättning väljas).",
+    modifiers: [
+      { type: 'kontakt', resources: '2T6+6', title: 'Journalist' },
+      { type: 'startkapital', description: 'Avsöjanden', diceFormula: 'Ob3T6', multiplier: 1000 },
+      { type: 'fired', reason: 'Avslöjanden' }
+    ]
+  },
+  {
+    min: 25,
+    max: 32,
+    description: "Företagsspion. Rollpersonen har sålt hemlig information om nya produkter till ett konkurrerande företag. Öka rollpersonens startkapital med Ob3T6 × 10.000 euro. Det hela uppdagas dock och rollpersonen döms till fängelse (nästa sysselsättningsperiod måste spenderas i fängelse, 1T6 år).",
+    modifiers: [
+      { type: 'startkapital', description: 'Avsöjanden', diceFormula: 'Ob3T6', multiplier: 10000 },
+      { type: 'prison', reason: 'Spioneri' }
+    ]
+  },
+  {
+    min: 33,
+    max: 40,
+    description: "Känd produkt. Rollpersonen har varit med om att designa en storsäljande produkt som säljs genom teve­shopping. Anteckna en slipad affärsman som kontakt med 2T6+10 resurser. Öka rollpersonens startkapital med Ob3T6 × 10.000 euro. Eftersom produkten bär rollpersonens namn så ökar dessutom Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'startkapital', description: 'Avsöjanden', diceFormula: 'Ob3T6', multiplier: 10000 },
+      { type: 'kontakt', resources: '2T6+6', title: 'Slipad affärsman' },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 41,
+    max: 48,
+    description: "Oumbärlig. Rollpersonen har lyckats göra sig oumbärlig och dessutom höjt sin lön. Öka startkapitalet med Ob3T6 × 1.000 euro. Om man fortsätter som tekniker nästa sysselsättningsperiod så lyckas ett valfritt framgångsslag automatiskt.",
+    modifiers: [
+      { type: 'startkapital', description: 'Oumbärlig', diceFormula: 'Ob3T6', multiplier: 1000 }
+    ]  
+  },
+  {
+    min: 49,
+    max: 56,
+    description: "Patent. Rollpersonen har tillsammans med en uppfinnare (anteckna som kontakt med 3T6 resurser) sålt ett patent till ett megaföretag. Öka startkapitalet med Ob2T6 × 5.000 euro.",
+    modifiers: [
+      { type: 'startkapital', description: 'Oumbärlig', diceFormula: 'Ob2T6', multiplier: 5000 },
+      { type: 'kontakt', resources: '3T6', title: 'Uppfinnare' },
+    ] 
+  },
+  {
+    min: 57,
+    max: 64,
+    description: "Uppköpt av företagsjätte. Rollpersonens företag har blivit uppköpta av en stor företagsjätte. Rollpersonen tjänade en hel del på affären, öka därför startkapitalet med Ob3T6 × 100.000 euro. Anteckna en direktör på det nya företaget som kontakt med 2T6+12 resurser.",
+     modifiers: [
+      { type: 'startkapital', description: 'Uppköpt', diceFormula: 'Ob3T6', multiplier: 100000 },
+      { type: 'kontakt', resources: '2T6+12', title: 'Direktör' },
+    ] 
+  },
+  {
+    min: 65,
+    max: 72,
+    description: "Värvad. Rollpersonen blir värvad av ett annat företag. Avdelningschefen på det tidigare arbetsgivaren hatar nu rollpersonen (anteckna som fiende med 2T6+6 resurser). Vid värvningen fick rollpersonen en rejäl bonus. Öka startkapitalet med Ob3T6 × 10.000 euro.",
+    modifiers: [
+      { type: 'startkapital', description: 'Värvad', diceFormula: 'Ob3T6', multiplier: 10000 },
+      { type: 'fiende', resources: '2T6+12', title: 'Avdelningschef' },
+    ] 
+  },
+  {
+    min: 73,
+    max: 80,
+    description: "Överarbetad. Rollpersonen har arbetat under för stor press och bestämde sig därför för att byta karriär till något mer engagerande. Nästa sysselsättningsperiod måste vara en annan sysselsättning. Rollpersonen får 1T6 psykoskryss.",
+    modifiers: [
+      { type: 'fired', reason: 'Överarbetad' }
+    ]
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]
+
+export const universitetetCareerEvents = [
+  {
+    min: 1,
+    max: 6,
+    description: "Anslag. Rollpersonen har fått ett större stipendium eller forskningsanslag. Öka startkapitalet med Ob3T6 × 1.000 euro. Anteckna en forskningschef på ett megaföretag som kontakt med 2T6+12 resurser.",
+    modifiers: [
+      { type: 'startkapital', description: 'Forskningsanslag', diceFormula: 'Ob3T6', multiplier: 1000 },
+      { type: 'fiende', resources: '2T6+12', title: 'Forskningschef' },
+    ] 
+  },
+  {
+    min: 7,
+    max: 12,
+    description: "Erbjudande. Rollpersonen blir erbjuden ett jobb som forskare på ett megaföretag. Om rollpersonen väljer företagsman nästa period så får rollpersonen dels välja ett framgångsslag som lyckas automatiskt och dels öka startkapitalet med Ob3T6 × 10.000 euro.",
+    modifiers: [
+      { type: 'startkapital', description: 'Erbjudande', diceFormula: 'Ob3T6', multiplier: 10000, 'nextCareer': 'bg-foretagsman' }
+    ] 
+  },
+  {
+    min: 13,
+    max: 19,
+    description: "Extraknäck. Rollpersonen jobbar extra hos en affärsman (anteckna som kontakt med 3T6 resurser). Öka startkapitalet med Ob3T6 × 100 euro.",
+    modifiers: [
+      { type: 'startkapital', description: 'Extraknäck', diceFormula: 'Ob3T6', multiplier: 100 }
+    ] 
+  },
+  {
+    min: 20,
+    max: 25,
+    description: "Fusk. Rollpersonen har blivit har blivit avslöjad med att fuska och blir därför regelverksmässigt relegerad. Nästa sysselsättningsperiod måste man välja en annan sysselsättning.",
+    modifiers: [
+      { type: 'fired', reason: 'Fusk' }
+    ] 
+  },
+  {
+    min: 26,
+    max: 32,
+    description: "Föreningsaktiv. Slå 1T6 för att avgöra vilken färdighet som används: 1 Politik, 2 Valfri idrott, 3 Musik, 4 Sjunga, 5 Förföra, 6 Socialt umgänge. Använd 1T6+1 enheter för att höja denna färdighet. Använd dessutom 1T6+1 enheter för att höja färdigheten Supa.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Supa'], description: 'Föreningsaktiv', diceFormula: '1T6+1' },
+      { type: 'skill_distribution', allowedSkills: ['Politik', 'Idrott', 'Musik', 'Sjunga', 'Förföra', 'Social umgänge'], description: 'Föreningsaktiv', diceFormula: '1T6+1' }
+    ]
+  },
+  {
+    min: 37,
+    max: 41,
+    description: "Lurad. Rollpersonen har gjort en viktig vetenskaplig upptäckt som en professor tog och publicerat som sin egen. Rollpersonen lyckades stämma institutionen. Höj startkapitalet med Ob3T6 × 1.000 euro. Professorn blev avskedad (anteckna som fiende med 2T6+8 resurser).",
+    modifiers: [
+      { type: 'startkapital', description: 'Forskningsanslag', diceFormula: 'Ob3T6', multiplier: 1000 },
+      { type: 'fiende', resources: '2T6+8', title: 'Professor' },
+    ] 
+  },
+  {
+    min: 42,
+    max: 48,
+    description: "Mediainteresse. Rollpersonens ståndpunkt i ett debattämne har blivit uppmärksammad i media. Öka Mediastatus med 1T6. Anteckna en reporter som kontakt med 2T6+6 resurser.",
+    modifiers: [
+      { type: 'kontakt', resources: '2T6+6', title: 'Journalist' },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 49,
+    max: 54,
+    description: "Publikation. Rollpersonen har fått sina artiklar och avhandlingar publicerade i en ansedd vetenskaplig tidning (exempelvis Nature eller Science). Öka rollpersonens Mediastatus med ett (+1).",
+     modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: 1 }
+    ]
+  },
+  {
+    min: 55,
+    max: 63,
+    description: "Rumskamrat. Rollpersonen blir mycket god vän med sin rumskamrat på campus. Slå 1T6 för att avgöra vad denna person sysslar med nu: 1 läkare, 2 forskare, 3 journalist, 4 tekniker, 5 affärsman, 6 företagsman. Anteckna denna person som kontakt med 2T6+6 resurser.",
+     modifiers: [
+      { type: 'kontakt', resources: '2T6+6', title: ['Journalist', 'Läkare', 'Forskare', 'Tekniker', 'Affärsman', 'Företagsman'] },
+    ]
+  },
+  {
+    min: 64,
+    max: 68,
+    description: "Tagit åt sig äran. Rollpersonen har ensam publicerat och tagit åt sig äran för forskningsresultat som en kollega hävdar att de gjort tillsammans (anteckna som fiende med 2T6+6 resurser). Rollpersonen vinner ett pris (höj startkapitalet med Ob3T6 × 10.000 euro). Höj dessutom rollpersonens Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'startkapital', description: 'Vetenskapspris', diceFormula: 'Ob3T6', multiplier: 10000 },
+      { type: 'fiende', resources: '2T6+6', title: 'Forskare' },
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' }
+    ]
+  },
+  {
+    min: 69,
+    max: 74,
+    description: "Triviamästare. Rollpersonen har blivit väldigt allmänbildad. Öka BIL med två (+2). Dessutom har rollpersonen deltagit i en frågesport på TV. Öka därför Mediastatus med 1T6.",
+    modifiers: [
+      { type: 'secondary_attribute', name: 'Mediastatus', value: '1T6' },
+      { type: 'attribute', target: 'BIL', amount: 2, description: 'Frågesport' }
+    ]
+  },
+  {
+    min: 75,
+    max: 80,
+    description: "Utbytesstudent. Rollpersonen har studerat ett år utomlands. Använd 1T6+6 enheter för att öka en valfri språkfärdighet. Anteckna en utländsk forskare som kontakt med 2T6+8 resurser.",
+    modifiers: [
+      { type: 'skill_distribution', allowedSkills: ['Språk'], description: 'Arbetat utomlands', diceFormula: '1T6+6' },
+      { type: 'kontakt', resources: '2T6+8', title: 'Utländsk forskare' },
+    ]
+  },
+  {
+    min: 81,
+    max: 100,
+    description: "Annan händelse. Slå ett slag på den allmänna händelsetabellen (tabell N2-22).",
+    modifiers: [{type: 'redirect', table: 'generalEvents' }]
+  }
+]

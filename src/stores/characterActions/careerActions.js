@@ -57,12 +57,20 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
             if (targetValue) {
                 successfulRolls += 1;
             }
+        } else if (attrName === 'Cool') {
+            const targetValue = store.cool
+            const rollResult = rollDiceString("Ob3T6");
+            if (rollResult <= targetValue) {
+                 successfulRolls += 1;
+            }
         } else {
             let targetValue = 0
             if (isAttribute(attrName)) {
+                // Check attribute
                 targetValue = store.getAttributeValue(attrName);
                 console.log(`Target is ${targetValue} for ${attrName}.`);
             } else {
+                // Check skill
                 targetValue = store.getSkillValue(attrName);
                 console.log(`Target is ${targetValue} for ${attrName}.`);
             }

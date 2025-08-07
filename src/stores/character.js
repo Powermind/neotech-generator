@@ -64,6 +64,7 @@ const defaultCharacterState = () => ({
   currentCareerDetails: null, // Full details of the selected career for the current stage
   pendingSkillDistributions: [], // Events waiting for skill point distribution
   contacts: [],
+  enemies: [],
 
   // --- NEW: Track initial points awarded ---
   initialCareerPointsAwarded: 0,
