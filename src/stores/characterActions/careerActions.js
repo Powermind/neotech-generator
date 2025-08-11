@@ -7,13 +7,16 @@ import { resolveEvent } from '../../utils/eventResolver'; // For career events
 import * as backgroundEventTables from '../../gameData/careers/backgroundEventTables';
 import * as careerEventTables from '../../gameData/careers/careerEventTables';
 
+// --- NEW IMPORT ---
+import generalCareers from '../../gameData/careers/generalCareers';
+
 // Helper function to see if the success roll is an attribute
 function isAttribute(name) {
     return name === name.toUpperCase();
 }
 
 // Helper function to apply characteristic rolls (Step 2 of career path)
-// Returns the number of succesful career rolls MINUS 1 to keep for array indexing
+// Returns the number of succesful career rolls
 function applyCharacteristicRolls(store, career, bribedAttribute = null) {
     if (!career.characteristicRolls || career.characteristicRolls.length === 0) {
         console.log(`No characteristic rolls defined for ${career.name}.`);
@@ -22,14 +25,13 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
     }
     let successfulRolls = 0
     career.characteristicRolls.forEach(attrName => {
-        // NEW: Check if this is the bribed attribute.
+        // NEW: Check if a bribe exists for this roll.
         if (attrName === bribedAttribute) {
             successfulRolls += 1;
             console.log(`Bribe applied for ${attrName}. Automatic success!`);
-            store.current.startkapital.push({ amount: -10000, description: 'Mutat bort framgångsslag' })
+            store.current.money -= 10000; // Deduct the bribe cost
             return; // Skip the roll for this attribute
         }
-        
         // Roll Ob3D6 for each characteristic (as per your game, adjust if 3D6/4D6)
         if (attrName === 'Startkapital') {
             if (store.totalStartkapital >= 10000) {
@@ -37,13 +39,6 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
                 console.log(`Automatic success for ${attrName}.`);
             } else {
                 console.log(`Fail for ${attrName}.`, store.totalStartkapital);
-            }
-        } else if (attrName === 'Playboy') {
-            if (store.totalStartkapital >= 100000 || store.socialClass === 'bg-socialElit') {
-                successfulRolls += 1;
-                console.log(`Passed ${attrName} automatically.`);
-            } else {
-                console.log(`Failed ${attrName}, `, store.socialClass);
             }
         } else if (attrName === 'Mediastatus') {
             const targetValue = store.mediastatus
@@ -63,14 +58,13 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
             if (rollResult <= targetValue) {
                  successfulRolls += 1;
             }
+            console.log(`Rolled ${rollResult} for ${attrName}.`);
         } else {
             let targetValue = 0
             if (isAttribute(attrName)) {
-                // Check attribute
                 targetValue = store.getAttributeValue(attrName);
                 console.log(`Target is ${targetValue} for ${attrName}.`);
             } else {
-                // Check skill
                 targetValue = store.getSkillValue(attrName);
                 console.log(`Target is ${targetValue} for ${attrName}.`);
             }
@@ -82,7 +76,7 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
         }
     });
     console.log(`Rolled ${successfulRolls} successes.`);
-    return Math.max(0, successfulRolls - 1)
+    return successfulRolls
 }
 
 // Helper function to enable career-specific skills for buying (Part of Step 3)
@@ -119,10 +113,10 @@ export function selectCareerLogic(store, careerId, allBackgroundCareers, allGene
     console.log(`Selected career for ${store.current.currentCareerStage}: ${selectedCareer.name}`);
 }
 
-// --- NEW/REFACTORED Logic for Applying Career Effects (Called after selection, before skill spending) ---
+// --- UPDATED Logic for Applying Career Effects (Called after selection, before skill spending) ---
 export function applyCareerEffectsLogic(store, bribedAttribute) {
     const currentStage = store.current.currentCareerStage;
-    const selectedCareer = store.current.currentCareerDetails;
+    let selectedCareer = store.current.currentCareerDetails;
 
     if (!selectedCareer) {
         console.warn(`No career selected for stage ${currentStage}. Cannot advance.`);
@@ -135,7 +129,31 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
     let successRate = 0
     if (currentStage !== 'background_selection') {
         successRate = applyCharacteristicRolls(store, selectedCareer, bribedAttribute);
+        
+        // --- NEW LOGIC: REDIRECT ON TOTAL FAILURE ---
+        if (successRate === 0) {
+            console.log("Failing all rolls! Character is redirected to the Arbetslös or Hemlös career.");
+            let autoCareer = generalCareers.find(c => c.id === 'car-arbetslos');
+            if (store.totalStartkapital < 0) {
+                autoCareer = generalCareers.find(c => c.id === 'car-hemlos');
+            }
+            // Find the "Arbetare" career
+            if (autoCareer) {
+                selectedCareer = autoCareer;
+                store.current.currentCareerDetails = selectedCareer;
+                // Re-run the rolls for the new career, but force a success rate of 0 to show the penalty
+                // Or you could roll again, but this feels more punitive.
+                successRate = 1;
+            } else {
+                console.error("Could not find career for redirection.");
+            }
+        }
     }
+    // NB! Reduce successRate here to keep for array indexing
+    if (successRate > 0) {
+       successRate -= 1
+    } 
+
     // 2) User gets some skill points to buy career skills
     store.current.careerPointsPool = selectedCareer.baseCareerSkillPoints[successRate];
     // --- NEW: Set initial award for career points ---
@@ -159,7 +177,9 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
     store.current.promotions.push(selectedCareer.promotion);
 
     // 7) Characters gets money for their starting capital
-    store.current.money += selectedCareer.startingCapital[successRate];
+    const amountRoll = rollDiceString('Ob3T6')
+    const amount = amountRoll * selectedCareer.startingCapital[successRate];
+    store.current.startkapital.push({ amount , description: "Lön"});
 
     // 8) Character rolls two times on the career event table
     if (selectedCareer.eventTable) {
@@ -178,35 +198,6 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
             }
         }
     }
-
-    /*
-    // Store this completed career in history
-    store.current.careerHistory.push({
-        stage: currentStage,
-        careerId: selectedCareer.id,
-        name: selectedCareer.name,
-        promotion: selectedCareer.promotion,
-        years: selectedCareer.yearsInCareer,
-    });
-
-    // Reset current career details for the next stage's selection
-    store.current.selectedCareerId = null;
-    store.current.currentCareerDetails = null;
-    // Optionally disable previously enabled skills
-    // disableAllBuyableSkills(store); // Uncomment if you want to clear 'buyable' status after each stage completes
-
-    // Advance to the next career stage
-    if (currentStage === 'background') {
-        store.current.currentCareerStage = 'career1';
-    } else if (currentStage === 'career1') {
-        store.current.currentCareerStage = 'career2';
-    } else if (currentStage === 'career2') {
-        store.current.currentCareerStage = 'career3';
-    } else if (currentStage === 'career3') {
-        store.current.currentCareerStage = 'finished';
-    }
-    console.log(`Character advanced to new stage: ${store.current.currentCareerStage}`);
-    */
 }
 
 // --- NEW Logic for Completing Current Career Stage and Advancing ---
@@ -253,6 +244,9 @@ export function completeCurrentCareerStageAndAdvanceLogic(store) {
     // Reset current career details for the next stage's selection
     store.current.selectedCareerId = null;
     store.current.currentCareerDetails = null;
+
+    // Reset prison for character
+    // store.current.prisonTerm = false
 
     // Optional: Disable skills that were just enabled for this career path
     // This is good practice to clear 'buyable' status for the next career's specific skills

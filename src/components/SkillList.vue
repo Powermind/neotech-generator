@@ -75,6 +75,18 @@ const handleToggleEasy = (skillName) => {
     <p class="buyable-skills-summary">
         Buyable Skills: {{ characterStore.buyableSkills.map(s => s.name).join(', ') || 'None' }}
     </p>
+    <!-- NEW: Display Startkapital entries -->
+    <div class="startkapital-summary">
+      <h3>Startkapital Entries</h3>
+      <div v-if="characterStore.current.startkapital.length === 0">
+        <p>No startkapital entries yet.</p>
+      </div>
+      <div v-else>
+        <p v-for="(entry, index) in characterStore.current.startkapital" :key="index">
+          {{ entry.description }}: {{ entry.amount }} €
+        </p>
+      </div>
+    </div>  
   </div>
 </template>
 

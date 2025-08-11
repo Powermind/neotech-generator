@@ -1,11 +1,11 @@
 export const generalEvents = [
   {
     min: 1,
-    max: 2,
+    max: 100,
     description: "Aktieklipp. Rollpersonen har gjort lyckade affärer på börsen. Anteckna en aktiemäklare som kontakt med 2T6+10 resurser. Fördubbla rollpersonens nuvarande startkapital. Om rollpersonen är skuldsatt halveras skulden.",
     modifiers: [
       { type: 'kontakt', title: 'Aktiemäklare', resources: '2T6+6'},
-      { type: 'startkapital', multiplier: 2 },
+      { type: 'startkapital', multiplier: 1 },
     ]
   },
   {
@@ -245,7 +245,7 @@ export const generalEvents = [
     max: 67,
     description: "Misslyckade affärer. Rollpersonen har satsat pengar i en riktigt dålig affär. Halvera rollpersonens startkapital. Om rollpersonen är skuldsatt så fördubblas skulden.",
     modifiers: [
-      { type: 'startkapital', multiplier: 0.5 }
+      { type: 'startkapital', multiplier: -0.5 }
     ]
   },
   {

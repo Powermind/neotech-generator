@@ -47,7 +47,7 @@ const skillsData = [
   { name: 'Hasardspel', value: 0, easy: false, buyable: false },
   { name: 'Historia', value: 0, easy: false, buyable: false },
   { name: 'Hoppa', value: 0, easy: false, buyable: false },
-  { name: 'Informationssök.', value: 0, easy: false, buyable: false },
+  { name: 'Informationssökning', value: 0, easy: false, buyable: false },
   { name: 'Jakt', value: 0, easy: false, buyable: false },
   { name: 'Juridik', value: 0, easy: false, buyable: false },
   { name: 'Kasta', value: 0, easy: false, buyable: false },

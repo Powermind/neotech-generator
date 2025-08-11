@@ -49,10 +49,12 @@ const defaultCharacterState = () => ({
   money: 0, // <-- NEW: Character's money
   promotions: [], // <-- NEW: Store promotions earned
   startkapital: [],
+  startkapitalMultiplier: 1, // Total modifier
   hasRolledAdvantages: false,
   hasRolledDisadvantages: false,
   hasRolledBackground: false,
   hasDegree: false,
+  prisonTerm: false, // If true, next career must be Fängelse
 
   // --- NEW CAREER TRACKING STATE ---
   currentCareerStage: 'background_selection', // <--- CHANGED HERE!
@@ -94,7 +96,8 @@ export const useCharacterStore = defineStore('character', {
       return state.current.attributes.reduce((sum, attr) => sum + attr.value, 0);
     },
     totalStartkapital: (state) => {
-      return state.current.startkapital.reduce((sum, event) => sum + event.amount, 0);
+      const beforeModifier = state.current.startkapital.reduce((sum, event) => sum + event.amount, 0);
+      return Math.round(beforeModifier * state.current.startkapitalMultiplier);
     },
     socialClass: (state) => {
       console.log(state.current.socialClass)
@@ -202,6 +205,11 @@ export const useCharacterStore = defineStore('character', {
 
     // Returns general careers filtered by character restrictions
     availableGeneralCareers: (state) => {
+      // If Character must go to prison
+      if (state.current.prisonTerm) {
+        return generalCareers.filter(career => career.name === 'Fängelse')
+      }
+      // Else choose
       return generalCareers.filter(career => {
         if (career.restrictions && career.restrictions.length > 0) {
           return career.restrictions.every(restriction => {
@@ -212,6 +220,9 @@ export const useCharacterStore = defineStore('character', {
             // Add other restriction types here as needed (e.g., 'max_attribute', 'has_skill', etc.)
             return true; // If restriction type is unknown, assume it passes
           });
+        }
+        if (career.type === 'automatic') {
+            return false
         }
         return true; // No restrictions, so it's available
       });
@@ -241,7 +252,7 @@ export const useCharacterStore = defineStore('character', {
     updateAttribute(attributeName, newValue) {
       const attributeToUpdate = this.current.attributes.find(attr => attr.name === attributeName);
       if (attributeToUpdate) {
-        attributeToUpdate.value = newValue;
+        attributeToUpdate.mods.push({value:newValue});
       } else {
         console.warn(`Attribute with name "${attributeName}" not found.`);
       }
@@ -437,39 +448,38 @@ export const useCharacterStore = defineStore('character', {
       this.selectCareer(this.current.socialClass.socialClass)
 
       // Startkapital
-      const amountRoll = rollDiceString('Ob3T6')
-      console.log(amountRoll)
-      const amount = amountRoll * this.current.currentCareerDetails.startingCapital
-      this.current.startkapital.push({ amount , description: "Social status"});
+      //
+      // const amountRoll = rollDiceString('Ob3T6')
+      // console.log(amountRoll)
+      // const amount = amountRoll * this.current.currentCareerDetails.startingCapital
+      // this.current.startkapital.push({ amount , description: "Social status"});
 
       // Apply bilmod
       // Find the current value of the attribute from the store's state
-      const currentAttribute = this.current.attributes.find(attr => attr.name === 'Bildning');
 
-      if (currentAttribute) {
-        // Calculate the new value
-        let bilAmount = this.current.currentCareerDetails.bilMod
-        // If the amount is a string, roll the dice
-          if (typeof bilAmount === 'string') {
-            try {
-              bilAmount = rollDiceString(bilAmount);
-            } catch (error) {
-              console.error(`Error rolling dice string "${bilAmount}":`, error);
-              return;
-            }
-          }
-        const newValue = currentAttribute.value + bilAmount;
-        // Use the existing updateAttribute action from the store
-        this.updateAttribute('Bildning', newValue);
-        console.log(`  - Bildning changed by ${bilAmount} to ${newValue}`);
-
-        // Genetics
-        if (this.current.currentCareerDetails.genetics) {
-          rollLifeEventLogic(this, 'genetics');
-          rollLifeEventLogic(this, 'sideeffects');
+      let bilAmount = this.current.currentCareerDetails.bilMod
+      // If the amount is a string, roll the dice
+      if (typeof bilAmount === 'string') {
+        try {
+          bilAmount = rollDiceString(bilAmount);
+        } catch (error) {
+          console.error(`Error rolling dice string "${bilAmount}":`, error);
+          return;
         }
-      } else {
-        console.warn(`Modifier target attribute "${targetAttributeName}" not found.`);
+      }
+      console.log('Applying bilmod', bilAmount)
+
+      this.updateAttribute('Bildning', bilAmount);
+
+      //const newValue = currentAttribute.value + bilAmount;
+      // Use the existing updateAttribute action from the store
+      //this.updateAttribute('Bildning', newValue);
+      // console.log(`  - Bildning changed by ${bilAmount} to ${newValue}`);
+
+      // Genetics
+      if (this.current.currentCareerDetails.genetics) {
+        rollLifeEventLogic(this, 'genetics');
+        rollLifeEventLogic(this, 'sideeffects');
       }
 
       this.current.hasRolledBackground = true;
@@ -514,7 +524,9 @@ export const useCharacterStore = defineStore('character', {
         console.warn('Not enough career skill points!');
       }
     },
-
+    resetStartkapital() {
+      this.current.startkapital = []
+    },
     returnSkillPoints(skillName, pointsToSpend, type="career") {
       let pool
       if (type == "career") {

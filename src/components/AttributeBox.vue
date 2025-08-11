@@ -24,16 +24,22 @@ const attributeName = computed(() => {
 // 3. Use another computed property to get the current attribute value
 // This makes sure the value displayed is always reactive to the store
 const attributeValue = computed(() => {
-  return characterStore.current.attributes[props.attributeIndex].value;
+  const abbr = characterStore.current.attributes[props.attributeIndex].abbr;
+  return characterStore.getAttributeValue(abbr)
 });
 
+const change = computed(() => {
+  return characterStore.current.attributes[props.attributeIndex].mods.length > 0;
+});
 
 </script>
 
 <template>
   <div class="attribute-box">
     <p class="attribute-label">{{ attributeName }}</p>
-    <p class="attribute-value">{{ attributeValue }}</p>
+    <p class="attribute-value">{{ attributeValue }}
+      <sup v-if="change">&#9662;</sup>
+    </p>
   </div>
 </template>
 
@@ -53,6 +59,10 @@ p {
 }
 .attribute-value {
     font-size: 36px;
+}
+
+sup {
+  font-size: 20px;
 }
 
 /* https://www.w3schools.com/howto/howto_css_glowing_text.asp */

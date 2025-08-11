@@ -29,7 +29,13 @@ import {
   polisCareerEvents,
   rymdarbetareCareerEvents,
   sjukvardareCareerEvents,
-  soldatCareerEvents
+  soldatCareerEvents,
+  soloCareerEvents,
+  teknikerCareerEvents,
+  universitetetCareerEvents,
+  hemlosCareerEvents,
+  fangelseCareerEvents,
+  arbetslosCareerEvents
 } from '../../gameData/careers/careerEventTables';
 
 import {
@@ -45,20 +51,20 @@ import {
 import generalEvents from '../../gameData/lifeEvents/generalEvents'
 
 const lifeEventTables = {
-    hemlosBackgroundEvents: hemlosBackgroundEvents,
-    underklassenBackgroundEvents: underklassenBackgroundEvents,
-    medelklassenBackgroundEvents: medelklassenBackgroundEvents,
-    overklassenBackgroundEvents: overklassenBackgroundEvents,
-    socialElitBackgroundEvents: socialElitBackgroundEvents,
+    hemlosBackgroundEvents,
+    underklassenBackgroundEvents,
+    medelklassenBackgroundEvents,
+    overklassenBackgroundEvents,
+    socialElitBackgroundEvents,
     advantages: advantagesEvents,
     disadvantages: disadvantagesEvents,
-    genetics: genetics,
-    sideeffects: sideeffects,
-    generalEvents: generalEvents,
-    arbetareCareerEvents: arbetareCareerEvents,
-    artistCareerEvents: artistCareerEvents,
-    affarsmanCareerEvents: affarsmanCareerEvents,
-    foretagsmanCareerEvents: foretagsmanCareerEvents,
+    genetics,
+    sideeffects,
+    generalEvents,
+    arbetareCareerEvents,
+    artistCareerEvents,
+    affarsmanCareerEvents,
+    foretagsmanCareerEvents,
     gangmedlemCareerEvents,
     gangsterCareerEvents,
     hackerCareerEvents,
@@ -69,7 +75,13 @@ const lifeEventTables = {
     polisCareerEvents,
     rymdarbetareCareerEvents,
     sjukvardareCareerEvents,
-    soldatCareerEvents
+    soldatCareerEvents,
+    soloCareerEvents,
+    teknikerCareerEvents,
+    universitetetCareerEvents,
+    hemlosCareerEvents,
+    fangelseCareerEvents,
+    arbetslosCareerEvents
     // Add more tables here as you create them for other careers/stages
 };
 
@@ -98,7 +110,7 @@ export function applyModifiersLogic(store, eventResult, redirect = false) {
             return;
           }
         }
-        const currentAttribute = store.current.attributes.find(attr => attr.name === targetAttributeName);
+        const currentAttribute = store.current.attributes.find(attr => (attr.name === targetAttributeName || attr.abbr === targetAttributeName) );
 
         if (currentAttribute) {
           const newValue = currentAttribute.value + amount;
@@ -124,6 +136,8 @@ export function applyModifiersLogic(store, eventResult, redirect = false) {
       } else if (modifier.type === 'redirect') {
         rollLifeEventLogic(store, modifier.table, true);
         shouldStoreEvent = false;
+      } else if (modifier.type === 'prison') {
+        store.current.prisonTerm = true;
       } else if (modifier.type === 'kontakt') {
         const resources = rollDiceString(modifier.resources);
         let contactTitle;
@@ -149,9 +163,17 @@ export function applyModifiersLogic(store, eventResult, redirect = false) {
         }
         store.current.enemies.push({ title: contactTitle, resources });
       } else if (modifier.type === 'startkapital') {
-        const amount = rollDiceString(modifier.diceFormula) * modifier.multiplier;
-        store.current.startkapital.push({ amount, description: modifier.title });
-        console.log(`Logged startkapital: ${modifier.diceFormula}, ${amount}`);
+        if (modifier.reset) {
+          store.current.resetStartkapital
+        } else {
+          if (modifier.diceFormula) {
+            const amount = rollDiceString(modifier.diceFormula) * modifier.multiplier;
+            store.current.startkapital.push({ amount, description: modifier.title });
+            console.log(`Logged startkapital: ${modifier.diceFormula}, ${amount}`);
+          } else {
+            store.current.startkapitalMultiplier += modifier.multiplier;
+          }
+        }
       } else if (modifier.type === 'reroll10') {
         console.log('Logged genetic reroll all under 10');
         store.rerollAttributesUnder10();
@@ -162,7 +184,7 @@ export function applyModifiersLogic(store, eventResult, redirect = false) {
       } else if (modifier.type === 'secondary_attribute') {
         console.log('Logged secondary attribute');
         const targetAttribute = modifier.name;
-        const value = modifier.value;
+        const value = modifier.modifier;
 
         let calculatedValue;
         if (typeof value === 'string') {
