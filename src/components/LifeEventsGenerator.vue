@@ -38,6 +38,10 @@ const displayedLifeEvents = computed(() => {
   // Otherwise, return all reversed events
   return showAllEvents.value ? reversedEvents : reversedEvents.slice(0, 2);
 });
+
+const numEvents = computed(() => {
+  return characterStore.current.lifeEvents.length
+});
 </script>
 
 <template>
@@ -45,9 +49,9 @@ const displayedLifeEvents = computed(() => {
     class="life-events-generator"
     :class="{ 'flash-effect': isFlashing }"
   >
-    <h2>Life Events</h2>
+    <h2>Händelser i rollpersonens liv ({{ numEvents }})</h2>
     <div class="event-list">
-      <p v-if="characterStore.current.lifeEvents.length === 0">No events rolled yet.</p>
+      <p v-if="characterStore.current.lifeEvents.length === 0">Inga händelser ännu.</p>
       <ul>
         <!-- Now iterates over the computed property 'displayedLifeEvents' -->
         <li v-for="(event, index) in displayedLifeEvents" :key="index">
@@ -104,12 +108,12 @@ const displayedLifeEvents = computed(() => {
 }
 
 .life-events-generator {
-  background-color: #f7f7f7;
-  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  border: 1px solid #6a5acd;
   border-radius: 10px;
-  padding: 30px;
+  padding: 10px 30px;
   margin: 20px auto;
-  max-width: 600px;
+  max-width: 960px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   text-align: left;
   color: #333;

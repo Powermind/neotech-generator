@@ -198,6 +198,17 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
             }
         }
     }
+
+    // 9) Character gets benefits or penalties for career success
+    if (successRate < 1 && selectedCareer.failedBenefits) {
+        store.applyLifeEvents(selectedCareer.failedBenefits);
+    }
+    if (successRate === 1 && selectedCareer.normalBenefits) {
+        store.applyLifeEvents(selectedCareer.normalBenefits);
+    }
+    if (successRate > 1 && selectedCareer.successfulBenefits) {
+        store.applyLifeEvents(selectedCareer.successfulBenefits);
+    }
 }
 
 // --- NEW Logic for Completing Current Career Stage and Advancing ---

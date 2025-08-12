@@ -54,10 +54,10 @@ const currentCareerName = computed(() => characterStore.current.currentCareerDet
 
 // Map current stage name to display name
 const stageDisplayName = computed(() => {
-    if (characterStore.current.currentCareerStage === 'background_skill_purchase') return 'Background Skill Purchase';
-    if (characterStore.current.currentCareerStage === 'career1_skill_purchase') return 'First Career Skill Purchase';
-    if (characterStore.current.currentCareerStage === 'career2_skill_purchase') return 'Second Career Skill Purchase';
-    if (characterStore.current.currentCareerStage === 'career3_skill_purchase') return 'Third Career Skill Purchase';
+    if (characterStore.current.currentCareerStage === 'background_skill_purchase') return 'Bakgrundsfärdigheter';
+    if (characterStore.current.currentCareerStage === 'career1_skill_purchase') return 'Färdigheter karriär 1';
+    if (characterStore.current.currentCareerStage === 'career2_skill_purchase') return 'Färdigheter karriär 2';
+    if (characterStore.current.currentCareerStage === 'career3_skill_purchase') return 'Färdigheter karriär 3';
     return 'Skill Purchase Stage';
 });
 
@@ -116,37 +116,39 @@ const isReductionLevelDisabled = (skill, poolType) => {
 <template>
   <div class="career-skill-purchase-stage">
     <h2>{{ stageDisplayName }}: {{ currentCareerName }}</h2>
-    <p>Spend the skill points earned from your {{ currentCareerName }} career.</p>
+    <p>Fördela färdighetspoäng från karriären {{ currentCareerName }}.</p>
 
     <div class="skill-pools">
       <div class="pool-item">
-        <h3>Career Skill Points: {{ careerPoints }}</h3>
-        <p>Spend these points on skills associated with this career.</p>
+        <h3>Karriärens färdighetspoäng: {{ careerPoints }}</h3>
+        <p>Fördela dessa på färdigheter från karriären.</p>
       </div>
       <div class="pool-item" v-if="initialFreePoints > 0">
-        <h3>Free Skill Points: {{ freePoints }}</h3>
-        <p>Spend these points on any skill.</p>
+        <h3>Valfria färdighetspoäng: {{ freePoints }}</h3>
+        <p>Fördela dessa poäng på valfria färdigheter.</p>
       </div>
       <div class="pool-item" v-if="initialStridsvanaPoints > 0">
-        <h3>Stridsvana Points: {{ stridsvanaPoints }}</h3>
-        <p>Spend these points specifically on "Stridsvana".</p>
+        <h3>Stridsvana-poäng: {{ stridsvanaPoints }}</h3>
+        <p>Fördela dessa på färdigheten "Stridsvana".</p>
       </div>
     </div>
 
     <div class="skill-spending-area">
       <div class="skill-category">
-        <h4>Spend Career Skills Points ({{ careerPoints }} remaining)</h4>
+        <h4>Karriärens färdighetspoäng ({{ careerPoints }} kvar)</h4>
         <div v-if="careerBuyableSkills.length > 0" class="skill-list">
           <div v-for="skill in careerBuyableSkills" :key="skill.name" class="skill-item">
             <span>
-                {{ skill.name }} (Current: {{ skill.value }})
-                <span class="cost-info" v-if="getCostForOneLevel(skill, 'career') !== Infinity">
-                    (Cost: {{ getCostForOneLevel(skill, 'career') }})
-                </span>
-                <span class="cost-info invalid-cost" v-else>
-                    (Invalid)
-                </span>
+                {{ skill.name }} {{ skill.value }}
             </span>
+            <div class="skill-cost">
+              <span class="cost-info" v-if="getCostForOneLevel(skill, 'career') !== Infinity">
+                  ({{ getCostForOneLevel(skill, 'career') }})
+              </span>
+              <span class="cost-info invalid-cost" v-else>
+                  (-)
+              </span>
+            </div>
             <button @click="spendSkillPoints(skill.name, getCostForOneLevel(skill, 'career'), 'career')" :disabled="isOneLevelDisabled(skill, 'career')">+</button>
             <button @click="returnSkillPoints(skill.name, getReductionCostForOneLevel(skill, 'career'), 'career')" :disabled="isReductionLevelDisabled(skill, 'career')">-</button>
         </div>
@@ -155,18 +157,20 @@ const isReductionLevelDisabled = (skill, poolType) => {
       </div>
 
       <div class="skill-category" v-if="initialFreePoints > 0">
-        <h4>Spend Free Skill Points ({{ freePoints }} remaining)</h4>
+        <h4>Valfria färdighetspoäng ({{ freePoints }} kvar)</h4>
         <div class="skill-list">
           <div v-for="skill in allSkillsSorted" :key="skill.name" class="skill-item">
             <span>
-                {{ skill.name }} (Current: {{ skill.value }})
-                <span class="cost-info" v-if="getCostForOneLevel(skill, 'free') !== Infinity">
-                    (Cost: {{ getCostForOneLevel(skill, 'free') }})
+                {{ skill.name }} {{ skill.value }}
+            </span>
+            <div class="skill-cost">
+            <span class="cost-info" v-if="getCostForOneLevel(skill, 'free') !== Infinity">
+                    ({{ getCostForOneLevel(skill, 'free') }})
                 </span>
                 <span class="cost-info invalid-cost" v-else>
-                    (Invalid)
+                    (-)
                 </span>
-            </span>
+            </div>
             <button @click="spendSkillPoints(skill.name, getCostForOneLevel(skill, 'free'), 'free')" :disabled="isOneLevelDisabled(skill, 'free')">+</button>
             <button @click="returnSkillPoints(skill.name, getReductionCostForOneLevel(skill, 'free'), 'free')" :disabled="isReductionLevelDisabled(skill, 'free')">-</button>
           </div>
@@ -174,18 +178,21 @@ const isReductionLevelDisabled = (skill, poolType) => {
       </div>
 
       <div class="skill-category" v-if="initialStridsvanaPoints > 0">
-        <h4>Spend Stridsvana Points ({{ stridsvanaPoints }} remaining)</h4>
+        <h4>Stridsvana-poäng ({{ stridsvanaPoints }} kvar)</h4>
         <div class="skill-list">
           <div class="skill-item">
             <span>
-                Stridsvana (Current: {{ characterStore.current.skills.find(s => s.name === 'Stridsvana')?.value || 0 }})
-                <span class="cost-info" v-if="getCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana') !== Infinity">
-                    (Cost: {{ getCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana') }})
+                Stridsvana {{ characterStore.current.skills.find(s => s.name === 'Stridsvana')?.value || 0 }}
+                
+            </span>
+            <div class="skill-cost">
+            <span class="cost-info" v-if="getCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana') !== Infinity">
+                    ({{ getCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana') }})
                 </span>
                 <span class="cost-info invalid-cost" v-else>
-                    (Invalid)
+                    (-)
                 </span>
-            </span>
+            </div>
             <button @click="spendSkillPoints('Stridsvana', getCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana'), 'stridsvana')" :disabled="isOneLevelDisabled(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana')">+</button>
             <button @click="returnSkillPoints('Stridsvana', getReductionCostForOneLevel(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana'), 'stridsvana')" :disabled="isReductionLevelDisabled(characterStore.current.skills.find(s => s.name === 'Stridsvana'), 'stridsvana')">-</button>
           </div>
@@ -322,6 +329,10 @@ h2 {
 .skill-item button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.skill-cost {
+  padding-right: 10px;
 }
 
 .continue-button {

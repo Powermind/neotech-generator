@@ -26,6 +26,8 @@ const selectedCareerId = ref(characterStore.current.selectedCareerId);
 
 // NEW: A local ref to store the attribute the user wants to bribe
 const selectedBribeAttribute = ref(null);
+const showBribeOptions = ref(false);
+
 
 // Watch for changes in the local selectedCareerId and update the store
 watch(selectedCareerId, (newId) => {
@@ -58,10 +60,10 @@ const isNextButtonEnabled = computed(() => {
 
 // Map current stage name to display name (updated for new stage names)
 const stageDisplayName = computed(() => {
-    if (characterStore.current.currentCareerStage === 'background_selection') return 'Background Career';
-    if (characterStore.current.currentCareerStage === 'career1_selection') return 'First Career';
-    if (characterStore.current.currentCareerStage === 'career2_selection') return 'Second Career';
-    if (characterStore.current.currentCareerStage === 'career3_selection') return 'Third Career';
+    if (characterStore.current.currentCareerStage === 'background_selection') return 'Bakgrund och uppväxtmiljö';
+    if (characterStore.current.currentCareerStage === 'career1_selection') return 'Karriär 1';
+    if (characterStore.current.currentCareerStage === 'career2_selection') return 'Karriär 2';
+    if (characterStore.current.currentCareerStage === 'career3_selection') return 'Karriär 3';
     return 'Career Stage';
 });
 
@@ -73,15 +75,22 @@ const handleAdvanceWithBribe = () => {
     // Reset the local bribe selection after advancing
     selectedBribeAttribute.value = null;
 };
+
+// Method to toggle the visibility of the bribe options
+const toggleBribeOptions = () => {
+  showBribeOptions.value = !showBribeOptions.value;
+};
 </script>
 
 <template>
   <div class="career-selection-stage">
-    <h2>{{ stageDisplayName }} Selection</h2>
-    <p>Choose the path your character took during this stage of their life.</p>
+    <h2>{{ stageDisplayName }}</h2>
+    <p>Välj karriär för rollpersonen.</p>
 
     <div class="career-options">
       <div v-for="career in availableCareers" :key="career.id" class="career-card">
+
+      <div class="career-header-wrapper">
         <input
           type="radio"
           :id="career.id"
@@ -91,27 +100,10 @@ const handleAdvanceWithBribe = () => {
         />
         <label :for="career.id">
           <h3>{{ career.name }}</h3>
-          <p>{{ career.description }}</p>
-          <div class="career-info">
-            <div v-if="props.careerType !== 'background' && career.characteristicRolls && career.characteristicRolls.length">
-                <p>You can use a bribe to guarantee success on one roll. Select one below if you can afford it.</p>
-                <div class="bribe-options">
-                    <div v-for="roll in career.characteristicRolls" :key="roll" class="bribe-option">
-                        <input
-                            type="radio"
-                            :id="`bribe-${career.id}-${roll}`"
-                            :value="roll"
-                            v-model="selectedBribeAttribute"
-                            :name="`bribe-for-${career.id}`"
-                            :disabled="!canAffordBribe || selectedCareerId !== career.id"
-                        />
-                        <label :for="`bribe-${career.id}-${roll}`">{{ roll }}</label>
-                    </div>
-                </div>
-                <p v-if="!canAffordBribe" class="cannot-afford-message">You need at least 10000€ to bribe a roll.</p>
-            </div>
-            <span v-if="career.associatedSkills && career.associatedSkills.length">Skills: {{ career.associatedSkills.join(', ') }}</span>
-            <span v-if="career.characteristicRolls && career.characteristicRolls.length" class="restrictions">
+          
+        </label>
+      </div>  
+      <div v-if="career.characteristicRolls && career.characteristicRolls.length" class="restrictions">
               Framgångsslag:
               <span v-for="(restriction, rIndex) in career.characteristicRolls" :key="rIndex">
                 <span>
@@ -119,9 +111,37 @@ const handleAdvanceWithBribe = () => {
                 </span>
                 <span v-if="rIndex < career.characteristicRolls.length - 1">, </span>
               </span>
-            </span>
+            </div>
+
+          <div class="career-info">
+            <div v-if="props.careerType !== 'background' && career.characteristicRolls && career.characteristicRolls.length">
+                <div v-if="canAffordBribe" id="can-bribe-wrapper">
+                  <p>Du kan muta bort ett framgångsslag. Detta lyckas då automatiskt men kostar €10.000.</p>
+                  <button @click="toggleBribeOptions" class="toggle-bribe-button">
+                    {{ showBribeOptions ? 'Dölj mutor' : 'Visa mutor' }}
+                  </button>
+                  <!-- The bribe options div is now conditional -->
+                  <div class="bribe-options" v-show="showBribeOptions">
+                    <div v-for="roll in career.characteristicRolls" :key="roll" class="bribe-option">
+                          <input
+                              type="radio"
+                              :id="`bribe-${career.id}-${roll}`"
+                              :value="roll"
+                              v-model="selectedBribeAttribute"
+                              :name="`bribe-for-${career.id}`"
+                              :disabled="!canAffordBribe || selectedCareerId !== career.id"
+                          />
+                          <label :for="`bribe-${career.id}-${roll}`">{{ roll }}</label>
+                      </div>
+                  </div>
+                </div>
+                <p v-if="!canAffordBribe" class="cannot-afford-message">Du behöver minst €10.000 i startkapital för att kunna muta bort framgångsslag</p>
+            </div>
+            <div v-if="career.associatedSkills && career.associatedSkills.length" class="career-skills">
+              <span class="career-skills-header">Färdigheter:</span> {{ career.associatedSkills.join(', ') }}</div>
+            
           </div>
-        </label>
+
       </div>
     </div>
 
@@ -129,17 +149,17 @@ const handleAdvanceWithBribe = () => {
       <h3>Selected: {{ selectedCareerDetails.name }}</h3>
       <p>{{ selectedCareerDetails.description }}</p>
       <ul>
-        <li>Skill Points: {{ selectedCareerDetails.baseCareerSkillPoints }}</li>
-        <li>Free Skill Points: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
-        <li>Stridsvana Points: {{ selectedCareerDetails.baseStridsvanaPoints }}</li>
-        <li>Starting Capital: {{ selectedCareerDetails.startingCapital }}</li>
-        <li>Promotion: {{ selectedCareerDetails.promotion }}</li>
-        <li>Years in Career: {{ selectedCareerDetails.yearsInCareer }}</li>
+        <li>Karriärens färdighetspoäng: {{ selectedCareerDetails.baseCareerSkillPoints }}</li>
+        <li>Valfria färdighetspoäng: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
+        <li>Stridsvana-poäng: {{ selectedCareerDetails.baseStridsvanaPoints }}</li>
+        <li>Startkapital: {{ selectedCareerDetails.startingCapital }}</li>
+        <li>Befodran: {{ selectedCareerDetails.promotion }}</li>
+        <li>År i karriären: {{ selectedCareerDetails.yearsInCareer }}</li>
       </ul>
     </div>
 
     <button @click="handleAdvanceWithBribe()" :disabled="!isNextButtonEnabled" class="next-step-button">
-      Next Step: Apply Career Effects & Spend Skills
+      Nästa steg: Applicera karriärseffekt och köp färdigheter
     </button>
   </div>
 </template>
@@ -152,7 +172,7 @@ const handleAdvanceWithBribe = () => {
   border-radius: 10px;
   padding: 30px;
   margin: 20px auto;
-  max-width: 800px;
+  max-width: 900px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   color: #333;
@@ -178,12 +198,19 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;
-  width: 280px;
+  width: 250px;
   text-align: left;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, border-color 0.2s ease;
   display: flex; /* For radio button alignment */
   align-items: flex-start;
+  flex-direction: column;
+}
+
+.career-header-wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
 }
 
 .career-card:hover {
@@ -218,7 +245,7 @@ h2 {
 }
 
 .career-info {
-  font-size: 0.8em;
+  font-size: 0.9em;
   color: #777;
   margin-top: 10px;
   border-top: 1px solid #eee;
@@ -229,6 +256,15 @@ h2 {
     color: #dc3545; /* Red for restrictions */
     font-weight: bold;
     margin-left: 5px;
+}
+
+.career-skills {
+  padding-top: 5px;
+  font-size: 1.1em;
+}
+
+.career-skills-header {
+  font-weight: 700;
 }
 
 .selected-career-summary {
@@ -291,6 +327,7 @@ h2 {
     gap: 15px;
     margin-top: 10px;
     justify-content: center;
+    flex-direction: column;
 }
 
 .bribe-option {

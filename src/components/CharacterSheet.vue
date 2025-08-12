@@ -48,6 +48,12 @@ const rerollAttributes= () => {
     characterStore.rerollAttributes()
 }
 
+let attributesLocked = ref(false)
+
+const lockAttributes = () => {
+  attributesLocked.value = true;
+}
+
 const resetCurrent = () => {
   characterStore.resetCharacter();
 };
@@ -64,14 +70,22 @@ const handleRollChildhoodEvent = () => {
 };
 const handleRollAdvantages = () => {
   characterStore.rollLifeEvent('advantages');
-  characterStore.rollLifeEvent('advantages');
-  characterStore.current.hasRolledAdvantages = true;
+  characterStore.current.rolledAdvantages += 1;
 };
 const handleRollDisadvantages = () => {
   characterStore.rollLifeEvent('disadvantages');
-  characterStore.rollLifeEvent('disadvantages');
-  characterStore.current.hasRolledDisadvantages = true;
+  characterStore.current.rolledDisadvantages += 1;
 };
+
+const rerollButtonText = computed(() => {
+  if (characterStore.getAttributeValue('STY') === 0) {
+    return 'Slå grundegenskaper'
+  } else {
+    return 'Slå om grundegenskaper'
+  }
+});
+
+const rolledOnce = computed(() =>{ return characterStore.getAttributeValue('STY') !== 0 });
 
 const careerHistorySlots = computed(() => {
     const slots = [
@@ -109,19 +123,19 @@ const careerHistorySlots = computed(() => {
       <p>Mediastatus: {{ characterStore.mediastatus }}</p>
     </div>
     </div>
-    <div class="attribute-button-wrapper">
-        <button @click="rerollAttributes" class="attribute-button">Reroll Attributes</button>
-    </div>
-    <div class="life-event-roll-section" v-if="!characterStore.current.hasRolledAdvantages">
-        <p>Roll events for different stages of your character's life.</p>
-        <button @click="handleRollAdvantages" class="roll-button roll-life-event">Slå två fördelar</button>
-    </div>
-    <div class="life-event-roll-section" v-if="characterStore.current.hasRolledAdvantages && !characterStore.current.hasRolledDisadvantages">
-        <p>Roll events for different stages of your character's life.</p>
-        <button @click="handleRollDisadvantages" class="roll-button roll-life-event">Slå två nackdelar</button>
+    <div class="attribute-button-wrapper" v-if="!attributesLocked">
+        <button @click="rerollAttributes" class="attribute-button">{{ rerollButtonText }}</button>
+        <button @click="lockAttributes" class="attribute-button" v-if="rolledOnce">Lås grundegenskaper</button>
     </div>
     
     <LifeEventsGenerator />
+
+    <div class="life-event-roll-section" v-if="attributesLocked && characterStore.current.rolledAdvantages < 2">
+        <button @click="handleRollAdvantages" class="roll-button roll-life-event">Slå en speciell fördel</button>
+    </div>
+    <div class="life-event-roll-section" v-if="characterStore.current.rolledAdvantages > 1 && characterStore.current.rolledDisadvantages < 2">
+        <button @click="handleRollDisadvantages" class="roll-button roll-life-event">Slå en speciell nackdel</button>
+    </div>
 
     <EventSkillDistribution />
 
@@ -165,25 +179,27 @@ const careerHistorySlots = computed(() => {
 <style scoped>
 
 .attribute-wrapper {
-    position: sticky;
-    top: 0px;
-    z-index: 1;
+    padding: 0;
 }
 
 .primary-attribute-wrapper {
     display:flex;
     flex-direction: row;
-    background-color: black;
-    color: white;
-    border-top: solid 1px #007bff;
+    border-radius: 10px;
+    border: solid 1px #6a5acd;
+    padding: 10px;
+    background-color: white;
 }
 
 .secondary-attributes-wrapper {
-    background-color: black;
-    color: white;
+    border-radius: 10px;
+    border: solid 1px #6a5acd;
+    padding: 10px;
+    background-color: white;
     display: flex;
     flex-direction: row;
     gap: 10px;
+    margin-top: 10px;
 }
 
 .secondary-attributes-wrapper p {
@@ -195,20 +211,31 @@ const careerHistorySlots = computed(() => {
   width: 100%;
   margin-top: 20px;
   text-align: center;
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
-.attribute-button {
-  margin: 0px auto;
-  background: #007bff;
+.attribute-button, .roll-button {
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin: 0px auto 20px;
 }
 
-.attribute-button:hover {
+.attribute-button:hover, .roll-button:hover {
   background-color: #0056b3;
 }
 
 .character-sheet {
   background-color: #f0f8ff;
-  padding: 0;
+  padding: 20px;
   margin: 0 auto;
   max-width: 1200px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -217,26 +244,12 @@ const careerHistorySlots = computed(() => {
 }
 
 .life-event-roll-section {
-  background-color: #eaf7ff; /* Lighter blue for this section */
-  border: 1px solid #cce7ff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-top: 30px;
   text-align: center;
 }
 
 .life-event-roll-section h3 {
     border-bottom: 2px solid #007bff; /* Blue underline */
     margin-bottom: 15px;
-}
-
-.life-event-roll-section button {
-  margin: 5px 10px; /* Adjust margin for these buttons */
-  background-color: #007bff; /* Blue for life event buttons */
-}
-
-.life-event-roll-section button:hover {
-  background-color: #0056b3;
 }
 
 h2, h3 {
@@ -274,10 +287,6 @@ button {
   font-size: 0.9em;
   margin-right: 10px;
   transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #368a65;
 }
 
 ul {

@@ -48,10 +48,10 @@ const isNextButtonEnabled = computed(() => {
 
 // Map current stage name to display name (updated for new stage names)
 const stageDisplayName = computed(() => {
-    if (characterStore.current.currentCareerStage === 'background_selection') return 'Background Career';
-    if (characterStore.current.currentCareerStage === 'career1_selection') return 'First Career';
-    if (characterStore.current.currentCareerStage === 'career2_selection') return 'Second Career';
-    if (characterStore.current.currentCareerStage === 'career3_selection') return 'Third Career';
+    if (characterStore.current.currentCareerStage === 'background_selection') return 'Social klass';
+    if (characterStore.current.currentCareerStage === 'career1_selection') return 'Karriär 1';
+    if (characterStore.current.currentCareerStage === 'career2_selection') return 'Karriär 2';
+    if (characterStore.current.currentCareerStage === 'career3_selection') return 'Karriär 3';
     return 'Career Stage';
 });
 
@@ -59,22 +59,24 @@ const backgroundName = computed(() => {
   return  characterStore.current.currentCareerDetails?.name;
 });
 
+const upbringingName = computed(() => { return characterStore.current.upbringing })
+
 </script>
 
 <template>
   <div class="career-selection-stage">
-    <h2>{{ stageDisplayName }} Selection</h2>
+    <h2>{{ stageDisplayName }}<span v-if="characterStore.current.hasRolledBackground">: {{ backgroundName }}</span></h2>
     <div v-if="!characterStore.current.hasRolledBackground" class="pre-background">
-      <p>Choose the path your character took during this stage of their life.</p>
+      <p>Slå vilken social klass och upväxtmiljö rollpersonen kommer ifrån</p>
       <button @click="characterStore.rollBackground()" class="next-step-button">
-        Roll Background
+        Slå uppväxtmiljö och bakgrund
     </button>
     </div>
 
     <div v-if="characterStore.current.hasRolledBackground" class="post-background">
-      <p>Your background is: {{ backgroundName }}</p>
+      <p>Rollpersonens uppväxtmiljö: {{ upbringingName }}</p>
       <button @click="characterStore.applySelectedCareerEffects()" :disabled="!isNextButtonEnabled" class="next-step-button">
-        Next Step: Apply Career Effects & Spend Skills
+        Nästa Steg: Applicera karriärseffekter och köp färdigheter
       </button>
     </div>
   </div>
@@ -88,7 +90,7 @@ const backgroundName = computed(() => {
   border-radius: 10px;
   padding: 30px;
   margin: 20px auto;
-  max-width: 800px;
+  max-width: 900px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   color: #333;

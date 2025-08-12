@@ -50,12 +50,30 @@ const currentCareerType = computed(() => {
 // You might want to update these to reflect the new sub-stages for more granular progress display,
 // but for now, we'll keep it high-level to match the stepper UI.
 const careerStageOrder = ['background_selection', 'career1_selection', 'career2_selection', 'career3_selection', 'finished'];
+
+const careerStageLabel = {
+  'background_selection': 'Bakgrund', 
+  'career1_selection': 'Karriär 1',
+  'career2_selection': 'Karriär 2',
+  'career3_selection': 'Karriär 3', 
+  'finished': 'Slutförd'
+  };
 </script>
 
 <template>
   <div class="career-path-stepper">
-    <h2>Character Career Path</h2>
-
+    <h2>Rollpersonens bakgrund och karriär</h2>
+    
+    <div v-if="currentStageComponent" class="current-stage-content">
+      <component :is="currentStageComponent" :career-type="currentCareerType" />
+    </div>
+    
+    <div v-else class="career-finished-message">
+      <h3>Rollpersonen klar!</h3>
+      <p>Rollpersonen har är nu klar att användas.</p>
+      <button @click="characterStore.resetCharacter()" class="reset-button">Skapa en ny rollperson</button>
+    </div>
+    
     <div class="career-progress-indicators">
       <div
         v-for="stage in careerStageOrder"
@@ -67,17 +85,8 @@ const careerStageOrder = ['background_selection', 'career1_selection', 'career2_
           'future': careerStageOrder.indexOf(stage) > careerStageOrder.indexOf(characterStore.current.currentCareerStage.split('_')[0] + '_selection') // Compare based on selection stage for future
         }"
       >
-        {{ stage.replace('_selection', '').charAt(0).toUpperCase() + stage.replace('_selection', '').slice(1) }}
+        {{ careerStageLabel[stage] }}
       </div>
-    </div>
-
-    <div v-if="currentStageComponent" class="current-stage-content">
-      <component :is="currentStageComponent" :career-type="currentCareerType" />
-    </div>
-    <div v-else class="career-finished-message">
-      <h3>Character Career Path Completed!</h3>
-      <p>Your character has successfully completed all career stages.</p>
-      <button @click="characterStore.resetCharacter()" class="reset-button">Start New Character</button>
     </div>
   </div>
 </template>
@@ -86,19 +95,18 @@ const careerStageOrder = ['background_selection', 'career1_selection', 'career2_
 /* Your existing styles are fine */
 .career-path-stepper {
   background-color: #fdfdfd;
-  border: 1px solid #dcdcdc;
+  border: 1px solid #6a5acd;
   border-radius: 12px;
   padding: 30px;
-  margin: 30px auto;
-  max-width: 900px;
+  margin: 0px auto;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   color: #333;
   text-align: center;
 }
 
 h2 {
-  color: #4b0082; /* Indigo */
-  border-bottom: 2px solid #4b0082;
+  color: #6a5acd; /* Indigo */
+  border-bottom: 2px solid #6a5acd;
   padding-bottom: 10px;
   margin-bottom: 30px;
 }
@@ -113,7 +121,7 @@ h2 {
 
 .indicator-item {
   padding: 10px 15px;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: #e0e0e0;
   color: #777;
   font-weight: bold;
@@ -123,7 +131,7 @@ h2 {
 }
 
 .indicator-item.active {
-  background-color: #4b0082; /* Indigo */
+  background-color: #6a5acd; /* Indigo */
   color: white;
   box-shadow: 0 2px 8px rgba(75, 0, 130, 0.4);
   transform: scale(1.05);
@@ -140,10 +148,6 @@ h2 {
 }
 
 .current-stage-content {
-  border: 1px dashed #cccccc;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
   margin-top: 20px;
 }
 

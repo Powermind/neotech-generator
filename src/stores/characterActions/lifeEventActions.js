@@ -113,9 +113,8 @@ export function applyModifiersLogic(store, eventResult, redirect = false) {
         const currentAttribute = store.current.attributes.find(attr => (attr.name === targetAttributeName || attr.abbr === targetAttributeName) );
 
         if (currentAttribute) {
-          const newValue = currentAttribute.value + amount;
-          store.updateAttribute(targetAttributeName, newValue);
-          console.log(`  - ${targetAttributeName} changed by ${amount} to ${newValue}`);
+          store.updateAttribute(targetAttributeName, amount);
+          console.log(`  - ${targetAttributeName} changed by ${amount}`);
         } else {
           console.warn(`Modifier target attribute "${targetAttributeName}" not found.`);
         }

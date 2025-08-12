@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs (install if ne
 import { rollDice, roll3D6, roll4D6DropLowest, rollDiceString } from '../utils/diceRolls';
 
 // Import the refactored action logic
-import { rollLifeEventLogic } from './characterActions/lifeEventActions'; 
+import { rollLifeEventLogic, applyModifiersLogic } from './characterActions/lifeEventActions'; 
 import { rollUpbringing } from './characterActions/upbringingActions';
 
 // Import career data
@@ -50,8 +50,8 @@ const defaultCharacterState = () => ({
   promotions: [], // <-- NEW: Store promotions earned
   startkapital: [],
   startkapitalMultiplier: 1, // Total modifier
-  hasRolledAdvantages: false,
-  hasRolledDisadvantages: false,
+  rolledAdvantages: 0,
+  rolledDisadvantages: 0,
   hasRolledBackground: false,
   hasDegree: false,
   prisonTerm: false, // If true, next career must be Fängelse
@@ -395,6 +395,10 @@ export const useCharacterStore = defineStore('character', {
     rollLifeEvent(tableName) {
       // Call the external logic function, passing 'this' (the store instance) and tableName
       rollLifeEventLogic(this, tableName);
+    },
+
+    applyLifeEvents(events) {
+      applyModifiersLogic(this, events);
     },
 
     // Action to set the selected career ID and details for the current stage

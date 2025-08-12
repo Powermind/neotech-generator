@@ -15,6 +15,16 @@ const generalCareers = [
     eventTable: 'arbetareCareerEvents',
     associatedSkills: ['Elektronik', 'Fingerfärdighet', 'Klättra', 'Mekanik', 'Köra/truck', 'Köra/lastbil'],
     restrictions: [], // No general restrictions for this one
+    failedBenefits: {  description: 'Sparkad. Rollpersonen har förlorat jobbet och får inte fortsätta som Arbetare nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Sparkad' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Oumbärlig. Rollpersonen har gjort sig oumbrälig på jobbet. Om rollpersonen väljer samma karriär nästa steg lyckas ett framgångsslag automatiskt.',
+      modifiers:[
+        { type: 'characteristicsRoll', career: 'Arbetare' }
+      ] 
+    },
     yearsInCareer: '1T6+2',
   },
   {
@@ -32,6 +42,21 @@ const generalCareers = [
     associatedSkills: ['Agera', 'Dans', 'Förklädnad', 'Media', 'Sjunga', 'Språk', 'Stil & smak', 'Övertalning'],
     // restrictions: [{ type: 'min_attribute', attribute: 'Bildning', value: 8 }],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Fiasko. Rollpersonen har tappat sugen och vill inte fortsätta som Artist.',
+      modifiers:[
+         { type: 'fired', reason: 'Fiasko' },
+      ] 
+    },
+    normalBenefits: {  description: 'Mediavan. Rollpersonen har klarat sig bra på jobbet och får höja mediastatus med 1.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: 1 },
+      ] 
+    },
+    successfulBenefits: {  description: 'Succe. Rollpersonen har gjort succe och får höja mediastatus med 2T6.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: '2T6' },
+      ] 
+    },
   },
   {
     id: 'car-affarsman',
@@ -48,6 +73,16 @@ const generalCareers = [
     associatedSkills: ['Administration', 'Ekonomi', 'Juridik', 'Ledarskap', 'Media', 'Psykologi', 'Socialt Uppträdande', 'Värdering', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6+1',
+    failedBenefits: {  description: 'Fiasko. Rollpersonen har tappat sugen och vill inte fortsätta som Affärsman.',
+      modifiers:[
+         { type: 'fired', reason: 'Fiasko' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Reklam. Rollpersonen har gjort mycket reklam och blivit kändis genom den. Öka Mediastatus med 1T6.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: '1T6' },
+      ] 
+    },
   },
   {
     id: 'car-foretagsman',
@@ -64,22 +99,16 @@ const generalCareers = [
     associatedSkills: ['Administration', 'Diplomati', 'Ekonomi', 'Informationssökning', 'Juridik', 'Ledarskap', 'Psykologi', 'Socialt uppträdande', 'Stil & smak', 'Värdering', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6+1',
-  },
-  {
-    id: 'car-gangster',
-    name: 'Gangster',
-    type: 'general',
-    description: 'Medlem av den organiserade brottsligheten.',
-    characteristicRolls: ['PSY', 'PER', 'Undre världen'],
-    baseCareerSkillPoints: [15, 20, 25],
-    baseFreeSkillPoints: [10, 15, 20],
-    baseStridsvanaPoints: [2, 3, 4],
-    promotion: 'Pathfinder',
-    startingCapital: [100, 500, 2500],
-    eventTable: 'gangsterCareerEvents',
-    associatedSkills: ['Ekonomi', 'Förhörsteknik', 'Hasardspel', 'Juridik', 'Köra/bil', 'Ledarskap', 'Närstrid/Slagsmål', 'Närstrid/Kniv', 'Pistol', 'Undre världen', 'Övertalning' ],
-    restrictions: [],
-    yearsInCareer: '1T6+1',
+    failedBenefits: {  description: 'Fiasko. Rollpersonen har tappat sugen och vill inte fortsätta som Företagsman.',
+      modifiers:[
+         { type: 'fired', reason: 'Fiasko' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Reklam. Rollpersonen har gjort mycket reklam och blivit kändis genom den. Öka Mediastatus med 1.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: 1 },
+      ] 
+    },
   },
   {
     id: 'car-gangmedlem',
@@ -96,6 +125,42 @@ const generalCareers = [
     associatedSkills: ['Fingerfärdighet', 'Genomsöka', 'Köra/bil', 'Närstrid/Slagsmål', 'Närstrid/Kniv', 'Pistol', 'Supa', 'Undre världen', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Utesluten. Rollpersonen har blivit utesluten ur gänget och får inte fortsätta som Gängmedlem nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Utesluten' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Hårding. Rollpersonen har varit en riktig hårding och utmärkt sig i gänget. Om rollpersonen väljer samma karriär nästa period lyckas ett framgångsslag automatiskt.',
+      modifiers:[
+        { type: 'characteristicsRoll', career: 'Gängmedlem' }
+      ] 
+    },
+  },
+  {
+    id: 'car-gangster',
+    name: 'Gangster',
+    type: 'general',
+    description: 'Medlem av den organiserade brottsligheten.',
+    characteristicRolls: ['PSY', 'PER', 'Undre världen'],
+    baseCareerSkillPoints: [15, 20, 25],
+    baseFreeSkillPoints: [10, 15, 20],
+    baseStridsvanaPoints: [2, 3, 4],
+    promotion: 'Pathfinder',
+    startingCapital: [100, 500, 2500],
+    eventTable: 'gangsterCareerEvents',
+    associatedSkills: ['Ekonomi', 'Förhörsteknik', 'Hasardspel', 'Juridik', 'Köra/bil', 'Ledarskap', 'Närstrid/Slagsmål', 'Närstrid/Kniv', 'Pistol', 'Undre världen', 'Övertalning' ],
+    restrictions: [],
+    yearsInCareer: '1T6+1',
+    failedBenefits: {  description: 'Utesluten. Rollpersonen har blivit utesluten ur mafifan och får inte fortsätta som Gangster nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Utesluten' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Ökänd. Rollpersonen har blivit ökänd. Mediastatus ökar med 2.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: 2 },
+      ]
+    },
   },
   {
     id: 'car-hacker',
@@ -112,6 +177,17 @@ const generalCareers = [
     associatedSkills: ['Fingerfärdighet', 'Genomsöka', 'Köra/bil', 'Närstrid/Slagsmål', 'Närstrid/Kniv', 'Pistol', 'Supa', 'Undre världen', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Utbränd. Rollpersonen får inte fortsätta som Hacker nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Utbränd' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Kändis. Rollpersonen har blivit uppmärksammad i media. Mediastatus ökar med 1T6.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: '1T6' },
+      ]
+    },
+
   },
   {
     id: 'car-kriminell',
@@ -128,6 +204,16 @@ const generalCareers = [
     associatedSkills: ['Dyrka lås', 'Fingerfärdighet', 'Förfalskning', 'Gömma', 'Klättra', 'Köra/bil', 'Närstrid/Kniv', 'Pistol', 'Smyga', 'Spaning', 'Sprängteknik', 'Säkerhetssystem', 'Värdering', 'Undre världen', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Blivit hederlig. Rollpersonen har avslutat sin kriminella bana och får inte fortsätta som Kriminell nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Hederlig' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Kan alla knep. Rollpersonen har lärt sig alla knep i branschen. Om rollpersonen väljer samma karriär nästa period lyckas ett framgångsslag automatiskt.',
+      modifiers:[
+        { type: 'characteristicsRoll', career: 'Kriminell' }
+      ] 
+    },
   },
   {
     id: 'car-mediaarbetare',
@@ -144,6 +230,21 @@ const generalCareers = [
     associatedSkills: ['Agera', 'Foto & film', 'Förhörsteknik', 'Informationssökning', 'Media', 'Skriva/läsa', 'Socialt uppträdande', 'Språk', 'Stil & smak', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Oönskad. Rollpersonen är inte önskad i branschen och får inte fortsätta som Mediaarbetare.',
+      modifiers:[
+         { type: 'fired', reason: 'Oönskad' },
+      ] 
+    },
+    normalBenefits: {  description: 'Mediavan. Rollpersonen har klarat sig bra på jobbet och får höja mediastatus med 1.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: 1 },
+      ] 
+    },
+    successfulBenefits: {  description: 'Kändis. Rollpersonen har blivit känd i media och får höja mediastatus med 1T6+1.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: '1T6+1' },
+      ] 
+    },
   },
   {
     id: 'car-officer',
@@ -160,6 +261,13 @@ const generalCareers = [
     associatedSkills: ['Automateld', 'Första hjälpen', 'Gevär', 'Kasta', 'Ledarskap', 'Navigering', 'Närstrid/stridskonst', 'Pistol', 'Samband', 'Simma', 'Smyga', 'Spaning', 'Sprängteknik', 'Strategi', 'Taktik', 'Överlevnad', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Avskedad. Rollpersonen har blivit avskedad med goda vitsord och får inte fortsätta som Officer nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Avskedad' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Medalj. Rollpersonen har visat tapperhet och får en medalj.'
+    },
   },
   {
     id: 'car-playboy',
@@ -176,6 +284,21 @@ const generalCareers = [
     associatedSkills: ['Dans', 'Förföra', 'Jakt', 'Hasardspel', 'Konstkännedom', 'Media', 'Socialt uppträdande', 'Språk', 'Stil & smak', 'Övertalning' ],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Oönskad. Rollpersonen är inte önskad i branschen och får inte fortsätta som Playboy.',
+      modifiers:[
+         { type: 'fired', reason: 'Oönskad' },
+      ] 
+    },
+    normalBenefits: {  description: 'Mediavan. Rollpersonen har klarat sig bra på jobbet och får höja mediastatus med 1.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: 1 },
+      ] 
+    },
+    successfulBenefits: {  description: 'Kändis. Rollpersonen har blivit känd i media och får höja mediastatus med 1T6.',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: '1T6' },
+      ] 
+    },
   },
   {
     id: 'car-polis',
@@ -192,6 +315,11 @@ const generalCareers = [
     associatedSkills: ['Administration', 'Förhörsteknik', 'Genomsöka', 'Gevär', 'Informationssökning', 'Juridik', 'Köra/bil', 'Ledarskap', 'Närstrid/stridskonst', 'Pistol', 'Samband', 'Spaning', 'Spåra', 'Undre världen', 'Övertalning'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Avskedad. Rollpersonen har blivit avskedad och får inte fortsätta som Polis.',
+      modifiers:[
+         { type: 'fired', reason: 'Avskedad' },
+      ] 
+    },
   },
   {
     id: 'car-rymdarbetare',
@@ -208,6 +336,16 @@ const generalCareers = [
     associatedSkills: ['Astronomi', 'Datateknik', 'Elektronik', 'Fritt fall', 'Fysik', 'Geologi', 'Mekanik', 'Navigering', 'Pilot/rymdfarkost', 'Rymddräkt', 'Samband'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Avskedad. Rollpersonen har blivit avskedad och får inte fortsätta som Rymdarbetare.',
+      modifiers:[
+         { type: 'fired', reason: 'Oönskad' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Avslappnad attityd. Rollpersonen har utvecklat en cool attityd och får höja Cool med ett (+1).',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Cool', modifier: 1 },
+      ] 
+    },
   },
   {
     id: 'car-sjukvårdare',
@@ -224,6 +362,16 @@ const generalCareers = [
     associatedSkills: ['Administration', 'Biologi', 'Cybernetik', 'Fingerfärdighet', 'Första hjälpen', 'Genteknik', 'Kemi', 'Kirurgi', 'Medicin', 'Psykologi', 'Övertalning'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Avskedad. Rollpersonen har blivit avskedad och får inte fortsätta som Sjukvårdare.',
+      modifiers:[
+         { type: 'fired', reason: 'Avskedad' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Avslappnad attityd. Rollpersonen har utvecklat en cool attityd och får höja Cool med ett (+1).',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Cool', modifier: 1 },
+      ] 
+    },
   },
   {
     id: 'car-soldat',
@@ -240,6 +388,13 @@ const generalCareers = [
     associatedSkills: ['Automateld', 'Första hjälpen', 'Gevär', 'Gömma', 'Kasta', 'Ledarskap', 'Närstrid/kniv', 'Samband', 'Simma', 'Smyga', 'Spaning', 'Taktik', 'Undervisning', 'Överlevnad', 'Övertalning'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Avskedad. Rollpersonen har blivit avskedad med goda vitsord och får inte fortsätta som Soldat.',
+      modifiers:[
+         { type: 'fired', reason: 'Avskedad' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Medalj. Rollpersonen har visat tapperhet och får en medalj.'
+    },
   },
   {
     id: 'car-solo',
@@ -256,6 +411,16 @@ const generalCareers = [
     associatedSkills: ['Dyrka lås', 'Förklädnad', 'Förhörsteknik', 'Informationssökning', 'Klättra', 'Köra/bil', 'Närstrid/kniv', 'Närstrid/slagsmål', 'Samband', 'Pistol', 'Foto & film', 'Gevär', 'Smyga', 'Spaning', 'Spåra', 'Säkerhetssystem', 'Undre världen', 'Övertalning'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Tröttnat. Rollpersonen har tröttnat på livet som Solo får inte fortsätta som Solo nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Tröttnat' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Kan alla knep. Rollpersonen har lärt sig alla knep i branschen. Om rollpersonen väljer samma karriär nästa period lyckas ett framgångsslag automatiskt.',
+      modifiers:[
+        { type: 'characteristicsRoll', career: 'Solo' }
+      ] 
+    },
   },
   {
     id: 'car-tekniker',
@@ -272,6 +437,13 @@ const generalCareers = [
     associatedSkills: ['Administration', 'Cybernetik', 'Datateknik', 'Elektronik', 'Fysik', 'Informationssökning', 'Kemi', 'Ledarskap', 'Matematik', 'Mekanik', 'Programmering', 'Övertalning'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Tröttnat. Rollpersonen har tröttnat på sin sysselsättning och får inte fortsätta som Tekniker nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Tröttnat' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Patent. Rollpersonen har lyckats få ett patent i sitt eget namn.'
+    },
   },
   {
     id: 'car-universitetet',
@@ -288,6 +460,16 @@ const generalCareers = [
     associatedSkills: ['Informationssökning', 'Läsa/skriva', 'Undervisning', 'Språk', 'Administration', 'Antropologi', 'Astronomi', 'Biologi', 'Cybernetik', 'Datateknik', 'Design', 'Ekonomi', 'Elektronik', 'Filosofi', 'Fysik', 'Genteknik', 'Geografi', 'Geologi', 'Historia', 'Juridik', 'Kemi', 'Kirurgi', 'Konstkänndeom', 'Matematik', 'Media', 'Medicin', 'Mekanik', 'Navigering', 'Politik', 'Programmering', 'Psykologi', 'Religion', 'Sociologi'],
     restrictions: [],
     yearsInCareer: '1T6',
+    failedBenefits: {  description: 'Klarar inte studierna. Rollpersonen måste hitta en ny sysselsättning nästa period.',
+      modifiers:[
+         { type: 'fired', reason: 'Klarar inte studierna.' },
+      ] 
+    },
+    successfulBenefits: {  description: 'Publicerad. Rollpersonen har lyckats få en artikel publicerad i en väl ansedd vetenskaplig publikation. Mediastatus ökar med ett (+1).',
+      modifiers:[
+         { type: 'secondary_attribute', name: 'Mediastatus', modifier: 1 },
+      ] 
+    },
   },
   {
     id: 'car-hemlos',

@@ -958,7 +958,7 @@ export const sjukvardareCareerEvents = [
     max: 7,
     description: "Ambulansservice. Rollpersonen har arbetat för ett ambulanslevererande företag. Använd 1T6+1 enheter för att höja någon av färdigheterna Stridsvana, Pilot-helikopter eller Första hjälpen.",
     modifiers: [
-      { type: 'skill_distribution', allowedSkills: ['Stridsvana', 'Pilot/helikopter', 'Första Hjälpen'], description: 'Ambulansservice', diceFormula: '1T6+1' }
+      { type: 'skill_distribution', allowedSkills: ['Stridsvana', 'Pilot/helikopter', 'Första hjälpen'], description: 'Ambulansservice', diceFormula: '1T6+1' }
     ]
   },
   {
