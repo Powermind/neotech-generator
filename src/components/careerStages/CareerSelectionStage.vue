@@ -1,6 +1,7 @@
 <script setup>
 import { useCharacterStore } from '../../stores/character';
 import { computed, ref, watch } from 'vue';
+import { nextTick } from 'vue';
 
 const characterStore = useCharacterStore();
 
@@ -69,11 +70,16 @@ const stageDisplayName = computed(() => {
 
 // NEW: Method to handle advancing the stage with the bribe info
 const handleAdvanceWithBribe = () => {
-    // Pass the selected bribe attribute to the store action
-    console.log(selectedBribeAttribute.value)
     characterStore.applySelectedCareerEffects(selectedBribeAttribute.value);
     // Reset the local bribe selection after advancing
     selectedBribeAttribute.value = null;
+
+    nextTick(() => {
+      const el = document.getElementById('skillsSection');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
 };
 
 // Method to toggle the visibility of the bribe options
@@ -100,7 +106,6 @@ const toggleBribeOptions = () => {
         />
         <label :for="career.id">
           <h3>{{ career.name }}</h3>
-          
         </label>
       </div>  
       <div v-if="career.characteristicRolls && career.characteristicRolls.length" class="restrictions">
@@ -137,24 +142,24 @@ const toggleBribeOptions = () => {
                 </div>
                 <p v-if="!canAffordBribe" class="cannot-afford-message">Du behöver minst €10.000 i startkapital för att kunna muta bort framgångsslag</p>
             </div>
-            <div v-if="career.associatedSkills && career.associatedSkills.length" class="career-skills">
-              <span class="career-skills-header">Färdigheter:</span> {{ career.associatedSkills.join(', ') }}</div>
-            
           </div>
-
       </div>
     </div>
 
     <div v-if="selectedCareerDetails" class="selected-career-summary">
-      <h3>Selected: {{ selectedCareerDetails.name }}</h3>
+      <h3>Förhandsgranskning av {{ selectedCareerDetails.name }}</h3>
       <p>{{ selectedCareerDetails.description }}</p>
       <ul>
         <li>Karriärens färdighetspoäng: {{ selectedCareerDetails.baseCareerSkillPoints }}</li>
         <li>Valfria färdighetspoäng: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
+        <li v-if="selectedCareerDetails.baseAcademicSkillPoints">Skolfärdighetspoäng: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
         <li>Stridsvana-poäng: {{ selectedCareerDetails.baseStridsvanaPoints }}</li>
         <li>Startkapital: {{ selectedCareerDetails.startingCapital }}</li>
         <li>Befodran: {{ selectedCareerDetails.promotion }}</li>
         <li>År i karriären: {{ selectedCareerDetails.yearsInCareer }}</li>
+        <li>Karriärsfärdigheter: {{ selectedCareerDetails.associatedSkills.join(', ') }}</li>
+        <li v-if="selectedCareerDetails.baseAcademicSkillPoints">Skolfärdigheter: {{ selectedCareerDetails.academicSkills.join(', ') }}</li>
+
       </ul>
     </div>
 
@@ -198,7 +203,7 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;
-  width: 250px;
+  width: 245px;
   text-align: left;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, border-color 0.2s ease;

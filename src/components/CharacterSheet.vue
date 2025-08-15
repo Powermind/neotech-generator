@@ -128,6 +128,8 @@ const careerHistorySlots = computed(() => {
         <button @click="lockAttributes" class="attribute-button" v-if="rolledOnce">Lås grundegenskaper</button>
     </div>
     
+    <div id="skillsSection"></div>
+
     <LifeEventsGenerator />
 
     <div class="life-event-roll-section" v-if="attributesLocked && characterStore.current.rolledAdvantages < 2">
@@ -146,29 +148,20 @@ const careerHistorySlots = computed(() => {
       <button @click="resetCurrent">Reset Character</button>
     </div>
 
-    <div class="career-history-boxes">
-        <h3>Career History</h3>
-        <div class="career-slots">
-            <div v-for="slot in careerHistorySlots" :key="slot.stage" class="career-slot">
-                <h4>{{ slot.stage === 'background' ? 'Background' : `Career ${slot.stage.slice(-1)}` }}</h4>
-                <div v-if="slot.career" class="career-entry">
-                    <strong>{{ slot.career.name }}</strong>
-                    <p>Promotion: {{ slot.career.promotion }}</p>
-                    <p>Years: {{ slot.career.years }}</p>
-                </div>
-                <div v-else class="career-empty">
-                    <p>-- Not yet chosen --</p>
-                </div>
-            </div>
-        </div>
-        <div class="promotions-display">
-            <h4>Promotions Earned:</h4>
-            <span v-if="characterStore.current.promotions.length === 0">None</span>
-            <span v-else>{{ characterStore.current.promotions.join(', ') }}</span>
-        </div>
-    </div>
-
     <SkillList />
+ 
+    <!-- NEW: Display Startkapital entries -->
+    <div class="startkapital-summary">
+      <h3>Startkapital Entries</h3>
+      <div v-if="characterStore.current.startkapital.length === 0">
+        <p>No startkapital entries yet.</p>
+      </div>
+      <div v-else>
+        <p v-for="(entry, index) in characterStore.current.startkapital" :key="index">
+          {{ entry.description }}: {{ entry.amount }} €
+        </p>
+      </div>
+    </div>  
 
     <h3>Validation</h3>
     <p v-if="characterStore.isCharacterValid" class="valid-message">Character is ready!</p>
@@ -177,6 +170,16 @@ const careerHistorySlots = computed(() => {
 </template>
 
 <style scoped>
+
+.character-sheet {
+  background-color: #f0f8ff;
+  padding: 20px;
+  margin: 0 auto;
+  width: 1000px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  color: #333;
+}
 
 .attribute-wrapper {
     padding: 0;
@@ -231,16 +234,6 @@ const careerHistorySlots = computed(() => {
 
 .attribute-button:hover, .roll-button:hover {
   background-color: #0056b3;
-}
-
-.character-sheet {
-  background-color: #f0f8ff;
-  padding: 20px;
-  margin: 0 auto;
-  max-width: 1200px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  color: #333;
 }
 
 .life-event-roll-section {

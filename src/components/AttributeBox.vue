@@ -1,8 +1,8 @@
 <script setup>
+// AttributeBox - Component for showing an attribute value
+
 import { useCharacterStore } from '../stores/character'; // 1. Import your store function
 
-// 2. Instantiate the store
-// This gives you access to all state, getters, and actions defined in your character store.
 const characterStore = useCharacterStore();
 import { ref, watch } from 'vue'; // Import ref and watch
 import { computed } from 'vue';
@@ -12,7 +12,7 @@ const props = defineProps({
   attributeIndex: {
     type: Number,
     required: true,
-    validator: (value) => value >= 0 && value < 9, // Assuming 7 attributes
+    validator: (value) => value >= 0 && value < 9, // Assuming 9 attributes
   },
 });
 
@@ -28,8 +28,11 @@ const attributeValue = computed(() => {
   return characterStore.getAttributeValue(abbr)
 });
 
-const change = computed(() => {
-  return characterStore.current.attributes[props.attributeIndex].mods.length > 0;
+const increased = computed(() => {
+  return characterStore.getAttributeMods(attributeName.value) > 0;
+});
+const decreased = computed(() => {
+  return characterStore.getAttributeMods(attributeName.value) < 0;
 });
 
 </script>
@@ -38,7 +41,8 @@ const change = computed(() => {
   <div class="attribute-box">
     <p class="attribute-label">{{ attributeName }}</p>
     <p class="attribute-value">{{ attributeValue }}
-      <sup v-if="change">&#9662;</sup>
+      <sup class="down-arrow" v-if="decreased">&#x25BC;</sup>
+      <sup class="up-arrow" v-if="increased">&#x25B2;</sup>
     </p>
   </div>
 </template>
@@ -62,7 +66,14 @@ p {
 }
 
 sup {
-  font-size: 20px;
+  font-size: 12px;
+}
+.up-arrow {
+  color: green;
+}
+
+.down-arrow {
+  color: red;
 }
 
 /* https://www.w3schools.com/howto/howto_css_glowing_text.asp */

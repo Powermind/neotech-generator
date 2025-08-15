@@ -61,16 +61,19 @@ const defaultCharacterState = () => ({
   careerHistory: [], // Stores objects { stage: 'background', careerId: 'bg-urban', name: 'Urban Upbringing' }
   careerPointsPool: 0, // Points for career-specific skills
   freeSkillPointsPool: 0, // Points for any skill
+  academicSkillPointsPool: 0, // Points for academic skills
   stridsvanaSkillPointsPool: 0, // Points specifically for Stridsvana
   selectedCareerId: null, // The ID of the career currently being processed for the current stage
   currentCareerDetails: null, // Full details of the selected career for the current stage
   pendingSkillDistributions: [], // Events waiting for skill point distribution
   contacts: [],
   enemies: [],
+  forbiddenCareers: [],
 
   // --- NEW: Track initial points awarded ---
   initialCareerPointsAwarded: 0,
   initialFreeSkillPointsAwarded: 0,
+  initialAcademicSkillPointsAwarded: 0,
   initialStridsvanaSkillPointsAwarded: 0,
 
   // --- Upbringing ---
@@ -115,6 +118,9 @@ export const useCharacterStore = defineStore('character', {
     buyableSkills: (state) => {
         return state.current.skills.filter(skill => skill.buyable);
     },
+    academicSkills: (state) => {
+        return state.current.skills.filter(skill => skill.academic);
+    },
     sortedSkills: (state) => {
         // Sort skills alphabetically by name for display
         return [...state.current.skills].sort((a, b) => a.name.localeCompare(b.name));
@@ -137,6 +143,19 @@ export const useCharacterStore = defineStore('character', {
       const baseValue = parseInt(attr.value) || 0; // Use 0 if parsing fails
 
       return baseValue + modsSum;
+    },
+    getAttributeMods: (state) => (attributeName) => {
+      // Find the attribute object by its name
+      const attribute = state.current.attributes.find(attr => attr.name === attributeName || attr.abbr === attributeName);
+
+      // If the attribute exists and has a 'mods' array,
+      // sum up all the 'value' properties in the array.
+      if (attribute && attribute.mods && attribute.mods.length > 0) {
+        return attribute.mods.reduce((sum, mod) => sum + (parseInt(mod.value) || 0), 0);
+      }
+      
+      // Return 0 if the attribute doesn't exist or has no modifiers
+      return 0;
     },
     getSkillValue: (state) => (skillName) => {
       const skillToUpdate = state.current.skills.find(skill => skill.name === skillName);
@@ -222,7 +241,12 @@ export const useCharacterStore = defineStore('character', {
           });
         }
         if (career.type === 'automatic') {
-            return false
+          return false;
+        }
+        if (state.current.forbiddenCareers.length > 0) {
+          if (state.current.forbiddenCareers.some(forbiddenCareer => forbiddenCareer === career.name)) {
+            return false;
+          }
         }
         return true; // No restrictions, so it's available
       });
@@ -250,7 +274,7 @@ export const useCharacterStore = defineStore('character', {
       this.current[key] = value;
     },
     updateAttribute(attributeName, newValue) {
-      const attributeToUpdate = this.current.attributes.find(attr => attr.name === attributeName);
+      const attributeToUpdate = this.current.attributes.find(attr => attr.name === attributeName || attr.abbr === attributeName);
       if (attributeToUpdate) {
         attributeToUpdate.mods.push({value:newValue});
       } else {
@@ -262,6 +286,15 @@ export const useCharacterStore = defineStore('character', {
         const skillToUpdate = this.current.skills.find(skill => skill.name === skillName);
         if (skillToUpdate) {
             skillToUpdate.buyable = isBuyable;
+        } else {
+            console.warn(`Skill with name "${skillName}" not found.`);
+        }
+    },
+    // --- NEW ACTION: Set a skill's buyable status ---
+    setSkillAcademic(skillName, isAcademic) {
+        const skillToUpdate = this.current.skills.find(skill => skill.name === skillName);
+        if (skillToUpdate) {
+            skillToUpdate.academic = isAcademic;
         } else {
             console.warn(`Skill with name "${skillName}" not found.`);
         }
@@ -500,6 +533,8 @@ export const useCharacterStore = defineStore('character', {
         pool = this.current.careerPointsPool
       } else if (type === "free") {
         pool = this.current.freeSkillPointsPool
+      } else if (type === "academic") {
+        pool = this.current.academicSkillPointsPool
       } else if (type === "stridsvana") {
         pool = this.current.stridsvanaSkillPointsPool
       }
@@ -517,6 +552,9 @@ export const useCharacterStore = defineStore('character', {
           }
           if (type === 'free') {
             this.current.freeSkillPointsPool -= pointsToSpend; 
+          }
+          if (type === 'academic') {
+            this.current.academicSkillPointsPool -= pointsToSpend; 
           }
           if (type === 'stridsvana') {
             this.current.stridsvanaSkillPointsPool -= pointsToSpend; 
@@ -537,6 +575,8 @@ export const useCharacterStore = defineStore('character', {
         pool = this.current.careerPointsPool
       } else if (type === "free") {
         pool = this.current.freeSkillPointsPool
+      } else if (type === "academic") {
+        pool = this.current.academicSkillPointsPool
       } else if (type === "stridsvana") {
         pool = this.current.stridsvanaSkillPointsPool
       }
@@ -552,6 +592,9 @@ export const useCharacterStore = defineStore('character', {
         }
         if (type === 'free') {
           this.current.freeSkillPointsPool += pointsToSpend; 
+        }
+        if (type === 'academic') {
+          this.current.academicSkillPointsPool += pointsToSpend; 
         }
         if (type === 'stridsvana') {
           this.current.stridsvanaSkillPointsPool += pointsToSpend; 
@@ -588,6 +631,20 @@ export const useCharacterStore = defineStore('character', {
             if (skill) {
                 skill.value += pointsToSpend;
                 this.current.freeSkillPointsPool -= pointsToSpend;
+            } else {
+                console.warn(`Skill "${skillName}" not found for spending free points.`);
+            }
+        } else {
+            console.warn('Not enough free skill points!');
+        }
+    },
+     // Action to handle spending free points on skills
+    spendAcademickillPoints(skillName, pointsToSpend) {
+        if (this.current.academicSkillPointsPool >= pointsToSpend) {
+            const skill = this.current.skills.find(s => s.name === skillName);
+            if (skill) {
+                skill.value += pointsToSpend;
+                this.current.academicSkillPointsPool -= pointsToSpend;
             } else {
                 console.warn(`Skill "${skillName}" not found for spending free points.`);
             }

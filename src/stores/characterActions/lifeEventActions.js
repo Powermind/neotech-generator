@@ -137,6 +137,8 @@ export function applyModifiersLogic(store, eventResult, redirect = false) {
         shouldStoreEvent = false;
       } else if (modifier.type === 'prison') {
         store.current.prisonTerm = true;
+      } else if (modifier.type === 'fired') {
+        store.current.forbiddenCareers.push(store.current.currentCareerDetails.name);
       } else if (modifier.type === 'kontakt') {
         const resources = rollDiceString(modifier.resources);
         let contactTitle;

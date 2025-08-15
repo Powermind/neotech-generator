@@ -47,6 +47,11 @@ function applyCharacteristicRolls(store, career, bribedAttribute = null) {
                  successfulRolls += 1;
             }
             console.log(`Rolled ${rollResult} for ${attrName}.`);
+        } else if (attrName === 'Börd') {
+            if (store.totalStartkapital >= 100000 || store.socialClass === 'Social Elit') {
+                successfulRolls += 1;
+                console.log('Börd successful')
+            }
         } else if (attrName === 'Examen') {
             const targetValue = store.hasDegree
             if (targetValue) {
@@ -87,12 +92,29 @@ function enableCareerSkills(store, career) {
         });
     }
 }
+// Helper function to enable career-specific skills for buying (Part of Step 3)
+function enableAcademicSkills(store, career) {
+    if (career.academicSkills && career.academicSkills.length > 0) {
+        career.academicSkills.forEach(skillName => {
+            store.setSkillAcademic(skillName, true);
+        });
+    }
+}
 
 // Helper to disable 'buyable' status for skills (useful at end of skill purchase phase)
 function disableAllBuyableSkills(store) {
     store.current.skills.forEach(skill => {
         if (skill.buyable) {
             store.setSkillBuyable(skill.name, false);
+        }
+    });
+}
+
+// Helper to disable 'buyable' status for skills (useful at end of skill purchase phase)
+function disableAllAcademicSkills(store) {
+    store.current.skills.forEach(skill => {
+        if (skill.buyable) {
+            store.setSkillAcademic(skill.name, false);
         }
     });
 }
@@ -137,7 +159,6 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
             if (store.totalStartkapital < 0) {
                 autoCareer = generalCareers.find(c => c.id === 'car-hemlos');
             }
-            // Find the "Arbetare" career
             if (autoCareer) {
                 selectedCareer = autoCareer;
                 store.current.currentCareerDetails = selectedCareer;
@@ -156,14 +177,25 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
 
     // 2) User gets some skill points to buy career skills
     store.current.careerPointsPool = selectedCareer.baseCareerSkillPoints[successRate];
-    // --- NEW: Set initial award for career points ---
     store.current.initialCareerPointsAwarded = selectedCareer.baseCareerSkillPoints[successRate];
     enableCareerSkills(store, selectedCareer);
 
+    if (selectedCareer.baseAcademicSkillPoints) {
+        store.current.academicPointsPool = selectedCareer.baseAcademicSkillPoints[successRate];
+        store.current.initialAcademicPointsAwarded = selectedCareer.baseAcademicSkillPoints[successRate];
+        enableAcademicSkills(store, selectedCareer);
+        console.log('Added academic skills points')
+    }
+        
     // 3) User gets a number of free skill points
     store.current.freeSkillPointsPool += selectedCareer.baseFreeSkillPoints[successRate];
-    // --- NEW: Set initial award for free points ---
     store.current.initialFreeSkillPointsAwarded = selectedCareer.baseFreeSkillPoints[successRate];
+
+    // And possbily a number of academic skills points...
+    if (selectedCareer.baseAcademicSkillPoints) {
+        store.current.academicSkillPointsPool += selectedCareer.baseAcademicSkillPoints[successRate];
+        store.current.initialAcademicSkillPointsAwarded = selectedCareer.baseAcademicSkillPoints[successRate];
+    }
 
     // 4) User gets a number of skillpoints for "Stridsvana"
     store.current.stridsvanaSkillPointsPool += selectedCareer.baseStridsvanaPoints[successRate];

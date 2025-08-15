@@ -20,7 +20,7 @@ const generalCareers = [
          { type: 'fired', reason: 'Sparkad' },
       ] 
     },
-    successfulBenefits: {  description: 'Oumbärlig. Rollpersonen har gjort sig oumbrälig på jobbet. Om rollpersonen väljer samma karriär nästa steg lyckas ett framgångsslag automatiskt.',
+    successfulBenefits: {  description: 'Oumbärlig. Rollpersonen har gjort sig oumbärlig på jobbet. Om rollpersonen väljer samma karriär nästa steg lyckas ett framgångsslag automatiskt.',
       modifiers:[
         { type: 'characteristicsRoll', career: 'Arbetare' }
       ] 
@@ -274,7 +274,7 @@ const generalCareers = [
     name: 'Playboy',
     type: 'general',
     description: 'Lever loppan på sina pengar',
-    characteristicRolls: ['PER', 'Mediastatus', 'Playboy'],
+    characteristicRolls: ['PER', 'Mediastatus', 'Börd'],
     baseCareerSkillPoints: [15, 20, 25],
     baseFreeSkillPoints: [10, 15, 20],
     baseStridsvanaPoints: [0, 0, 0],
@@ -451,13 +451,15 @@ const generalCareers = [
     type: 'general',
     description: 'Pluggat på universitet.',
     characteristicRolls: ['PSY', 'BIL', 'Informationssökning'],
-    baseCareerSkillPoints: [15, 30, 40],
+    baseCareerSkillPoints: [10, 15, 15],
     baseFreeSkillPoints: [15, 10, 10],
+    baseAcademicSkillPoints: [5, 15, 25],
     baseStridsvanaPoints: [0, 0, 0],
     promotion: 'Pathfinder',
     startingCapital: [100, 500, 1000],
     eventTable: 'universitetetCareerEvents',
-    associatedSkills: ['Informationssökning', 'Läsa/skriva', 'Undervisning', 'Språk', 'Administration', 'Antropologi', 'Astronomi', 'Biologi', 'Cybernetik', 'Datateknik', 'Design', 'Ekonomi', 'Elektronik', 'Filosofi', 'Fysik', 'Genteknik', 'Geografi', 'Geologi', 'Historia', 'Juridik', 'Kemi', 'Kirurgi', 'Konstkänndeom', 'Matematik', 'Media', 'Medicin', 'Mekanik', 'Navigering', 'Politik', 'Programmering', 'Psykologi', 'Religion', 'Sociologi'],
+    associatedSkills: ['Informationssökning', 'Läsa/skriva', 'Undervisning', 'Språk', 'Övertalning'],
+    academicSkills: ['Administration', 'Antropologi', 'Astronomi', 'Biologi', 'Cybernetik', 'Datateknik', 'Design', 'Ekonomi', 'Elektronik', 'Filosofi', 'Fysik', 'Genteknik', 'Geografi', 'Geologi', 'Historia', 'Juridik', 'Kemi', 'Kirurgi', 'Konstkänndeom', 'Matematik', 'Media', 'Medicin', 'Mekanik', 'Navigering', 'Politik', 'Programmering', 'Psykologi', 'Religion', 'Sociologi'],
     restrictions: [],
     yearsInCareer: '1T6',
     failedBenefits: {  description: 'Klarar inte studierna. Rollpersonen måste hitta en ny sysselsättning nästa period.',

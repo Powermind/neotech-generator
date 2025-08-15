@@ -3,183 +3,99 @@ import { useCharacterStore } from '../stores/character';
 import { computed } from 'vue';
 
 const characterStore = useCharacterStore();
-
-// Use the sortedSkills getter for display
 const skillsToDisplay = computed(() => characterStore.sortedSkills);
-
-const handleUpdateSkillValue = (skillName, event) => {
-  const newValue = parseInt(event.target.value);
-  if (!isNaN(newValue)) {
-    characterStore.updateSkill(skillName, newValue);
-  }
-};
-
-// --- NEW METHOD: Handle toggling buyable status ---
-const handleToggleBuyable = (skillName, event) => {
-  characterStore.setSkillBuyable(skillName, event.target.checked);
-};
-
-const handleToggleEasy = (skillName) => {
-  characterStore.toggleSkillEasy(skillName);
-};
 </script>
 
 <template>
   <div class="skill-list-container">
     <h2>Skills</h2>
-    <div class="skill-table-wrapper">
-      <table class="skill-table">
-        <thead>
-          <tr>
-            <th>Skill Name</th>
-            <th>Value</th>
-            <th>Easy?</th>
-            <th>Buyable?</th> <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="skill in skillsToDisplay" :key="skill.name">
-            <td>{{ skill.name }}</td>
-            <td class="skill-value-cell">
-              <input
-                type="number"
-                min="0"
-                :value="skill.value"
-                @input="handleUpdateSkillValue(skill.name, $event)"
-              />
-            </td>
-            <td>
-              <input
-                type="checkbox"
-                :checked="skill.easy"
-                @change="handleToggleEasy(skill.name)"
-              />
-            </td>
-            <td> <input
-                type="checkbox"
-                :checked="skill.buyable"
-                @change="handleToggleBuyable(skill.name, $event)"
-              />
-            </td>
-            <td>
-              <button @click="characterStore.updateSkill(skill.name, skill.value + 1)">+</button>
-              <button @click="characterStore.updateSkill(skill.name, skill.value - 1)">-</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+    <!-- Multi-column container: reads column-wise automatically -->
+    <div class="skills-columns">
+      <div
+        v-for="skill in skillsToDisplay"
+        :key="skill.name"
+        class="skill-card"
+      >
+        <div class="skill-name">{{ skill.name }}</div>
+        <div class="skill-value">{{ skill.value }}</div>
+      </div>
     </div>
-    <p class="easy-skills-summary">
-      Easy Skills: {{ characterStore.easySkills.map(s => s.name).join(', ') || 'None' }}
-    </p>
-    <p class="buyable-skills-summary">
-        Buyable Skills: {{ characterStore.buyableSkills.map(s => s.name).join(', ') || 'None' }}
-    </p>
-    <!-- NEW: Display Startkapital entries -->
-    <div class="startkapital-summary">
-      <h3>Startkapital Entries</h3>
-      <div v-if="characterStore.current.startkapital.length === 0">
-        <p>No startkapital entries yet.</p>
-      </div>
-      <div v-else>
-        <p v-for="(entry, index) in characterStore.current.startkapital" :key="index">
-          {{ entry.description }}: {{ entry.amount }} €
-        </p>
-      </div>
-    </div>  
   </div>
 </template>
 
 <style scoped>
-.buyable-skills-summary {
-    margin-top: 10px;
-    font-style: italic;
-    color: #4CAF50; /* Green for buyable summary */
-    text-align: left;
-    font-size: 0.9em;
-}
-
+/* Keep your container styles the same as before */
 .skill-list-container {
   background-color: #f8f8f8;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  padding: 30px;
+  padding: 16px;
   margin: 20px auto;
-  max-width: 900px; /* Wider to accommodate table */
+  max-width: 900px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  text-align: center;
   color: #333;
 }
 
 h2 {
   color: #2c3e50;
-  border-bottom: 2px solid #a0522d; /* Sienna brown for skills */
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  border-bottom: 2px solid #a0522d;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
   text-align: left;
 }
 
-.skill-table-wrapper {
-  overflow-x: auto; /* Enable horizontal scrolling for narrow screens */
+/* Columns — smaller gap for a tighter feel */
+.skills-columns {
+  column-count: 3;
+  column-width: 200px;  /* narrower */
+  column-gap: 8px;
 }
 
-.skill-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.skill-table th,
-.skill-table td {
+/* Compact skill entries */
+.skill-card {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  background: white;
   border: 1px solid #ddd;
-  padding: 10px;
-  text-align: left;
-  vertical-align: middle;
+  border-radius: 4px;
+
+  /* Row layout with small gap */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 0.85rem; /* slightly smaller text */
+  line-height: 1.2;
 }
 
-.skill-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+/* Skill name styling */
+.skill-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Skill value aligned right */
+.skill-value {
   color: #555;
+  flex-shrink: 0;
+  margin-left: 6px;
 }
 
-.skill-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+/* Responsive: fewer columns on smaller screens */
+@media (max-width: 700px) {
+  .skills-columns {
+    column-count: 2;
+  }
 }
-
-.skill-table input[type="number"] {
-  width: 60px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.skill-table input[type="checkbox"] {
-  transform: scale(1.2); /* Make checkbox slightly larger */
-}
-
-.skill-table button {
-  background-color: #4CAF50; /* Green for +/ - */
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9em;
-  margin: 0 2px;
-  transition: background-color 0.2s;
-}
-
-.skill-table button:hover {
-  background-color: #45a049;
-}
-
-.easy-skills-summary {
-    margin-top: 20px;
-    font-style: italic;
-    color: #666;
-    text-align: left;
-    font-size: 0.9em;
+@media (max-width: 450px) {
+  .skills-columns {
+    column-count: 1;
+  }
 }
 </style>

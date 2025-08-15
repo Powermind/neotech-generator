@@ -76,7 +76,7 @@ const upbringingName = computed(() => { return characterStore.current.upbringing
     <div v-if="characterStore.current.hasRolledBackground" class="post-background">
       <p>Rollpersonens uppväxtmiljö: {{ upbringingName }}</p>
       <button @click="characterStore.applySelectedCareerEffects()" :disabled="!isNextButtonEnabled" class="next-step-button">
-        Nästa Steg: Applicera karriärseffekter och köp färdigheter
+        Nästa Steg: Köp färdigheter
       </button>
     </div>
   </div>
