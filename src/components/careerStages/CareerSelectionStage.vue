@@ -88,88 +88,189 @@ const toggleBribeOptions = () => {
 };
 </script>
 
+
 <template>
   <div class="career-selection-stage">
-    <h2>{{ stageDisplayName }}</h2>
-    <p>Välj karriär för rollpersonen.</p>
+    <h2>{{ stageDisplayName }} Selection</h2>
+    <p>Choose the path your character took during this stage of their life.</p>
 
-    <div class="career-options">
-      <div v-for="career in availableCareers" :key="career.id" class="career-card">
 
-      <div class="career-header-wrapper">
-        <input
-          type="radio"
-          :id="career.id"
-          :value="career.id"
-          v-model="selectedCareerId"
-          :disabled="props.careerType === 'general' && !characterStore.availableGeneralCareers.some(c => c.id === career.id)"
-        />
-        <label :for="career.id">
-          <h3>{{ career.name }}</h3>
-        </label>
-      </div>  
-      <div v-if="career.characteristicRolls && career.characteristicRolls.length" class="restrictions">
-              Framgångsslag:
-              <span v-for="(restriction, rIndex) in career.characteristicRolls" :key="rIndex">
-                <span>
-                  {{ restriction }}
-                </span>
-                <span v-if="rIndex < career.characteristicRolls.length - 1">, </span>
-              </span>
+    <!-- NEW: A flex container to hold the two main sections -->
+    <div class="main-layout-container">
+        <div class="career-options-panel">
+            <div v-for="career in availableCareers" :key="career.id" class="career-card">
+                <!-- NEW: Radio input and label side by side -->
+                <input
+                    type="radio"
+                    :id="career.id"
+                    :value="career.id"
+                    v-model="selectedCareerId"
+                    :disabled="props.careerType === 'general' && !characterStore.availableGeneralCareers.some(c => c.id === career.id)"
+                />
+                <label :for="career.id">
+                    <h3>{{ career.name }}</h3>
+                    <div class="career-info">
+                        <div v-if="career.characteristicRolls && career.characteristicRolls.length" class="career-rolls-summary">
+                          Framgångsslag:
+                          <span v-for="(roll, rIndex) in career.characteristicRolls" :key="rIndex">
+                            <span>{{ roll }}</span>
+                            <span v-if="rIndex < career.characteristicRolls.length - 1">, </span>
+                          </span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div v-if="selectedCareerDetails" class="selected-career-summary">
+            <h3>Selected: {{ selectedCareerDetails.name }}</h3>
+            <p>{{ selectedCareerDetails.description }}</p>
+            <ul>
+                <li>Skill Points: {{ selectedCareerDetails.baseCareerSkillPoints }}</li>
+                <li>Free Skill Points: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
+                <li>Stridsvana Points: {{ selectedCareerDetails.baseStridsvanaPoints }}</li>
+                <li>Starting Capital: {{ selectedCareerDetails.startingCapital }}</li>
+                <li>Promotion: {{ selectedCareerDetails.promotion }}</li>
+                <li>Years in Career: {{ selectedCareerDetails.yearsInCareer }}</li>
+            </ul>
+
+            <div v-if="selectedCareerDetails.associatedSkills && selectedCareerDetails.associatedSkills.length" class="career-skills-preview">
+                <h4>Associated Skills:</h4>
+                <p>{{ selectedCareerDetails.associatedSkills.join(', ') }}</p>
             </div>
 
-          <div class="career-info">
-            <div v-if="props.careerType !== 'background' && career.characteristicRolls && career.characteristicRolls.length">
+            <div v-if="props.careerType !== 'background' && selectedCareerDetails.characteristicRolls && selectedCareerDetails.characteristicRolls.length">
                 <div v-if="canAffordBribe" id="can-bribe-wrapper">
-                  <p>Du kan muta bort ett framgångsslag. Detta lyckas då automatiskt men kostar €10.000.</p>
-                  <button @click="toggleBribeOptions" class="toggle-bribe-button">
-                    {{ showBribeOptions ? 'Dölj mutor' : 'Visa mutor' }}
-                  </button>
-                  <!-- The bribe options div is now conditional -->
-                  <div class="bribe-options" v-show="showBribeOptions">
-                    <div v-for="roll in career.characteristicRolls" :key="roll" class="bribe-option">
-                          <input
-                              type="radio"
-                              :id="`bribe-${career.id}-${roll}`"
-                              :value="roll"
-                              v-model="selectedBribeAttribute"
-                              :name="`bribe-for-${career.id}`"
-                              :disabled="!canAffordBribe || selectedCareerId !== career.id"
-                          />
-                          <label :for="`bribe-${career.id}-${roll}`">{{ roll }}</label>
-                      </div>
-                  </div>
+                    <p>Du kan muta bort ett framgångsslag. Detta lyckas då automatiskt men kostar €10.000.</p>
+                    <button @click="toggleBribeOptions" class="toggle-bribe-button">
+                        {{ showBribeOptions ? 'Dölj mutor' : 'Visa mutor' }}
+                    </button>
+                    <div class="bribe-options" v-show="showBribeOptions">
+                        <div v-for="roll in selectedCareerDetails.characteristicRolls" :key="roll" class="bribe-option">
+                            <input
+                                type="radio"
+                                :id="`bribe-${selectedCareerDetails.id}-${roll}`"
+                                :value="roll"
+                                v-model="selectedBribeAttribute"
+                                :name="`bribe-for-${selectedCareerDetails.id}`"
+                            />
+                            <label :for="`bribe-${selectedCareerDetails.id}-${roll}`">{{ roll }}</label>
+                        </div>
+                    </div>
                 </div>
                 <p v-if="!canAffordBribe" class="cannot-afford-message">Du behöver minst €10.000 i startkapital för att kunna muta bort framgångsslag</p>
             </div>
-          </div>
-      </div>
+        </div>
     </div>
-
-    <div v-if="selectedCareerDetails" class="selected-career-summary">
-      <h3>Förhandsgranskning av {{ selectedCareerDetails.name }}</h3>
-      <p>{{ selectedCareerDetails.description }}</p>
-      <ul>
-        <li>Karriärens färdighetspoäng: {{ selectedCareerDetails.baseCareerSkillPoints }}</li>
-        <li>Valfria färdighetspoäng: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
-        <li v-if="selectedCareerDetails.baseAcademicSkillPoints">Skolfärdighetspoäng: {{ selectedCareerDetails.baseFreeSkillPoints }}</li>
-        <li>Stridsvana-poäng: {{ selectedCareerDetails.baseStridsvanaPoints }}</li>
-        <li>Startkapital: {{ selectedCareerDetails.startingCapital }}</li>
-        <li>Befodran: {{ selectedCareerDetails.promotion }}</li>
-        <li>År i karriären: {{ selectedCareerDetails.yearsInCareer }}</li>
-        <li>Karriärsfärdigheter: {{ selectedCareerDetails.associatedSkills.join(', ') }}</li>
-        <li v-if="selectedCareerDetails.baseAcademicSkillPoints">Skolfärdigheter: {{ selectedCareerDetails.academicSkills.join(', ') }}</li>
-
-      </ul>
-    </div>
-
     <button @click="handleAdvanceWithBribe()" :disabled="!isNextButtonEnabled" class="next-step-button">
-      Nästa steg: Applicera karriärseffekt och köp färdigheter
+      Next Step: Apply Career Effects & Spend Skills
     </button>
   </div>
 </template>
 
 <style scoped>
+/*
+  UPDATED STYLES for the new layout
+*/
+.career-options-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.career-card {
+    display: flex; /* Makes the card a flex container */
+    align-items: flex-start; /* Aligns the input and content to the top */
+    padding: 10px; /* Reduced padding for a more compact look */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.career-card:hover {
+  transform: translateY(-2px); /* Smaller lift on hover */
+  border-color: #6a5acd;
+}
+
+.career-card input[type="radio"] {
+  margin-right: 10px;
+  margin-top: 5px;
+  transform: scale(1.2);
+}
+
+.career-card label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  font-weight: normal;
+}
+
+.career-card h3 {
+  margin-top: 0;
+  margin-bottom: 5px; /* Reduced margin */
+  color: #6a5acd;
+  font-size: 1.1em; /* Smaller font size */
+}
+
+.career-card p {
+  font-size: 0.85em; /* Smaller font size */
+  color: #555;
+  margin-bottom: 5px; /* Reduced margin */
+}
+
+.career-info {
+  font-size: 0.8em;
+  color: #777;
+  margin-top: 5px; /* Reduced margin */
+  padding-top: 5px;
+  border-top: 1px dashed #e0e0e0;
+}
+
+/*
+  NEW LAYOUT STYLES
+  These styles define the two-column layout.
+*/
+.main-layout-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start; /* Aligns content to the top */
+}
+
+.selected-career-summary {
+    flex: 2; /* Takes up 2 parts of the available space (2/3) */
+    /* Existing styles are kept and combined with this new flex property */
+    background-color: #e6ffe6;
+    border: 1px solid #90ee90;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 0; /* Override the old margin */
+    margin-bottom: 0; /* Override the old margin */
+    text-align: left;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    /* NEW STICKY PROPERTIES */
+    position: sticky;
+    top: 20px; /* Adjust this value to control the top offset */
+    z-index: 10;
+}
+
+/*
+  RESPONSIVE DESIGN
+  For screens smaller than 768px, switch back to a single column layout.
+*/
+@media (max-width: 768px) {
+    .main-layout-container {
+        flex-direction: column;
+    }
+    .career-options-panel, .selected-career-summary {
+        width: 100%;
+    }
+}
+
 /* Your existing styles are fine */
 .career-selection-stage {
   background-color: #f0f8ff; /* Alice Blue */
@@ -177,7 +278,7 @@ const toggleBribeOptions = () => {
   border-radius: 10px;
   padding: 30px;
   margin: 20px auto;
-  max-width: 900px;
+  max-width: 1200px; /* Increased max-width for better two-column display */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   color: #333;
@@ -191,70 +292,17 @@ h2 {
 }
 
 .career-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  margin-bottom: 30px;
+  display: none;
 }
 
-.career-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  width: 245px;
-  text-align: left;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-  display: flex; /* For radio button alignment */
-  align-items: flex-start;
-  flex-direction: column;
+.intro-text {
+  margin-bottom: 20px;
 }
 
 .career-header-wrapper {
   display: flex;
   align-items: flex-start;
   flex-direction: row;
-}
-
-.career-card:hover {
-  transform: translateY(-5px);
-  border-color: #6a5acd; /* Highlight on hover */
-}
-
-.career-card input[type="radio"] {
-  margin-right: 10px;
-  margin-top: 5px; /* Align with h3 */
-  transform: scale(1.2);
-}
-
-.career-card label {
-  cursor: pointer;
-  display: flex; /* Makes the whole label clickable for its content */
-  flex-direction: column;
-  flex-grow: 1; /* Allows content to take remaining space */
-  font-weight: normal; /* Override default label bold */
-}
-
-.career-card h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: #6a5acd; /* Slate Blue */
-}
-
-.career-card p {
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.career-info {
-  font-size: 0.9em;
-  color: #777;
-  margin-top: 10px;
-  border-top: 1px solid #eee;
-  padding-top: 10px;
 }
 
 .career-card .restrictions {
@@ -326,13 +374,28 @@ h2 {
   background-color: #483d8b; /* Darker Slate Blue */
 }
 
-/* Add these new styles */
+
+.toggle-bribe-button {
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.toggle-bribe-button:hover {
+  background-color: #483d8b;
+}
+
 .bribe-options {
     display: flex;
     gap: 15px;
     margin-top: 10px;
     justify-content: center;
-    flex-direction: column;
 }
 
 .bribe-option {
@@ -343,4 +406,51 @@ h2 {
 .bribe-option input[type="radio"] {
     margin-right: 5px;
 }
+
+.cannot-afford-message {
+    color: red;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.career-selection-stage h2 {
+  color: #2c3e50;
+  border-bottom: 2px solid #6a5acd; /* Slate Blue */
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+.next-step-button {
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.next-step-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.next-step-button:hover:not(:disabled) {
+  background-color: #483d8b;
+}
+
+.selected-career-summary {
+  background-color: #e6ffe6; /* Light green for summary */
+  border: 1px solid #90ee90;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 </style>

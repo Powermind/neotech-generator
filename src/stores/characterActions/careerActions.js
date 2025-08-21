@@ -185,6 +185,9 @@ export function applyCareerEffectsLogic(store, bribedAttribute) {
         store.current.initialAcademicPointsAwarded = selectedCareer.baseAcademicSkillPoints[successRate];
         enableAcademicSkills(store, selectedCareer);
         console.log('Added academic skills points')
+    } else {
+        store.current.academicPointsPool = 0;
+        store.current.initialAcademicPointsAwarded = 0;
     }
         
     // 3) User gets a number of free skill points
